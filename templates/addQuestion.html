@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Данная страница предназначена для обновления и добавления новых вопросов в базу данных.">
+    <title>Добавление вопросов в базу данных</title>
+    <link rel="stylesheet" href="..\static\css\addQuestion.css">
+</head>
+<body>
+    <form id="test-form">
+        <h1>Добавление вопросов</h1>
+        <div class="question-block">
+            <label for="theme">Тема</label>
+            <select id="theme" name="theme">
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+        <div class="question-block">
+            <label for="direction">Направление подготовки</label>
+            <select id="direction" name="direction">
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+        <div class="question-block">
+            <label for="discipline">Дисциплина</label>
+            <select id="discipline" name="discipline">
+                <!-- Options will be populated dynamically -->
+            </select>
+        </div>
+        <div class="question-block">
+            <label for="difficulty-level">Сложность</label>
+            <select id="difficulty-level" name="difficulty-level">
+                <option value="легкий">легкий</option>
+                <option value="средний">средний</option>
+                <option value="сложный">сложный</option>
+            </select>
+        </div>
+        <div id="questions-container"></div>
+
+        <div class="submit-container">
+            <button type="submit" class='submit'>Добавить вопрос</button>
+        </div>
+    </form>
+    <script src="..\static\js\addQuestion.js"></script>
+</body>
+</html>

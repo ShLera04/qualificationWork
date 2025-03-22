@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Shishkina Lera">
+    <meta name="description" content="Выполните вход в научно-исследовательскую систему 'Исследование операций', чтобы начать обучение по данной дисциплине.">
+    <title>Вход</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="..\static\css\entrance.css">
+</head>
+<body>
+    <form method="POST" action="/entrance.html" class="form">
+        <h1>Вход</h1>
+        <p>в научно-исследовательскую систему</p>
+        <h2>"Исследование операций"</h2>
+
+        <div class="group">
+            <input type="text" placeholder="‎" name="login" required id="login">
+            <label for="login">Логин</label>
+        </div>
+        <div class="group">
+            <input type="password" placeholder="‎" name="password" required id="password">
+            <label for="password">Пароль</label>
+            <span class="toggle-password" onclick="togglePassword('password')"><i class="fas fa-eye"></i></span>
+        </div>
+
+        <button id="loginBtn" class="button blue">
+            <i class="fa fa-unlock"></i>
+            <span><b>Войти</b></span>
+        </button>
+        <a href="/register" class="register">Зарегистрироваться</a>
+        <!-- <a href="#" class="forget">Забыли пароль?</a> -->
+    </form>
+
+    <script>
+        // Показ сообщения через параметры URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var message = urlParams.get('message');
+        if (message) {
+            alert(message);
+        }
+
+        // Анимация для полей ввода
+        function togglePassword(fieldId) {
+            var passwordField = document.getElementById(fieldId);
+            if (passwordField) {
+                var passwordFieldType = passwordField.getAttribute("type");
+                if (passwordFieldType === "password") {
+                    passwordField.setAttribute("type", "text");
+                } else {
+                    passwordField.setAttribute("type", "password");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

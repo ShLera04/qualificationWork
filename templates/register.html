@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Shishkina Lera">
+    <meta name="description" content="Зарегистрируйтесь на сайте научно-исследовательской системы 'Исследование операций', чтобы начать обучение по данной дисциплине. Регистрация занимает всего несколько минут.">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="..\static\css\register.css">
+</head>
+<body>
+    <form method="POST" class="form">
+        <h1>Регистрация</h1>
+        <p>в научно-исследовательской системе</p>
+        <h2>"Исследование операций"</h2>
+
+        <div class="group">
+            <input type="text" placeholder="‎" name="name" required id="name" title="В данном поле необходимо указать ваш логин.">
+            <label for="name">Логин</label>
+        </div>
+        <div class="group">
+            <input type="email" placeholder="‎" name="email" required id="email" title="В данном поле необходимо указать вашу электронную почту.">
+            <label for="email">Ваш e-mail</label>
+        </div>
+        <div class="group">
+            <input type="password" placeholder="‎" name="password" required id="password" title="В данном поле необходимо указать пароль (минимум 8 символов).">
+            <label for="password">Пароль</label>
+            <span class="toggle-password" onclick="togglePassword('password')"><i class="fas fa-eye"></i></span>
+        </div>
+        <div class="group">
+            <input type="password" placeholder="‎" name="repetpassword" required id="repetpassword" title="Введите пароль повторно.">
+            <label for="repetpassword">Повтор пароля</label>
+            <span class="toggle-password" onclick="togglePassword('repetpassword')"><i class="fas fa-eye"></i></span>
+        </div>
+
+        <button id="login" class="button blue">
+            <i class="fa fa-unlock"></i>
+            <span><b>Зарегистрироваться</b></span>
+        </button>
+    </form>
+    <script src="..\static\js\register.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

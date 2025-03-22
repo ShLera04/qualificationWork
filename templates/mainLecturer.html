@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="autor" content="Shishkina Lera">
+    <title>Главная страница</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="..\static\css\style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-line">
+                <img src="..\static\images\logo_WUoITg47.png" alt="Логотип">
+                <div class="nav">
+                    <a class="nav-item" href="#first">ГЛАВНАЯ</a>
+                    <a class="nav-item" href="#teoriya">МАТЕРИАЛЫ</a>
+                    <a class="nav-item" href="#functionality">ФУНКЦИОНАЛЬНОСТЬ</a>
+                </div>
+                <div class="burger-menu" id="burgerMenu">
+                    <span class="burger-line"></span>
+                    <span class="burger-line"></span>
+                    <span class="burger-line"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section class="first" id="first">
+            <div class="header-down">
+                <div class="text-overlay">
+                    <b>Учебно-исследовательская система для поддержки дисциплины «Исследование операций»</b>
+                </div>
+                <img id="mainImage" src="..\static\images\home_2.jpg.jpeg" alt="Основное изображение">
+            </div>
+        </section>
+        <section class="teoriya" id="teoriya">
+            <div class="container1">
+                <h1>Материалы для изучения дисциплины</h1>
+                <div class="containerbuttone1">
+                    <button class="bottone1" id="bottone1"><strong>Добавить тему</strong></button>
+                    <button class="bottone1" id="bottone2"><strong>Добавить админа</strong></button>
+                    <div class="InputContainer">
+                        <input placeholder="Поиск" id="inputSearch" class="inputSearch" name="text" type="text" />
+                        <label class="labelforsearch" for="input">
+                            <svg class="searchIcon" viewBox="0 0 512 512">
+                                <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path>
+                            </svg>
+                        </label>
+                    </div>
+                </div>
+                <div class="cards-wrapper">
+                    <button class="scroll-button left" onclick="scrollLeft()">&#10094;</button>
+                    <div class="cards-container" id="cardsContainer">
+                        <!-- Карточки будут добавлены здесь динамически -->
+                    </div>
+                    <button class="scroll-button right" onclick="scrollRight()">&#10095;</button>
+                </div>
+            </div>
+        </section>
+
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h3>ДОБАВИТЬ РАЗДЕЛ</h3>
+                <div class="group">
+                    <input type="text" id="topicInput" placeholder=" " required>
+                    <label for="topicInput">Название раздела</label>
+                </div>
+                <button id="addTopicButton" class="button blue"><bold>Добавить</bold></button>
+            </div>
+        </div>
+
+        <div id="adminModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeAdminModal">&times;</span>
+                <h3>ДОБАВИТЬ АДМИНА</h3>
+                <div class="group">
+                    <select id="adminSelect" placeholder="Выберите пользователя" required>
+                        <!-- Опции будут добавлены динамически -->
+                    </select>
+                    <!-- <label for="adminSelect">Выберите админа</label> -->
+                </div>
+                <button id="addAdminButton" class="button blue"><bold>Добавить</bold></button>
+            </div>
+        </div>
+
+        <section class="functionality" id="functionality">
+            <div class="container1">
+                <h1>Функциональность</h1>
+                <div class="container11">
+                    <div class="second_container">
+                        <div class="input-container question-block">
+                            <label for="rows">Количество строк</label>
+                            <input type="number" id="rows" name="rows" min="1" value="3" class="functionality-input">
+                            <label for="cols">Количество столбцов</label>
+                            <input type="number" id="cols" name="cols" min="1" value="3" class="functionality-input">
+                            <label for="minValue">Минимальное значение</label>
+                            <input type="number" id="minValue" name="minValue" value="1" class="functionality-input">
+                            <label for="maxValue">Максимальное значение</label>
+                            <input type="number" id="maxValue" name="maxValue" value="10" class="functionality-input">
+                        </div>
+                        <div class="input-container question-block flex-container">
+                            <label for="autoFill">Автоматическое заполнение</label>
+                            <input type="checkbox" id="autoFill" name="autoFill" class="functionality-input">
+                        </div>                        
+                        <div class = "button-container">
+                            <button id="generateMatrix" class="submit">Создать матрицы</button>
+                        </div>
+                        <div class="input-container question-block">
+                            <label for="optionSelect">Выберите опцию</label>
+                            <select id="optionSelect" class="functionality-select">
+                                <option value="saddlePoints">Седловая точка</option>
+                                <option value="nashEquilibrium">Равновесие по Нэшу</option>
+                                <option value="paretoOptimal">Оптимальность по Парето</option>
+                            </select>
+                        </div>
+                        <div id="matrixContainer" class="matrix-container"></div>
+                        <div id="matrixContainer2" class="matrix-container"></div> <!-- Вторая матрица -->
+                        <div id="results" class="results"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+                   
+        <section class="footer">
+            <!-- Footer content -->
+        </section>
+    </main>
+
+    <!-- Бургер-меню -->
+    <div class="menu-overlay" id="menuOverlay">
+        <div class="menu-content">
+            <div class="menu-header">
+                <span class="username">Валерчик</span>
+                <span class="close-btn" id="closeMenu">&times;</span>
+            </div>
+            <div class="menu-links">
+                <a class="menu-item" href="#first">ГЛАВНАЯ</a>
+                <a class="menu-item" href="#teoriya">МАТЕРИАЛЫ</a>
+                <a class="menu-item" href="#functionality">ФУНКЦИОНАЛЬНОСТЬ</a>
+                <a class="menu-item" href="#functionality">ВЫХОД</a>
+            </div>
+        </div>
+    </div>
+    <script src="..\static\js\mainLecture.js"></script>
+</body>
+</html>
