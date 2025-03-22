@@ -14,6 +14,17 @@
         <h1>Регистрация</h1>
         <p>в научно-исследовательской системе</p>
         <h2>"Исследование операций"</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flashes">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
 
         <div class="group">
             <input type="text" placeholder="‎" name="name" required id="name" title="В данном поле необходимо указать ваш логин.">
@@ -33,13 +44,43 @@
             <label for="repetpassword">Повтор пароля</label>
             <span class="toggle-password" onclick="togglePassword('repetpassword')"><i class="fas fa-eye"></i></span>
         </div>
-
+        <div class="group">
+            <div class="question-block">
+                <select id="direction" name="direction">
+                    <option value="" style = "text-align: center;">Выберите направление подготовки</option>
+                    {% for direction in directions %}
+                        <option value="{{ direction.direction_id }}">{{ direction.direction_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>  
+        <div class="group">
+            <div class="question-block">
+                <select id="group" name="group">
+                    <option value="" style = "text-align: center;">Выберите группу</option>
+                    {% for group in groups %}
+                        <option value="{{ group.group_id }}">{{ group.group_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>      
         <button id="login" class="button blue">
             <i class="fa fa-unlock"></i>
             <span><b>Зарегистрироваться</b></span>
         </button>
     </form>
-    <script src="..\static\js\register.js"></script>
+    <script>
+        
+        function togglePassword(fieldId) {
+            var passwordField = document.getElementById(fieldId);
+            var passwordFieldType = passwordField.getAttribute("type");
+            if (passwordFieldType === "password") {
+                passwordField.setAttribute("type", "text");
+            } else {
+                passwordField.setAttribute("type", "password");
+            }
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

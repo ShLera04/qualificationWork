@@ -10,9 +10,10 @@ CREATE TABLE allusers (
 CREATE TABLE students (
   student_id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL UNIQUE,
-  group_name VARCHAR(255) NOT NULL,
   direction_id INTEGER NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES allusers(user_id)
+  group_id INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES allusers(user_id),
+  FOREIGN KEY (group_id) REFERENCES allgroups(group_id)
 );
 
 CREATE TABLE lecturers (
@@ -24,6 +25,7 @@ CREATE TABLE lecturers (
 
 CREATE TABLE attempts (
   attempt_id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
   mark INTEGER CHECK (mark BETWEEN 0 AND 7),
   attemp_data TIMESTAMP NOT NULL
 );
@@ -103,14 +105,6 @@ CREATE TABLE test_options_themes (
   FOREIGN KEY (theme_id) REFERENCES theme(theme_id)
 );
 
-CREATE TABLE students_attempts (
-  students_attempts_id SERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL,
-  attempt_id INTEGER NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES students(user_id),
-  FOREIGN KEY (attempt_id) REFERENCES attempts(attempt_id)
-);
-
 CREATE TABLE test_options_attempts (
   tests_attempts_id SERIAL PRIMARY KEY,
   test_id INTEGER NOT NULL,
@@ -125,4 +119,9 @@ CREATE TABLE questions_files (
   file_id INTEGER NOT NULL,
   FOREIGN KEY (question_id) REFERENCES question_storage(question_id),
   FOREIGN KEY (file_id) REFERENCES files(file_id)
+);
+
+CREATE TABLE allgroups (
+  group_id SERIAL PRIMARY KEY,
+  group_name VARCHAR(255) NOT NULL
 );
