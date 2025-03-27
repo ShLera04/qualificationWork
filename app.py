@@ -30,6 +30,7 @@ class Student(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('allusers.user_id'), nullable=False, unique=True)
     direction_id = db.Column(db.Integer, nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('allgroups.group_id'), nullable=False)
+    user = db.relationship('AllUser', backref=db.backref('students', lazy=True))
 
 
 class Group(db.Model):
@@ -42,6 +43,18 @@ class Direction(db.Model):
     direction_id = db.Column(db.Integer, primary_key=True)
     direction_name = db.Column(db.String(255), nullable=False)
 
+class Theme(db.Model):
+    __tablename__ = 'theme'
+    theme_id = db.Column(db.Integer, primary_key=True)
+    theme_name = db.Column(db.String(255), nullable=False)
+
+class Lecturer(db.Model):
+    __tablename__ = 'lecturers'
+    lecturer_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('allusers.user_id'), nullable=False)
+    direction_id = db.Column(db.Integer, nullable=False)
+    user = db.relationship('AllUser', backref=db.backref('lecturers', lazy=True))
+
 @app.route('/entrance', methods=['GET', 'POST'])
 def entrance_page():
     return render_template('entrance.html')
@@ -49,6 +62,18 @@ def entrance_page():
 @app.route('/mainStudent')
 def mainStudent_page():
     return render_template('mainStudent.html')
+
+@app.route('/mainLecturer')
+def mainLecturer_page():
+    return render_template('mainLecturer.html')
+
+@app.route('/settings')
+def settings_page():
+    return render_template('settings.html')
+
+@app.route('/pageLecturer')
+def pageLecturer_page():
+    return render_template('pageLecturer.html')
 
 # Маршрут для регистрации
 @app.route('/register', methods=['GET', 'POST'])
@@ -118,7 +143,7 @@ def entrance():
         user = AllUser.query.filter_by(login=login).first()
 
         if user and check_password_hash(user.password, password):
-            flash('Вход выполнен успешно!', 'success')
+            # flash('Вход выполнен успешно!', 'success')
             return redirect(url_for('mainStudent_page'))  # Перенаправьте на главную страницу или другую защищенную страницу
         else:
             flash('Неверный логин или пароль!', 'error')
@@ -226,8 +251,85 @@ def nash_equilibrium():
         return jsonify([])
 
 
+@app.route('/get-themes', methods=['GET'])
+def get_themes():
+    themes = Theme.query.all()
+    themes_list = [{'name': theme.theme_name} for theme in themes]
+    return jsonify(themes_list)
+
+@app.route('/get-lecturers', methods=['GET'])
+def get_lecturers():
+    lecturers = Lecturer.query.all()
+    lecturers_list = [{'name': lecturer.user.login, 'lecturer_id': lecturer.lecturer_id} for lecturer in lecturers]
+    return jsonify(lecturers_list)
 
 
+
+@app.route('/get-students', methods=['GET'])
+def get_students():
+    students = Student.query.all()
+    students_list = [{'name': student.user.login, 'student_id': student.student_id} for student in students]
+    return jsonify(students_list)
+
+
+
+@app.route('/add-theme',methods=['GET', 'POST'])
+def add_theme():
+    data = request.get_json()
+    new_theme = Theme(theme_name=data['theme_name'])
+    try:
+        db.session.add(new_theme)
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/delete-theme/<int:theme_id>', methods=['DELETE'])
+def delete_theme(theme_id):
+    theme = Theme.query.get(theme_id)
+    if theme:
+        try:
+            db.session.delete(theme)
+            db.session.commit()
+            return jsonify({"success": True})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"success": False, "error": str(e)}), 500
+    else:
+        return jsonify({"success": False, "error": "Theme not found"}), 404
+
+@app.route('/delete-lecturer/<int:lecturer_id>', methods=['DELETE'])
+def delete_lecturer(lecturer_id):
+    lecturer = Lecturer.query.get(lecturer_id)
+    if lecturer:
+        try:
+            db.session.delete(lecturer)
+            db.session.commit()
+            return jsonify({"success": True})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"success": False, "error": str(e)}), 500
+    else:
+        return jsonify({"success": False, "error": "Lecturer not found"}), 404
+
+@app.route('/add-admin', methods=['POST'])
+def add_admin():
+    data = request.get_json()
+    student_id = data['student_id']
+    student = Student.query.get(student_id)
+
+    if student:
+        try:
+            new_lecturer = Lecturer(user_id=student.user_id, direction_id=student.direction_id)
+            db.session.add(new_lecturer)
+            db.session.commit()
+            return jsonify({"success": True})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"success": False, "error": str(e)}), 500
+    else:
+        return jsonify({"success": False, "error": "Student not found"}), 404
 
 
 def is_strong_password(password):

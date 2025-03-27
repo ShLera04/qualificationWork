@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/page.css">
+    <title>Basic Page Layout</title>
+    <style>
+        body {
+            margin-top: 50px; /* Добавляем отступ сверху */
+        }
+        .file-list {
+            margin-top: 10px;
+        }
+        .file-item {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .file-item a {
+            text-decoration: none;
+            color: inherit;
+            overflow: hidden; /* Скрываем переполнение */
+            text-overflow: ellipsis; /* Добавляем многоточие */
+            white-space: nowrap; /* Запрещаем перенос строк */
+            display: inline-block;
+            max-width: 85%; /* Ограничиваем ширину */
+        }
+        .file-item button {
+            background-color: hsl(205, 51%, 93%);
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 9px;
+            font-size: 12px;
+        }
+        .file-item button:hover {
+            background-color:hsl(205, 51%, 93%);
+        }
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            background-color:hsl(205, 51%, 93%);
+            color: black;
+            font-family: Roboto, Verdana, Tahoma, sans-serif;
+            display: block;
+            padding: 10px 20px;
+            border-radius: 9px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.4s;
+            width: 150px;
+            height: 20px;
+            box-shadow: 10px 10px 40px 20px #0000001A;
+            font-weight: bold;
+        }
+        .file-input-wrapper:hover {
+            box-shadow: 7px 5px 56px -14px hsl(205, 51%, 93%);
+        }
+        .file-input-wrapper:active {
+            transform: scale(0.97);
+            box-shadow: 7px 5px 56px -10px hsl(205, 51%, 93%);
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .button-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px; /* Добавляем отступ между кнопками */
+            margin-top: 10px;
+        }
+        .nav-item {
+            overflow: hidden; /* Скрываем переполнение */
+            text-overflow: ellipsis; /* Добавляем многоточие */
+            white-space: nowrap; /* Запрещаем перенос строк */
+            max-width: 95%; /* Ограничиваем ширину */
+        }
+        @media (max-width: 426px) {
+            .container{
+                margin: 0px 50px;
+                font-size: 12px;
+                align-items: center;
+                text-align: center;
+            }
+            .file-input-wrapper {
+                width: 50%;
+                height: 15px;
+                font-size: 12px;
+                align-items: center;
+                text-align: center;
+            }
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+
+            }
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .file-item button {
+                margin-top: 5px;
+                width: 40%;
+            }
+        }
+        @media (max-width: 426px) {
+            .container{
+                margin: 0px 50px;
+                font-size: 9px;
+                align-items: center;
+                text-align: center;
+            }
+            .file-input-wrapper {
+                width: 50%;
+                height: 10px;
+                font-size: 9px;
+                align-items: center;
+                text-align: center;
+            }
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+
+            }
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .file-item button {
+                width: 40%;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="nav-item">Название раздела</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="box">
+                <h2>Материалы</h2>
+                <!-- Обертка для элемента выбора файлов -->
+                <div class="button-container">
+                    <div class="file-input-wrapper">
+                        <span>Добавить файл</span>
+                        <input type="file" id="fileInput" multiple>
+                    </div>
+                </div>
+                <!-- Список, куда будут добавляться файлы -->
+                <div id="fileList" class="file-list"></div>
+            </div>
+            <div class="box">
+                <h2>Тесты</h2>
+                <div class="button-container">
+                    <div class="file-input-wrapper" id="createTestButton">
+                        <span>Составить тест</span>
+                    </div>
+                    <div class="file-input-wrapper" id = "newQuestionButton">
+                        <span>Новые вопросы</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <!-- <div class="container">
+            <p>&copy; 2024 Your Website. All rights reserved.</p>
+        </div> -->
+    </footer>
+
+    <script>
+        document.getElementById("fileInput").addEventListener("change", function () {
+            const fileInput = document.getElementById("fileInput");
+            const fileList = document.getElementById("fileList");
+
+            // Проходим по каждому выбранному файлу и добавляем его в список
+            Array.from(fileInput.files).forEach(file => {
+                // Создаем элемент для отображения файла
+                const listItem = document.createElement("div");
+                listItem.classList.add("file-item");
+
+                // Создаем ссылку для скачивания файла
+                // const fileLink = document.createElement("a");
+                // fileLink.textContent = file.name; 
+
+    
+                // const reader = new FileReader();
+                // reader.onload = function(event) {
+                //     const fileURL = URL.createObjectURL(file);
+                //     fileLink.href = fileURL;
+                //     fileLink.download = file.name; 
+                // };
+                // reader.readAsDataURL(file);
+                // Создаем ссылку для открытия файла в новой вкладке
+                const fileLink = document.createElement("a");
+                fileLink.textContent = file.name; // Указываем имя файла
+                fileLink.href = URL.createObjectURL(file);
+                fileLink.target = "_blank"; // Открываем ссылку в новой вкладке
+
+                // Добавляем ссылку в элемент списка
+                listItem.appendChild(fileLink);
+
+                // Создаем кнопку для удаления файла
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Удалить";
+                deleteButton.addEventListener("click", function () {
+                    // Удаляем элемент из списка
+                    fileList.removeChild(listItem);
+                    // Удаляем URL-адрес файла
+                    URL.revokeObjectURL(fileLink.href);
+                });
+
+                // Добавляем кнопку в элемент списка
+                listItem.appendChild(deleteButton);
+
+                // Добавляем элемент в список файлов
+                fileList.appendChild(listItem);
+            });
+        });
+
+        // Обработчик события для кнопки "Составить тест"
+        document.getElementById("createTestButton").addEventListener("click", function () {
+            window.location.href = 'formula';
+        });
+        document.getElementById("newQuestionButton").addEventListener("click", function () {
+            window.location.href = 'test';
+        });
+    </script>
+</body>
+</html>

@@ -262,26 +262,27 @@ document.getElementById('optionSelect').addEventListener('change', function() {
 
 // Загрузка тем из базы данных и отображение их в карточках
 document.addEventListener('DOMContentLoaded', function() {
-        fetch('/get-themess')
-            .then(response => response.json())
-            .then(themes => {
-                const cardsContainer = document.getElementById('cardsContainer');
-                themes.forEach((theme, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'cards';
-                    card.innerHTML = `
-                        <p>Раздел №${index + 1}</p>
-                        <p>Тема:</p>
-                        <a href="../page${index + 1}">
-                            <p>"${theme.name}"</p>
-                        </a>
-                    `;
-                    cardsContainer.appendChild(card);
-                });
-                updateButtons();
-            })
-            .catch(error => console.error('Error:', error));
+    fetch('/get-themes')
+        .then(response => response.json())
+        .then(themes => {
+            const cardsContainer = document.getElementById('cardsContainer');
+            themes.forEach((theme, index) => {
+                const card = document.createElement('div');
+                card.className = 'cards';
+                card.innerHTML = `
+                    <p>Раздел №${index + 1}</p>
+                    <p>Тема:</p>
+                    <a href="../page${index + 1}">
+                        <p>"${theme.name}"</p>
+                    </a>
+                `;
+                cardsContainer.appendChild(card);
+            });
+            updateButtons();
+        })
+        .catch(error => console.error('Error:', error));
 });
+
 burgerMenu.addEventListener('click', () => {
     menuOverlay.classList.toggle('active');
 });

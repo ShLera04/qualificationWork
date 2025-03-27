@@ -15,8 +15,6 @@ const modal = document.getElementById('modal');
         const menuOverlay = document.getElementById('menuOverlay');
         const closeMenu = document.getElementById('closeMenu');
 
-        
-
         // Открываем модальное окно
         openModalButton.addEventListener('click', () => {
             modal.style.display = 'flex'; // Показываем окно с flex
@@ -276,7 +274,7 @@ const modal = document.getElementById('modal');
 
         // Загрузка тем из базы данных и отображение их в карточках
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('/get-themess')
+            fetch('/get-themes')
                 .then(response => response.json())
                 .then(themes => {
                     const cardsContainer = document.getElementById('cardsContainer');
@@ -296,6 +294,7 @@ const modal = document.getElementById('modal');
                 })
                 .catch(error => console.error('Error:', error));
         });
+        
 
         document.addEventListener('DOMContentLoaded', function() {
             fetch('/get-regular-users')

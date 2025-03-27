@@ -1,142 +1,121 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    top: 0px;
+}
+
 body {
-    margin-top: 50px; /* Добавляем отступ сверху */
-}
-.file-list {
-    margin-top: 10px;
-}
-.file-item {
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 9px;
-    margin-top: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.file-item a {
-    text-decoration: none;
-    color: inherit;
-    overflow: hidden; /* Скрываем переполнение */
-    text-overflow: ellipsis; /* Добавляем многоточие */
-    white-space: nowrap; /* Запрещаем перенос строк */
-    display: inline-block;
-    max-width: 85%; /* Ограничиваем ширину */
-}
-.file-item button {
-    background-color: hsl(205, 51%, 93%);
-    color: black;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 9px;
-    font-size: 12px;
-}
-.file-item button:hover {
-    background-color:hsl(205, 51%, 93%);
-}
-.file-input-wrapper {
-    position: relative;
-    display: inline-block;
-    background-color:hsl(205, 51%, 93%);
-    color: black;
+    margin: 0px;
+    overflow-x: hidden;
+    background: #041027;
     font-family: Roboto, Verdana, Tahoma, sans-serif;
-    display: block;
-    padding: 10px 20px;
-    border-radius: 9px;
-    cursor: pointer;
-    text-align: center;
-    font-size: 14px;
-    cursor: pointer;
-    transition: 0.4s;
-    width: 150px;
-    height: 20px;
-    box-shadow: 10px 10px 40px 20px #0000001A;
-    font-weight: bold;
 }
-.file-input-wrapper:hover {
-    box-shadow: 7px 5px 56px -14px hsl(205, 51%, 93%);
-}
-.file-input-wrapper:active {
-    transform: scale(0.97);
-    box-shadow: 7px 5px 56px -10px hsl(205, 51%, 93%);
-}
-.file-input-wrapper input[type="file"] {
-    position: absolute;
-    top: 0;
-    left: 0;
+
+img {
+    margin-right: 480px;
     width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
+    height: auto;
+    display: block;
 }
-.button-container {
+
+.container {
+    margin: 0px 150px;
+    line-height: 1.2;
+}
+
+.box {
+    background-color: #1f2a44; /* Цвет фона прямоугольников */
+    color: white; /* Цвет текста */
+    padding: 20px; /* Внутренний отступ */
+    margin: 20px 0; /* Внешний отступ сверху и снизу */
+    border-radius: 5px; /* Скругление углов */
+    transition: all 0.3s; /* Плавный переход при изменении размеров */
+}
+
+.box h2 {
+    margin-bottom: 10px; /* Отступ снизу заголовка */
+}
+
+input[type="file"] {
+    margin-bottom: 10px; /* Отступ снизу от поля выбора файла */
+    padding: 5px;
+    border: none;
+    border-radius: 5px; /* Скругление углов поля */
+    background-color: #2a3b56; /* Цвет фона поля */
+    color: white; /* Цвет текста */
+}
+
+/* button {
+    padding: 10px 15px; 
+    border: none;
+    border-radius: 5px; 
+    background-color: #3b4a68; 
+    color: white; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+} */
+button {
+    padding: 10px 15px; 
+    border: none;
+    border-radius: 12px; 
+    background-color: hsl(205, 51%, 93%);
+    color: black; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+    font-family: Roboto, Verdana, Tahoma, sans-serif;
+    font-weight: bolder;
+    font-size: 14px;
+    height: 40px;
+} 
+
+
+button:hover {
+    background-color: #4a5b78; /* Цвет фона кнопки при наведении */
+}
+
+#fileList {
+    margin-top: 15px; /* Отступ сверху для списка файлов */
+    list-style-type: none; /* Убираем маркеры списка */
+    padding-left: 0; /* Убираем отступ слева */
+}
+
+#fileList li {
+    margin: 5px 0; /* Отступ между элементами списка */
+    padding: 5px; /* Внутренний отступ для элемента списка */
+    background-color: #2a3b56; /* Цвет фона элемента списка */
+    border-radius: 5px; /* Скругление углов элемента списка */
+}
+
+
+.nav {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px; /* Добавляем отступ между кнопками */
-    margin-top: 10px;
+    gap: 15px;
 }
+
 .nav-item {
-    overflow: hidden; /* Скрываем переполнение */
-    text-overflow: ellipsis; /* Добавляем многоточие */
-    white-space: nowrap; /* Запрещаем перенос строк */
-    max-width: 95%; /* Ограничиваем ширину */
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    position: relative;
+    padding: 0.5rem 0;
+    overflow: hidden;
+    margin-top: 20px; 
+    text-align: center;
 }
-@media (max-width: 426px) {
-    .container{
-        margin: 0px 50px;
-        font-size: 12px;
-        align-items: center;
-        text-align: center;
-    }
-    .file-input-wrapper {
-        width: 50%;
-        height: 15px;
-        font-size: 12px;
-        align-items: center;
-        text-align: center;
-    }
-    .button-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
 
-    }
-    .file-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .file-item button {
-        margin-top: 5px;
-        width: 40%;
-    }
+.nav-item::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 40%;
+    height: 2px;
+    background-color: white;
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+    transition: transform 0.42s cubic-bezier(.25, .8, .25, 1);
 }
-@media (max-width: 426px) {
-    .container{
-        margin: 0px 50px;
-        font-size: 9px;
-        align-items: center;
-        text-align: center;
-    }
-    .file-input-wrapper {
-        width: 50%;
-        height: 10px;
-        font-size: 9px;
-        align-items: center;
-        text-align: center;
-    }
-    .button-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
 
-    }
-    .file-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .file-item button {
-        width: 40%;
-        margin-top: 5px;
-    }
+.nav-item:hover::after {
+    transform: translateX(-50%) scaleX(1);
 }
