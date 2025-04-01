@@ -110,12 +110,17 @@ document.getElementById('generateMatrix').addEventListener('click', function() {
     generateMatrix(matrixContainer, rows, cols, autoFill, minValue, maxValue);
     generateMatrix(matrixContainer2, rows, cols, autoFill, minValue, maxValue);
 
-    generateButtons('saddlePointsPrediction', rows, cols);
+    generateButtons('saddlePointsPrediction1', rows, cols);
+    generateButtons('saddlePointsPrediction2', rows, cols);
     generateButtons('nashEquilibriumPrediction', rows, cols);
     generateButtons('paretoOptimalPrediction', rows, cols);
 });
 
-document.getElementById('noSaddlePoints').addEventListener('click', function() {
+document.getElementById('noSaddlePoints1').addEventListener('click', function() {
+    this.classList.toggle('selected');
+});
+
+document.getElementById('noSaddlePoints2').addEventListener('click', function() {
     this.classList.toggle('selected');
 });
 
@@ -146,21 +151,36 @@ function getMatrix(containerId) {
     return matrix;
 }
 
+// function displayResult(result, title) {
+//     const resultsContainer = document.getElementById('results');
+//     resultsContainer.innerHTML = `<h3>${title}</h3>`;
+//     if (result.length > 0) {
+//         result.forEach(point => {
+//             resultsContainer.innerHTML += `(${point[0]}, ${point[1]})<br>`;
+//         });
+//     } else {
+//         if (title === 'Седловые точки') {
+//             resultsContainer.innerHTML += 'Седловые точки не найдены.<br>';
+//         } else if (title === 'Равновесие по Нэшу') {
+//             resultsContainer.innerHTML += 'Равновесие по Нэшу не найдено.<br>';
+//         } else if (title === 'Оптимальность по Парето') {
+//             resultsContainer.innerHTML += 'Парето-оптимальные точки не найдены.<br>';
+//         }
+//     }
+// }
+
 function displayResult(result, title) {
     const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = `<h3>${title}</h3>`;
-    if (result.length > 0) {
+    resultsContainer.innerHTML += `<h3>${title}</h3>`;
+    
+    if (result && result.length > 0) {
         result.forEach(point => {
-            resultsContainer.innerHTML += `(${point[0]}, ${point[1]})<br>`;
+            const i = Array.isArray(point) ? point[0] : point[0];
+            const j = Array.isArray(point) ? point[1] : point[1];
+            resultsContainer.innerHTML += `(${i}, ${j})<br>`;
         });
     } else {
-        if (title === 'Седловые точки') {
-            resultsContainer.innerHTML += 'Седловые точки не найдены.<br>';
-        } else if (title === 'Равновесие по Нэшу') {
-            resultsContainer.innerHTML += 'Равновесие по Нэшу не найдено.<br>';
-        } else if (title === 'Оптимальность по Парето') {
-            resultsContainer.innerHTML += 'Парето-оптимальные точки не найдены.<br>';
-        }
+        resultsContainer.innerHTML += 'Не найдено<br>';
     }
 }
 
@@ -171,12 +191,11 @@ function compareResults(prediction, result, title) {
     if (prediction.length === 0) {
         resultsContainer.innerHTML += "Предположительные результаты не указаны.<br>";
     } else {
-        // Преобразуем предположительные точки в формат [x, y]
-        const predictedPoints = prediction.map(point => point.trim().replace(/[()]/g, '').split(',').map(Number));
-        // Преобразуем фактические точки в формат [x, y]
+        const predictedPoints = prediction.map(point => 
+            point.trim().replace(/[()]/g, '').split(',').map(Number)
+        );
         const actualPoints = result.map(point => [point[0], point[1]]);
 
-        // Проверка на вариант "НЕТ"
         const noOption = prediction.includes("НЕТ");
         const actualNoResult = result.length === 0;
 
@@ -186,13 +205,16 @@ function compareResults(prediction, result, title) {
             resultsContainer.innerHTML += "Предположительные результаты не совпадают с фактическими.<br>";
         } else {
             const matchedPoints = predictedPoints.filter(point =>
-                actualPoints.some(actualPoint => actualPoint[0] === point[0] && actualPoint[1] === point[1])
+                actualPoints.some(actualPoint => 
+                    actualPoint[0] === point[0] && actualPoint[1] === point[1]
+                )
             );
 
             if (matchedPoints.length === actualPoints.length && matchedPoints.length === predictedPoints.length) {
                 resultsContainer.innerHTML += "Все предположительные результаты совпадают с фактическими.<br>";
             } else if (matchedPoints.length > 0) {
-                resultsContainer.innerHTML += "Некоторые предположительные результаты совпадают с фактическими: " + matchedPoints.map(point => `(${point[0]}, ${point[1]})`).join(', ') + "<br>";
+                resultsContainer.innerHTML += "Некоторые предположительные результаты совпадают с фактическими: " + 
+                    matchedPoints.map(point => `(${point[0]}, ${point[1]})`).join(', ') + "<br>";
             } else {
                 resultsContainer.innerHTML += "Предположительные результаты не совпадают с фактическими.<br>";
             }
@@ -215,26 +237,68 @@ function sendRequest(url, data, prediction, title) {
     })
     .then(response => response.json())
     .then(result => {
-        // Преобразуем результат в формат [ [x, y], [x, y], ... ]
-        const formattedResult = result.map(point => [point[0], point[1]]);
-        displayResult(formattedResult, title);
-        compareResults(prediction, formattedResult, title);
+        // Специальная обработка для седловых точек
+        if (url === '/saddle_points') {
+            // Обрабатываем результаты для обеих матриц
+            const results1 = result.matrix_a || [];
+            const results2 = result.matrix_b || [];
+            
+            // Выводим результаты для первой матрицы
+            displayResult(results1, 'Седловые точки первой матрицы');
+            compareResults(prediction.prediction1, results1, 'Седловые точки первой матрицы');
+            
+            // Выводим результаты для второй матрицы
+            displayResult(results2, 'Седловые точки второй матрицы');
+            compareResults(prediction.prediction2, results2, 'Седловые точки второй матрицы');
+        } else {
+            // Стандартная обработка для других запросов
+            const formattedResult = result.map(point => [point[0], point[1]]);
+            displayResult(formattedResult, title);
+            compareResults(prediction, formattedResult, title);
+        }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('results').innerHTML += `<p style="color: red;">Ошибка: ${error.message}</p>`;
+    });
 }
+
 
 document.getElementById('optionSelect').addEventListener('change', function() {
     const selectedOption = this.value;
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = ''; 
     if (selectedOption === 'saddlePoints') {
-        const matrix = getMatrix('matrixContainer');
-        const prediction = Array.from(document.querySelectorAll('#saddlePointsPrediction .prediction-button.selected')).map(button => button.dataset.value);
-        const noSaddlePoints = document.getElementById('noSaddlePoints').classList.contains('selected');
+        const matrix1 = getMatrix('matrixContainer');
+        const matrix2 = getMatrix('matrixContainer2');
+        
+        const prediction1 = Array.from(document.querySelectorAll('#saddlePointsPrediction1 .prediction-button.selected')).map(button => button.dataset.value);
+        const noSaddlePoints1 = document.getElementById('noSaddlePoints1').classList.contains('selected');
+        
+        const prediction2 = Array.from(document.querySelectorAll('#saddlePointsPrediction2 .prediction-button.selected')).map(button => button.dataset.value);
+        const noSaddlePoints2 = document.getElementById('noSaddlePoints2').classList.contains('selected');
 
-        if (noSaddlePoints) {
-            prediction.push("НЕТ");
+        if (noSaddlePoints1) {
+            prediction1.push("НЕТ");
+        }
+        if (noSaddlePoints2) {
+            prediction2.push("НЕТ");
         }
 
-        sendRequest('/saddle_points', { matrix: matrix }, prediction, 'Седловые точки');
+        // Проверяем, что пользователь сделал предварительные предположения для обеих матриц
+        if (prediction1.length === 0 || prediction2.length === 0) {
+            alert('Пожалуйста, укажите предположительные седловые точки для обеих матриц перед выполнением проверки.');
+            return;
+        }
+
+        // Проверяем первую матрицу
+        sendRequest('/saddle_points', { 
+            matrix_a: matrix1, 
+            matrix_b: matrix2 
+        }, {
+            prediction1: prediction1,
+            prediction2: prediction2
+        }, 'Седловые точки');
     } else if (selectedOption === 'nashEquilibrium') {
         const matrix_a = getMatrix('matrixContainer');
         const matrix_b = getMatrix('matrixContainer2');

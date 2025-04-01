@@ -4,11 +4,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import pytz
 import re
+import random
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:12345@localhost/dataBase?client_encoding=utf8'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:12345@localhost/dataBaseQualificationWork?client_encoding=utf8'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Создание экземпляра SQLAlchemy
@@ -46,14 +47,14 @@ class Direction(db.Model):
 class Theme(db.Model):
     __tablename__ = 'theme'
     theme_id = db.Column(db.Integer, primary_key=True)
-    theme_name = db.Column(db.String(255), nullable=False)
+    theme_name = db.Column(db.Text, nullable=False)
 
-class Lecturer(db.Model):
-    __tablename__ = 'lecturers'
-    lecturer_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('allusers.user_id'), nullable=False)
-    direction_id = db.Column(db.Integer, nullable=False)
-    user = db.relationship('AllUser', backref=db.backref('lecturers', lazy=True))
+# class Lecturer(db.Model):
+#     __tablename__ = 'lecturers'
+#     lecturer_id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('allusers.user_id'), nullable=False)
+#     direction_id = db.Column(db.Integer, nullable=False)
+#     user = db.relationship('AllUser', backref=db.backref('lecturers', lazy=True))
 
 @app.route('/entrance', methods=['GET', 'POST'])
 def entrance_page():
@@ -159,17 +160,23 @@ def is_saddle_point(matrix, row, col):
         return False
     return True
 
-def find_saddle_points(matrix):
-    saddle_points = []
-    row_min = [min(row) for row in matrix]
-    col_max = [max(col) for col in zip(*matrix)]
+def find_saddle_points_for_both(matrix_a, matrix_b):
+    def find_saddle_points(matrix):
+        saddle_points = []
+        if not matrix:
+            return saddle_points
+        row_min = [min(row) for row in matrix]
+        col_max = [max(col) for col in zip(*matrix)]
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                if matrix[i][j] == row_min[i] and matrix[i][j] == col_max[j]:
+                    saddle_points.append((i, j))
+        return saddle_points
 
-    for i in range(len(matrix)):
-        for j in range(len(matrix[i])):
-            if matrix[i][j] == row_min[i] and matrix[i][j] == col_max[j]:
-                saddle_points.append((i, j, matrix[i][j]))
-
-    return saddle_points
+    return {
+        "matrix_a": find_saddle_points(matrix_a),
+        "matrix_b": find_saddle_points(matrix_b)
+    }
 
 def is_pareto_optimal(matrix_a, matrix_b):
     pareto_optimal_points = []
@@ -208,14 +215,14 @@ def is_nash_equilibrium(matrix_a, matrix_b):
 
             # Проверка строки (игрок 1 не может улучшить свой выигрыш)
             for k in range(n):
-                if matrix_a[k][j] >= current_a:
+                if matrix_a[k][j] > current_a:
                     is_nash = False
                     break
 
             # Проверка столбца (игрок 2 не может улучшить свой выигрыш)
             if is_nash:
                 for l in range(m):
-                    if matrix_b[i][l] >= current_b:
+                    if matrix_b[i][l] > current_b:
                         is_nash = False
                         break
 
@@ -227,8 +234,9 @@ def is_nash_equilibrium(matrix_a, matrix_b):
 @app.route('/saddle_points', methods=['POST'])
 def saddle_points():
     data = request.get_json()
-    matrix = data['matrix']
-    result = find_saddle_points(matrix)
+    matrix_a = data['matrix_a']
+    matrix_b = data['matrix_b']
+    result = find_saddle_points_for_both(matrix_a, matrix_b)
     return jsonify(result)
 
 @app.route('/pareto_optimal', methods=['POST'])
@@ -257,11 +265,11 @@ def get_themes():
     themes_list = [{'name': theme.theme_name} for theme in themes]
     return jsonify(themes_list)
 
-@app.route('/get-lecturers', methods=['GET'])
-def get_lecturers():
-    lecturers = Lecturer.query.all()
-    lecturers_list = [{'name': lecturer.user.login, 'lecturer_id': lecturer.lecturer_id} for lecturer in lecturers]
-    return jsonify(lecturers_list)
+# @app.route('/get-lecturers', methods=['GET'])
+# def get_lecturers():
+#     lecturers = Lecturer.query.all()
+#     lecturers_list = [{'name': lecturer.user.login, 'lecturer_id': lecturer.lecturer_id} for lecturer in lecturers]
+#     return jsonify(lecturers_list)
 
 
 
@@ -299,37 +307,37 @@ def delete_theme(theme_id):
     else:
         return jsonify({"success": False, "error": "Theme not found"}), 404
 
-@app.route('/delete-lecturer/<int:lecturer_id>', methods=['DELETE'])
-def delete_lecturer(lecturer_id):
-    lecturer = Lecturer.query.get(lecturer_id)
-    if lecturer:
-        try:
-            db.session.delete(lecturer)
-            db.session.commit()
-            return jsonify({"success": True})
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({"success": False, "error": str(e)}), 500
-    else:
-        return jsonify({"success": False, "error": "Lecturer not found"}), 404
+# @app.route('/delete-lecturer/<int:lecturer_id>', methods=['DELETE'])
+# def delete_lecturer(lecturer_id):
+#     lecturer = Lecturer.query.get(lecturer_id)
+#     if lecturer:
+#         try:
+#             db.session.delete(lecturer)
+#             db.session.commit()
+#             return jsonify({"success": True})
+#         except Exception as e:
+#             db.session.rollback()
+#             return jsonify({"success": False, "error": str(e)}), 500
+#     else:
+#         return jsonify({"success": False, "error": "Lecturer not found"}), 404
 
-@app.route('/add-admin', methods=['POST'])
-def add_admin():
-    data = request.get_json()
-    student_id = data['student_id']
-    student = Student.query.get(student_id)
+# @app.route('/add-admin', methods=['POST'])
+# def add_admin():
+#     data = request.get_json()
+#     student_id = data['student_id']
+#     student = Student.query.get(student_id)
 
-    if student:
-        try:
-            new_lecturer = Lecturer(user_id=student.user_id, direction_id=student.direction_id)
-            db.session.add(new_lecturer)
-            db.session.commit()
-            return jsonify({"success": True})
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({"success": False, "error": str(e)}), 500
-    else:
-        return jsonify({"success": False, "error": "Student not found"}), 404
+#     if student:
+#         try:
+#             new_lecturer = Lecturer(user_id=student.user_id, direction_id=student.direction_id)
+#             db.session.add(new_lecturer)
+#             db.session.commit()
+#             return jsonify({"success": True})
+#         except Exception as e:
+#             db.session.rollback()
+#             return jsonify({"success": False, "error": str(e)}), 500
+#     else:
+#         return jsonify({"success": False, "error": "Student not found"}), 404
 
 
 def is_strong_password(password):
@@ -337,7 +345,75 @@ def is_strong_password(password):
     pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
     return bool(pattern.match(password))
 
+import numpy as np
 
+def generate_matrix_with_saddle_points(rows, cols, saddle_points_count):
+    # Шаг 1: Генерация случайной матрицы
+    matrix = np.random.randint(0, 100, size=(rows, cols)).tolist()
 
+    # Шаг 2: Поиск седловых точек
+    def find_saddle_points(matrix):
+        saddle_points = []
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                if (matrix[i][j] == min(matrix[i]) and 
+                    matrix[i][j] == max([row[j] for row in matrix])):
+                    saddle_points.append([i, j])
+        return saddle_points
+
+    # Шаг 3: Обеспечение нужного количества седловых точек
+    current_saddle_points = find_saddle_points(matrix)
+    while len(current_saddle_points) < saddle_points_count:
+        # Случайный выбор позиции для изменения
+        i, j = np.random.randint(0, rows), np.random.randint(0, cols)
+        # Изменение элемента для создания седловой точки
+        matrix[i] = [max(x, matrix[i][j]) for x in matrix[i]]
+        for row in matrix:
+            row[j] = min(row[j], matrix[i][j])
+        current_saddle_points = find_saddle_points(matrix)
+
+    # Шаг 4: Удаление лишних седловых точек, если их больше, чем нужно
+    while len(current_saddle_points) > saddle_points_count:
+        # Случайный выбор седловой точки для удаления
+        idx = np.random.randint(0, len(current_saddle_points))
+        i, j = current_saddle_points[idx]
+        # Изменение элемента, чтобы удалить седловую точку
+        matrix[i][j] = np.random.randint(0, 100)
+        current_saddle_points = find_saddle_points(matrix)
+
+    # Шаг 5: Проверка и корректировка, если количество седловых точек изменилось
+    if len(current_saddle_points) != saddle_points_count:
+        return generate_matrix_with_saddle_points(rows, cols, saddle_points_count)
+
+    return {
+        "matrix": matrix,
+        "saddle_points": current_saddle_points,
+        "rows": rows,
+        "cols": cols,
+        "k": saddle_points_count
+    }
+@app.route('/generate_saddle_matrix', methods=['POST'])
+def generate_saddle_matrix():
+    try:
+        data = request.get_json()
+        rows = int(data['rows'])
+        cols = int(data['cols'])
+        k = int(data['k'])
+        
+        if k > min(rows, cols):
+            return jsonify({
+                "error": f"Количество седловых точек не может превышать {min(rows, cols)}"
+            }), 400
+        
+        result = generate_matrix_with_saddle_points(rows, cols, k)
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        }), 500
+    
+    
 if __name__ == '__main__':
     app.run(debug=True)
+

@@ -213,7 +213,7 @@ p {
     overflow-x: auto;
     scroll-behavior: smooth;
     padding: 10px 0;
-    width: calc(100% - 80px);
+    width: 90%;
     margin: 0 40px;
 }
 
@@ -443,7 +443,7 @@ p {
 }
 
 .second_container {
-    width: 75%;
+    width: 50%;
     padding: 20px;
     box-sizing: border-box;
     border-radius: 12px;
@@ -568,7 +568,7 @@ button:active {
 }
 
 .second_container {
-    width: 75%;
+    width: 50%;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -961,7 +961,7 @@ button:active {
         height: auto;
         margin-top: 20px;
     }
-    #generateMatrix{
+    #generateMatrix, #generateSaddleMatrix{
         font-size: 14px;
     }
 
@@ -1125,7 +1125,7 @@ button:active {
     .button {
         font-size: 12px;
     }
-    #generateMatrix{
+    #generateMatrix, #generateSaddleMatrix{
         width: 100px;
         height: 35px;
         font-size: 10px;
@@ -1272,7 +1272,7 @@ button:active {
     .button {
         font-size: 16px;
     }
-    #generateMatrix{
+    #generateMatrix, #generateSaddleMatrix{
         width: 200px;
         height: 50px;
         font-size: 18px;
@@ -1428,7 +1428,7 @@ button:active {
     .button {
         font-size: 16px;
     }
-    #generateMatrix{
+    #generateMatrix, #generateSaddleMatrix{
         width: 300px;
         height: 60px;
         font-size: 26px;
@@ -1531,4 +1531,12 @@ button:active {
 #adminSelect option:hover {
     background-color: #007bff; 
     color: #fff; 
+}
+.center-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.matrix {
+    color: white; /* Тёмно-серый цвет текста для всей таблицы */
 }

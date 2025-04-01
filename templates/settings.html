@@ -49,6 +49,8 @@
         .input-container {
             display: flex;
             gap: 10px;
+            padding: 10px 0px;
+            width: 50%;
         }
         .file-input-wrapper {
             position: relative;
@@ -96,7 +98,7 @@
         }
         .question-block {
             /* margin-bottom: 20px; */
-            width: 300px;
+            width: 45%;
             height: -40px;
             padding: 10px;
             border: 1px solid #ddd;
@@ -117,8 +119,11 @@
         .question-block select,
         .question-block input[type="number"],
         .question-block input[type="file"] {
-            width: calc(100% - 20px);
+            /* width: calc(100% - 20px); */
             padding: 10px;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
@@ -186,26 +191,77 @@
             <div class="box">
                 <h2 class = "nameSection">Добавить администратора</h2>
                 <div class="input-container">
-                    <select id="studentDropdownForAdmin" class="question-block">
-                    </select>
+                    <select id="studentDropdownForAdmin" class="question-block"></select>
                     <button id="addLecturerButton">Добавить</button>
                 </div>
                 <div id="lecturerList" class="theme-list"></div>
             </div>
-            
-            
+            <div class="box">
+                <h2 class = "nameSection">Сменить группу или направление подготовки у пользователя</h2>
+                <div class="input-container">
+                    <input type="text" id="studentSearch" class="question-block" placeholder="Поиск пользователя">
+                </div>
+                <div class="input-container">
+                    <select id="studentDropdown" class="question-block" size="5">
+                    </select>
+                </div> 
+                <div class="input-container">
+                    <select id="studentDropdownForAdmin" class="question-block">
+                        <option value="saddlePoints">Направление подготовки</option>
+                    </select>
+                    <button id="removeStudentButton">Сменить</button>
+                </div>
+                <div class="input-container">
+                    <select id="studentDropdownForAdmin" class="question-block">
+                        <option value="saddlePoints">Группа</option>
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                    <button id="removeStudentButton">Сменить</button>
+                </div>
+            </div>   
+
             <div class="box">
                 <h2 class = "nameSection">Удаление студентов с курса</h2>
                 <div class="input-container">
+                    <select id="studentDropdownForAdmin" class="question-block">
+                        <option value="saddlePoints">Направление подготовки</option>
+                    </select>
+                    <button id="addLecturerButton">Выбрать</button>
+
+                </div>
+                <div class="input-container">
+                    <select id="studentDropdownForAdmin" class="question-block">
+                        <option value="saddlePoints">Группа</option>
+                    </select>
+                </div>
+                <button id="addLecturerButton">Удалить всех</button>
+                <div id="lecturerList" class="theme-list"></div>
+            </div>
+            
+            <div class="box">
+                <h2 class = "nameSection">Удаление студента с курса</h2>
+                <div class="input-container">
                     <input type="text" id="studentSearch" class="question-block" placeholder="Поиск студента">
+                    <button id="removeStudentButton">Удалить</button>
                 </div>
                 <div class="input-container">
                     <select id="studentDropdown" class="question-block" size="5">
                         <!-- Options will be populated by JavaScript -->
                     </select>
                 </div>
+            </div>
+            <div class="box">
+                <h2 class = "nameSection">Удаление группы студентов с курса</h2>
                 <div class="input-container">
+                    <select id="studentDropdownForAdmin" class="question-block">
+                        <option disabled selected value="saddlePoints">Направление подготовки</option>
+                    </select>
                     <button id="removeStudentButton">Удалить</button>
+                </div>
+                <div class="input-container">
+                    <select id="studentDropdownForAdmin" class="question-block">
+                        <option disabled selected value="saddlePoints">Группа</option>
+                    </select>
                 </div>
             </div>            
         </div>

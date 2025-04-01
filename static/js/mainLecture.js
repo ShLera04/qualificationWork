@@ -224,17 +224,47 @@ const modal = document.getElementById('modal');
         function displayResult(result, title) {
             const resultsContainer = document.getElementById('results');
             resultsContainer.innerHTML = `<h3>${title}</h3>`;
-            if (result.length > 0) {
-                result.forEach(point => {
-                    resultsContainer.innerHTML += `(${point[0]}, ${point[1]})<br>`;
-                });
-            } else {
-                if (title === 'Седловые точки') {
+        
+            if (title === 'Седловые точки') {
+                // Обработка объекта с двумя массивами
+                let hasPoints = false;
+                
+                if (result.matrix_a && result.matrix_a.length > 0) {
+                    resultsContainer.innerHTML += '<h4>Для игрока A:</h4>';
+                    result.matrix_a.forEach(point => {
+                        resultsContainer.innerHTML += `(${point[0]}, ${point[1]})<br>`;
+                    });
+                    hasPoints = true;
+                }
+                
+                if (result.matrix_b && result.matrix_b.length > 0) {
+                    resultsContainer.innerHTML += '<h4>Для игрока B:</h4>';
+                    result.matrix_b.forEach(point => {
+                        resultsContainer.innerHTML += `(${point[0]}, ${point[1]})<br>`;
+                    });
+                    hasPoints = true;
+                }
+                
+                if (!hasPoints) {
                     resultsContainer.innerHTML += 'Седловые точки не найдены.<br>';
-                } else if (title === 'Равновесие по Нэшу') {
-                    resultsContainer.innerHTML += 'Равновесие по Нэшу не найдено.<br>';
-                } else if (title === 'Оптимальность по Парето') {
-                    resultsContainer.innerHTML += 'Парето-оптимальные точки не найдены.<br>';
+                }
+            }
+            else {
+                // Обработка массива для Нэша и Парето
+                if (Array.isArray(result) && result.length > 0) {
+                    result.forEach(point => {
+                        const coords = title === 'Оптимальность по Парето' 
+                            ? `${point[0]}, ${point[1]}`
+                            : `${point[0]}, ${point[1]}`;
+                        
+                        resultsContainer.innerHTML += `(${coords})<br>`;
+                    });
+                } else {
+                    const messages = {
+                        'Равновесие по Нэшу': 'Равновесие по Нэшу не найдено.<br>',
+                        'Оптимальность по Парето': 'Парето-оптимальные точки не найдены.<br>'
+                    };
+                    resultsContainer.innerHTML += messages[title] || 'Результатов нет.<br>';
                 }
             }
         }
@@ -249,18 +279,21 @@ const modal = document.getElementById('modal');
             })
             .then(response => response.json())
             .then(result => {
-                // Преобразуем результат в формат [ [x, y], [x, y], ... ]
-                const formattedResult = result.map(point => [point[0], point[1]]);
-                displayResult(formattedResult, title);
+                // Убираем преобразование через map
+                displayResult(result, title);
             })
             .catch(error => console.error('Error:', error));
         }
-
+        
         document.getElementById('optionSelect').addEventListener('change', function() {
             const selectedOption = this.value;
             if (selectedOption === 'saddlePoints') {
-                const matrix = getMatrix('matrixContainer');  // Матрица A
-                sendRequest('/saddle_points', { matrix: matrix }, 'Седловые точки');
+                const matrix_a = getMatrix('matrixContainer');
+                const matrix_b = getMatrix('matrixContainer2');
+                sendRequest('/saddle_points', 
+                    { matrix_a: matrix_a, matrix_b: matrix_b }, 
+                    'Седловые точки'
+                );
             } else if (selectedOption === 'nashEquilibrium') {
                 const matrix_a = getMatrix('matrixContainer');
                 const matrix_b = getMatrix('matrixContainer2');
@@ -347,5 +380,103 @@ const modal = document.getElementById('modal');
             } else {
                 card.style.display = 'none';
             }
+        });
+    });
+    // Генератор матриц с седловыми точками
+    document.getElementById('generateSaddleMatrix').addEventListener('click', function() {
+        const rows = parseInt(document.getElementById('saddleRows').value);
+        const cols = parseInt(document.getElementById('saddleCols').value);
+        const k = parseInt(document.getElementById('saddlePointsCount').value);
+        
+        // Проверка ввода
+        const maxPossible = Math.min(rows, cols);
+        if (k > maxPossible) {
+            alert(`Ошибка: количество седловых точек не может превышать ${maxPossible}`);
+            return;
+        }
+        if (rows < 1 || cols < 1 || k < 1) {
+            alert("Все значения должны быть положительными числами");
+            return;
+        }
+        
+        fetch('/generate_saddle_matrix', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                rows: rows,
+                cols: cols,
+                k: k
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.error); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            const container = document.getElementById('saddleMatrixContainer');
+            container.innerHTML = '';
+            container.className = 'matrix-container';
+            
+            const table = document.createElement('table');
+            table.className = 'matrix';
+            
+            // Создаем заголовок таблицы
+            const headerRow = document.createElement('tr');
+            headerRow.appendChild(document.createElement('th')); // Пустая ячейка
+            for (let j = 0; j < cols; j++) {
+                const th = document.createElement('th');
+                headerRow.appendChild(th);
+            }
+            table.appendChild(headerRow);
+            
+            // Заполняем матрицу
+            for (let i = 0; i < rows; i++) {
+                const row = document.createElement('tr');
+                const rowHeader = document.createElement('th');
+                row.appendChild(rowHeader);
+                
+                for (let j = 0; j < cols; j++) {
+                    const cell = document.createElement('td');
+                    cell.textContent = data.matrix[i][j];
+                    cell.style.color = 'white';
+                    
+                    // Проверяем, является ли седловой точкой
+                    const isSaddle = data.saddle_points.some(p => p[0] === i && p[1] === j);
+                    if (isSaddle) {
+                        cell.style.backgroundColor = 'hsl(205, 51%, 93%)';
+                        cell.style.fontWeight = 'bold';
+                        cell.style.color = 'black';
+                        cell.title = 'Седловая точка';
+                    }
+                    
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+            
+            container.appendChild(table);
+            
+            // Выводим результаты
+            const resultContainer = document.getElementById('saddleMatrixResult');
+            
+            if (data.saddle_points.length !== k) {
+                resultContainer.innerHTML += `
+                    <p style="color: red;">
+                        Внимание: количество седловых точек не соответствует запросу!
+                    </p>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(`Ошибка: ${error.message}`);
+        })
+        .finally(() => {
+            button.disabled = false;
+            button.textContent = "Сгенерировать матрицу";
         });
     });

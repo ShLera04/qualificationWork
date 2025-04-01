@@ -80,23 +80,29 @@
                             <button id="generateMatrix" class="submit">Создать матрицы</button>
                         </div>
                         <div class="input-container question-block">
-                            <label>Предположительные седловые точки:</label>
-                            <div id="saddlePointsPrediction"></div>
-                            <button id="noSaddlePoints" class="prediction-button">НЕТ</button>
+                            <label>Предположительные седловые точки первой матрицы:</label>
+                            <div id="saddlePointsPrediction1"></div>
+                            <button id="noSaddlePoints1" class="prediction-button">НЕТ</button>
                         </div>
                         <div class="input-container question-block">
-                            <label>Предположительные равновесия Нэша:</label>
+                            <label>Предположительные седловые точки второй матрицы:</label>
+                            <div id="saddlePointsPrediction2"></div>
+                            <button id="noSaddlePoints2" class="prediction-button">НЕТ</button>
+                        </div>
+                        <div class="input-container question-block">
+                            <label>Предположительные точки, эффективные по Нэшу:</label>
                             <div id="nashEquilibriumPrediction"></div>
                             <button id="noNashEquilibrium" class="prediction-button">НЕТ</button>
                         </div>
                         <div class="input-container question-block">
-                            <label>Предположительные Парето-оптимальные точки:</label>
+                            <label>Предположительные точки, оптимальные по Парето:</label>
                             <div id="paretoOptimalPrediction"></div>
                             <button id="noParetoOptimal" class="prediction-button">НЕТ</button>
                         </div>
                         <div class="input-container question-block">
                             <label for="optionSelect">Выберите опцию</label>
                             <select id="optionSelect" class="functionality-select">
+                                <option disabled selected>Доступные опции</option>
                                 <option value="saddlePoints">Седловая точка</option>
                                 <option value="nashEquilibrium">Равновесие по Нэшу</option>
                                 <option value="paretoOptimal">Оптимальность по Парето</option>
