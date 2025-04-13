@@ -262,14 +262,7 @@ const modal = document.getElementById('modal');
         const cols = parseInt(document.getElementById('saddleCols').value);
         const k = parseInt(document.getElementById('saddlePointsCount').value);
     
-         // Очистка контейнера матрицы перед новым запросом
-        const container = document.getElementById('saddleMatrixContainer');
-        container.innerHTML = '';
-        container.className = 'matrix-container';
-
-        // Очистка контейнера результатов перед новым запросом
-        const resultContainer = document.getElementById('saddleMatrixResult');
-        resultContainer.innerHTML = '';
+        // Очистка контейнера матрицы перед новым запросом
         // Проверка ввода
         if (rows < 1 || cols < 1) {
             showFlashMessage("Все значения должны быть положительными числами", 'error', '#saddleGenerator .second_container');
@@ -365,6 +358,12 @@ const modal = document.getElementById('modal');
         })
         .catch(error => {
             console.error('Error:', error);
+            const container = document.getElementById('saddleMatrixContainer');
+            container.innerHTML = '';
+            container.className = 'matrix-container';
+
+            const resultContainer = document.getElementById('saddleMatrixResult');
+            resultContainer.innerHTML = '';
             showFlashMessage(error.message, 'error', '#saddleGenerator .second_container');
         })
         .finally(() => {

@@ -134,16 +134,16 @@
         document.getElementById("fileInput").addEventListener("change", function () {
             const fileInput = document.getElementById("fileInput");
             const fileList = document.getElementById("fileList");
-            const sectionName = document.querySelector('h1.nav-item').textContent; // Получаем section_name из заголовка
+            const sectionName = document.querySelector('h1.nav-item').textContent;
 
             Array.from(fileInput.files).forEach(file => {
                 const listItem = document.createElement("div");
                 listItem.classList.add("file-item");
 
                 const fileLink = document.createElement("a");
-                fileLink.textContent = file.name; // Указываем имя файла
+                fileLink.textContent = file.name;
                 fileLink.href = URL.createObjectURL(file);
-                fileLink.target = "_blank"; // Открываем ссылку в новой вкладке
+                fileLink.target = "_blank";
 
                 listItem.appendChild(fileLink);
 
@@ -152,7 +152,7 @@
                 uploadButton.addEventListener("click", function () {
                     const formData = new FormData();
                     formData.append('file', file);
-                    formData.append('section_name', sectionName); // Добавляем section_name в форму
+                    formData.append('section_name', sectionName);
 
                     fetch('/upload-file', {
                         method: 'POST',
@@ -188,7 +188,7 @@
         });
 
         function loadFiles() {
-            const sectionName = document.querySelector('h1.nav-item').textContent; // Получаем section_name из заголовка
+            const sectionName = document.querySelector('h1.nav-item').textContent;
 
             fetch(`/get-files-by-theme?theme_name=${encodeURIComponent(sectionName)}`)
             .then(response => response.json())
@@ -198,19 +198,41 @@
                 fileNames.forEach(fileName => {
                     const listItem = document.createElement("div");
                     listItem.classList.add("file-item");
-                    listItem.innerHTML = `
-                        <a href="/download-file-by-name/${encodeURIComponent(fileName)}" class="download-link">${fileName}</a>
-                        <button class="delete-button" data-file-name="${fileName}">Удалить</button>
-                    `;
-                    fileList.appendChild(listItem);
-                });
-
-                // Добавляем обработчики для кнопок удаления
-                document.querySelectorAll('.delete-button').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const fileName = this.getAttribute('data-file-name');
+                    
+                    // Создаем ссылку для файла
+                    const fileLink = document.createElement("a");
+                    fileLink.href = `/download-file-by-name/${encodeURIComponent(fileName)}`;
+                    fileLink.textContent = fileName;
+                    fileLink.className = "download-link";
+                    
+                    // Для PDF открываем в новой вкладке, остальные - скачиваем
+                    if (fileName.toLowerCase().endsWith('.pdf')) {
+                        fileLink.target = "_blank";
+                    } else {
+                        fileLink.addEventListener('click', function(e) {
+                            // Для не-PDF файлов добавляем атрибут download
+                            e.preventDefault();
+                            const downloadLink = document.createElement('a');
+                            downloadLink.href = this.href;
+                            downloadLink.download = fileName;
+                            document.body.appendChild(downloadLink);
+                            downloadLink.click();
+                            document.body.removeChild(downloadLink);
+                        });
+                    }
+                    
+                    // Создаем кнопку удаления
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Удалить";
+                    deleteButton.className = "delete-button";
+                    deleteButton.setAttribute('data-file-name', fileName);
+                    deleteButton.addEventListener('click', function() {
                         deleteFile(fileName);
                     });
+                    
+                    listItem.appendChild(fileLink);
+                    listItem.appendChild(deleteButton);
+                    fileList.appendChild(listItem);
                 });
             })
             .catch(error => {
@@ -227,12 +249,6 @@
             .then(data => {
                 if (data.success) {
                     showFlashMessage("Файл успешно удален!", "success", '#material');
-                    // Удаляем файл из списка загруженных файлов
-                    const fileList = document.getElementById('downloadFileList');
-                    const listItem = fileList.querySelector(`.file-item [data-file-name="${fileName}"]`);
-                    if (listItem) {
-                        listItem.parentElement.removeChild(listItem);
-                    }
                     loadFiles();
                 } else {
                     showFlashMessage(data.error || "Ошибка при удалении файла", "error", '.box');
@@ -266,12 +282,11 @@
                 flashesContainer = document.createElement('div');
                 flashesContainer.className = 'flashes-container';
 
-                // Вставляем контейнер после первого h2
                 const h2Element = box.querySelector('h2.nameSection');
                 if (h2Element) {
                     h2Element.insertAdjacentElement('afterend', flashesContainer);
                 } else {
-                    box.insertBefore(flashesContainer, box.firstChild); // Если h2 не найден, вставляем в начало
+                    box.insertBefore(flashesContainer, box.firstChild);
                 }
             }
 

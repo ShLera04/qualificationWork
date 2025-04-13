@@ -129,7 +129,7 @@
         });
 
         function loadFiles() {
-            const sectionName = document.querySelector('h1.nav-item').textContent; // Получаем section_name из заголовка
+            const sectionName = document.querySelector('h1.nav-item').textContent;
 
             fetch(`/get-files-by-theme?theme_name=${encodeURIComponent(sectionName)}`)
             .then(response => response.json())
@@ -139,9 +139,23 @@
                 fileNames.forEach(fileName => {
                     const listItem = document.createElement("div");
                     listItem.classList.add("file-item");
-                    listItem.innerHTML = `
-                        <a href="/download-file-by-name/${encodeURIComponent(fileName)}" class="download-link">${fileName}</a>
-                    `;
+                    
+                    const link = document.createElement("a");
+                    link.href = `/download-file-by-name/${encodeURIComponent(fileName)}`;
+                    link.textContent = fileName;
+                    link.className = "download-link";
+                    
+                    // Для PDF открываем в новой вкладке, остальные - скачиваем
+                    if (fileName.toLowerCase().endsWith('.pdf')) {
+                        link.target = "_blank";
+                    } else {
+                        link.download = fileName;
+                        link.addEventListener('click', function(e) {
+                            // Дополнительная логика для скачивания, если нужно
+                        });
+                    }
+                    
+                    listItem.appendChild(link);
                     fileList.appendChild(listItem);
                 });
             })
@@ -149,6 +163,22 @@
                 console.error('Ошибка:', error);
                 showFlashMessage("Ошибка при загрузке файлов", "error", '.box');
             });
+        }
+        function handleFileClick(event, fileName) {
+            event.preventDefault(); // Предотвращаем стандартное поведение ссылки
+
+            // Попытка открыть файл в новой вкладке
+            const newWindow = window.open(`/download-file-by-name/${encodeURIComponent(fileName)}`, '_blank');
+
+            if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                // Если открытие в новой вкладке не удалось, скачиваем файл
+                const link = document.createElement('a');
+                link.href = `/download-file-by-name/${encodeURIComponent(fileName)}`;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
         }
 
         // function showFlashMessage(message, type, containerSelector) {

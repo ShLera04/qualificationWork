@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page.css') }}">
+    <title>Тестирование - {{ test_name }}</title>
+    <style>
+        /* Основные стили из предыдущего кода */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .box {
+            background-color: #2a3a5a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .nameSection {
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        
+        /* Стили для вопросов */
+        .question-container {
+            margin-bottom: 30px;
+        }
+        .question-block {
+            background-color: #1f2a44;
+            border-radius: 9px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .question-number {
+            font-weight: bold;
+            color: #4CAF50;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .question-text {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .option-item {
+            margin-bottom: 10px;
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            cursor: pointer;
+        }
+        .option-input {
+            margin-right: 10px;
+        }
+        .text-answer {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            color: #333;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            background-color: #3a4a6a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 9px;
+            cursor: pointer;
+        }
+        .nav-btn:hover {
+            background-color: #4a5b78;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="nav-item">{{ test_name }}</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="box">
+                <h2 class="nameSection">Тестирование</h2>
+                <div class="flashes-container"></div>
+                
+                <!-- Прогресс-бар -->
+                <div style="margin-bottom: 20px;">
+                    <div style="background-color: #3a4a6a; height: 10px; border-radius: 5px;">
+                        <div style="background-color: #4CAF50; width: 30%; height: 100%; border-radius: 5px;"></div>
+                    </div>
+                    <p style="color: #fff; text-align: right;">Вопрос 3 из 10</p>
+                </div>
+                
+                <!-- Блок вопроса -->
+                <div class="question-container">
+                    <div class="question-block">
+                        <div class="question-number">Вопрос 3</div>
+                        <div class="question-text">
+                            Какое из следующих утверждений правильно описывает принцип инкапсуляции в ООП?
+                        </div>
+                        
+                        <!-- Блок с изображением (если есть) -->
+                        <img src="{{ url_for('static', filename='images/oop.png') }}" alt="Пример изображения" class="question-image">
+                        
+                        <!-- Варианты ответов (для вопросов с выбором) -->
+                        <ul class="options-list">
+                            <li class="option-item">
+                                <label class="option-label">
+                                    <input type="radio" name="answer" class="option-input">
+                                    Это процесс скрытия деталей реализации и предоставления только необходимого интерфейса
+                                </label>
+                            </li>
+                            <li class="option-item">
+                                <label class="option-label">
+                                    <input type="radio" name="answer" class="option-input">
+                                    Это способность объектов разных классов отвечать на одинаковые сообщения
+                                </label>
+                            </li>
+                            <li class="option-item">
+                                <label class="option-label">
+                                    <input type="radio" name="answer" class="option-input">
+                                    Это механизм создания новых классов на основе существующих
+                                </label>
+                            </li>
+                            <li class="option-item">
+                                <label class="option-label">
+                                    <input type="radio" name="answer" class="option-input">
+                                    Это процесс разделения программы на независимые модули
+                                </label>
+                            </li>
+                        </ul>
+                        
+                        <!-- Или поле для ввода ответа (для вопросов с текстовым ответом) -->
+                        <!-- <textarea class="text-answer" placeholder="Введите ваш ответ..."></textarea> -->
+                    </div>
+                    
+                    <!-- Кнопки навигации -->
+                    <div class="navigation-buttons">
+                        <button class="nav-btn" id="prevQuestion">Предыдущий вопрос</button>
+                        <button class="nav-btn" id="nextQuestion">Следующий вопрос</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+
+    <script>
+        // Обработчики для кнопок навигации
+        document.getElementById("prevQuestion").addEventListener("click", function() {
+            // Логика перехода к предыдущему вопросу
+            showFlashMessage("Переход к предыдущему вопросу", "info", '.box');
+        });
+        
+        document.getElementById("nextQuestion").addEventListener("click", function() {
+            // Логика перехода к следующему вопросу
+            showFlashMessage("Переход к следующему вопросу", "info", '.box');
+        });
+        
+        // Функция для отображения сообщений (из вашего предыдущего кода)
+        function showFlashMessage(message, type, containerSelector) {
+            let box;
+            if (typeof containerSelector === 'string') {
+                box = document.querySelector(containerSelector);
+            } else if (containerSelector instanceof HTMLElement) {
+                box = containerSelector;
+            } else {
+                console.error('Неверный контейнер:', containerSelector);
+                return;
+            }
+
+            if (!box) {
+                console.error('Контейнер не найден:', containerSelector);
+                return;
+            }
+
+            let flashesContainer = box.querySelector('.flashes-container');
+
+            if (!flashesContainer) {
+                flashesContainer = document.createElement('div');
+                flashesContainer.className = 'flashes-container';
+
+                const h2Element = box.querySelector('h2.nameSection');
+                if (h2Element) {
+                    h2Element.insertAdjacentElement('afterend', flashesContainer);
+                } else {
+                    box.insertBefore(flashesContainer, box.firstChild);
+                }
+            }
+
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            flashesContainer.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+                if (flashesContainer.children.length === 0) {
+                    flashesContainer.remove();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

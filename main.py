@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, jsonify, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import send_file, make_response
+import mimetypes
 import io
 from datetime import datetime
 import pytz
@@ -38,6 +39,10 @@ def login_required(f):
 @app.route('/addQuestion', methods=['GET', 'POST'])
 def addQuestion_page():
     return render_template('addQuestion.html')
+
+@app.route('/test', methods=['GET', 'POST'])
+def test_page():
+    return render_template('test.html')
 
 @app.route('/createTest', methods=['GET', 'POST'])
 def createTest_page():
@@ -860,18 +865,29 @@ def download_file_by_name(file_name):
             return jsonify({"success": False, "error": "Файл не найден"}), 404
 
         file_data = file_record[0]
-
-        # Создаем объект BytesIO для передачи файла
         file_stream = io.BytesIO(file_data)
 
-        # Отправляем файл клиенту
-        response = make_response(send_file(file_stream, as_attachment=True, download_name=file_name))
-        response.headers['Content-Disposition'] = f'attachment; filename={file_name}'
+        mime_type, _ = mimetypes.guess_type(file_name)
+        if mime_type is None:
+            mime_type = 'application/octet-stream'
+
+        # Для PDF устанавливаем inline, для других типов - attachment
+        disposition = 'inline' if file_name.lower().endswith('.pdf') else 'attachment'
+        
+        response = make_response(send_file(
+            file_stream,
+            as_attachment=(disposition == 'attachment'),
+            download_name=file_name,
+            mimetype=mime_type
+        ))
+        
+        response.headers['Content-Disposition'] = f'{disposition}; filename="{file_name}"'
         return response
 
     except Exception as e:
         app.logger.error(f"Error downloading file by name: {str(e)}")
         return jsonify({"success": False, "error": "Ошибка при скачивании файла"}), 500
+    
 
 @app.route('/get-all-file-names', methods=['GET'])
 def get_all_file_names():
