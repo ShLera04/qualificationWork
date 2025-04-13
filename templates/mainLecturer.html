@@ -12,11 +12,6 @@
         <div class="container">
             <div class="header-line">
                 <img src="..\static\images\logo_WUoITg47.png" alt="Логотип">
-                <div class="nav">
-                    <a class="nav-item" href="#first">ГЛАВНАЯ</a>
-                    <a class="nav-item" href="#teoriya">МАТЕРИАЛЫ</a>
-                    <a class="nav-item" href="#functionality">ФУНКЦИОНАЛЬНОСТЬ</a>
-                </div>
                 <div class="burger-menu" id="burgerMenu">
                     <span class="burger-line"></span>
                     <span class="burger-line"></span>
@@ -37,10 +32,8 @@
         <section class="teoriya" id="teoriya">
             <div class="container1">
                 <h1>Материалы для изучения дисциплины</h1>
-                <div class="containerbuttone1">
-                    <button class="bottone1" id="bottone1"><strong>Добавить тему</strong></button>
-                    <button class="bottone1" id="bottone2"><strong>Добавить админа</strong></button>
-                    <div class="InputContainer">
+                <div class="containerbuttone2">
+                    <div class="InputContainerSecond">
                         <input placeholder="Поиск" id="inputSearch" class="inputSearch" name="text" type="text" />
                         <label class="labelforsearch" for="input">
                             <svg class="searchIcon" viewBox="0 0 512 512">
@@ -58,32 +51,6 @@
                 </div>
             </div>
         </section>
-
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close" id="closeModal">&times;</span>
-                <h3>ДОБАВИТЬ РАЗДЕЛ</h3>
-                <div class="group">
-                    <input type="text" id="topicInput" placeholder=" " required>
-                    <label for="topicInput">Название раздела</label>
-                </div>
-                <button id="addTopicButton" class="button blue"><bold>Добавить</bold></button>
-            </div>
-        </div>
-
-        <div id="adminModal" class="modal">
-            <div class="modal-content">
-                <span class="close" id="closeAdminModal">&times;</span>
-                <h3>ДОБАВИТЬ АДМИНА</h3>
-                <div class="group">
-                    <select id="adminSelect" placeholder="Выберите пользователя" required>
-                        <!-- Опции будут добавлены динамически -->
-                    </select>
-                    <!-- <label for="adminSelect">Выберите админа</label> -->
-                </div>
-                <button id="addAdminButton" class="button blue"><bold>Добавить</bold></button>
-            </div>
-        </div>
 
         <section class="functionality" id="functionality">
             <div class="container1">
@@ -116,8 +83,12 @@
                                 <option value="paretoOptimal">Оптимальность по Парето</option>
                             </select>
                         </div>
-                        <div id="matrixContainer" class="matrix-container"></div>
-                        <div id="matrixContainer2" class="matrix-container"></div> <!-- Вторая матрица -->
+                        <div class="center-container">
+                            <div id="matrixContainer" class="matrix-container"></div>
+                        </div>
+                        <div class="center-container">
+                            <div id="matrixContainer2" class="matrix-container"></div> <!-- Вторая матрица -->
+                        </div>
                         <div id="results" class="results"></div>
                     </div>
                 </div>
@@ -162,14 +133,15 @@
     <div class="menu-overlay" id="menuOverlay">
         <div class="menu-content">
             <div class="menu-header">
-                <span class="username">Валерчик</span>
+                <span class="username">Гость</span>
                 <span class="close-btn" id="closeMenu">&times;</span>
             </div>
             <div class="menu-links">
                 <a class="menu-item" href="#first">ГЛАВНАЯ</a>
                 <a class="menu-item" href="#teoriya">МАТЕРИАЛЫ</a>
                 <a class="menu-item" href="#functionality">ФУНКЦИОНАЛЬНОСТЬ</a>
-                <a class="menu-item" href="#functionality">ВЫХОД</a>
+                <a class="menu-item"href="/settings">НАСТРОЙКИ</a>
+                <a class="menu-item" href="/logout">ВЫХОД</a>
             </div>
         </div>
     </div>

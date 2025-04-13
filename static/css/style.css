@@ -198,7 +198,6 @@ p {
     margin-right: 20px;
     width: 340px;
     height: 150px;
-    /* background-color: #D5F365; */
     background: hsl(205, 51%, 93%);
     color: black;
     box-shadow: 10px 10px 40px 20px #0000001A;
@@ -206,6 +205,7 @@ p {
     border-radius: 10px;
     justify-content: center;
     line-height: 1.2;
+    text-decoration: none;
 }
 
 .cards-container {
@@ -215,6 +215,7 @@ p {
     padding: 10px 0;
     width: 90%;
     margin: 0 40px;
+    text-decoration: none;
 }
 
 .cards:hover {
@@ -441,7 +442,6 @@ p {
     padding: 20px;
     box-sizing: border-box;
 }
-
 .second_container {
     width: 50%;
     padding: 20px;
@@ -452,30 +452,11 @@ p {
     color: white;
     font-family: Roboto, Verdana, Tahoma, sans-serif;
 }
-
-#matrixContainer {
-    margin-top: 25px;
-    /* margin-left: 41%; */
-    width: 100%;
-    max-width: 300px;
-    background-color: rgba(255, 255, 255, 0.1);
-    left: 50%;
-}
-
-#matrixContainer2 {
-    margin-top: 25px;
-    /* margin-left: 41%; */
-    width: 100%;
-    max-width: 300px;
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
 .matrix {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
-
 .matrix td {
     border: 1px solid white;
     padding: 0;
@@ -486,7 +467,6 @@ p {
     height: 50px;
     background-color: rgba(255, 255, 255, 0.1);
 }
-
 input[type="number"] {
     width: 30px;
     height: 30px;
@@ -496,13 +476,11 @@ input[type="number"] {
     font-family: Roboto, Verdana, Tahoma, sans-serif;
     text-align: center;
 }
-
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-
 button {
     margin-top: 20px;
     background-color: #D5F365;
@@ -514,24 +492,19 @@ button {
     transition: 0.4s;
     font-weight: bold;
 }
-
 button:hover {
     box-shadow: 7px 5px 56px -14px hsl(202, 78%, 89%);
 }
-
 button:active {
     transform: scale(0.97);
     box-shadow: 7px 5px 56px -10px hsl(202, 78%, 89%);
 }
-
 .input-container {
     margin-bottom: 10px;
 }
-
 .calculate {
     margin-top: 20px;
 }
-
 #results {
     margin-top: 15px;
     border-radius: 12px;
@@ -548,33 +521,27 @@ button:active {
     background-color: transparent;
     text-align: center;
 }
-
 .first_container, .second_container {
     padding: 20px;
     box-sizing: border-box;
     position: relative;
     z-index: 1;
 }
-
 .first_container {
     width: 25%;
 }
-
 .first img {
     width: 100%;
     height: auto;
     margin: 0;
     padding: 0;
 }
-
 .second_container {
     width: 50%;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
-/* Стили для бургер-меню */
 .menu-overlay {
     position: fixed;
     top: 0;
@@ -589,52 +556,44 @@ button:active {
     display: flex;
     flex-direction: column;
 }
-
 .menu-content {
     flex: 1;
     display: flex;
     flex-direction: column;
     padding: 20px;
 }
-
 .menu-header {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
 }
-
 .menu-header img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
 }
-
 .menu-header .username {
     flex: 1;
     font-size: 16px;
     font-weight: bold;
     color: white;
 }
-
 .close-btn {
     font-size: 24px;
     cursor: pointer;
     color: #333;
     transition: color 0.3s;
 }
-
 .close-btn:hover {
     color: #007bff;
 }
-
 .menu-links {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-
 .menu-item {
     text-decoration: none;
     color: white;
@@ -643,7 +602,6 @@ button:active {
     font-family: 'Roboto', Verdana, Tahoma, sans-serif;
     transition: background-color 0.3s, color 0.3s;
 }
-
 .menu-footer .menu-item {
     background-color: #041027;
     color: white;
@@ -653,16 +611,13 @@ button:active {
     width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 .menu-footer .menu-item:hover {
     background-color: #007bff;
 }
-
 .menu-item:hover {
     background-color: #041027;
     color: #007bff;
 }
-
 .menu-footer {
     position: fixed;
     bottom: 20px;
@@ -672,7 +627,6 @@ button:active {
     justify-content: center;
     z-index: 1001;
 }
-
 .menu-overlay.active {
     transform: translateX(0);
 }
@@ -684,18 +638,15 @@ button:active {
     background: hsl(205, 51%, 93%);
     transition: background-color 0.3s ease;
 }
-
 .question-block:hover {
     background-color: #e9e9e9;
 }
-
 .question-block label {
     font-weight: bold;
     display: block;
     margin-bottom: 5px;
     color: black;
 }
-
 .question-block input[type="text"],
 .question-block select,
 .question-block input[type="number"],
@@ -714,7 +665,6 @@ button:active {
     margin-bottom: 10px;
     box-sizing: border-box;
 }
-
 .question-block input[type="text"]:focus,
 .question-block select:focus,
 .question-block input[type="number"]:focus,
@@ -723,14 +673,11 @@ button:active {
     box-shadow: 0 0 5px #03264a;
     outline: none;
 }
-
 .button-container {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
 }
-
-
 button {
     background: hsl(205, 51%, 93%);
     color: black;
@@ -742,11 +689,9 @@ button {
     font-family: 'Roboto', Verdana, Tahoma, sans-serif;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
-
 button:active {
     transform: scale(0.97);
 }
-
 .formula-input {
     min-width: 0;
     max-width: 100%;
@@ -757,13 +702,11 @@ button:active {
     background-color: #f0f0f0;
     color: black;
 }
-
 .button-and-counter {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .submit {
     margin-top: 10px;
 }
@@ -771,11 +714,9 @@ button:active {
     display: flex;
     align-items: center; 
 }
-
 .flex-container label {
     margin-right: 10px; 
 }
-
 .InputContainer {
     margin-left:46%;
     height: 50px;
@@ -790,7 +731,6 @@ button:active {
     margin-top: 30px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
   }
-  
   .inputSearch {
     width: 500px;
     height: 100%;
@@ -807,7 +747,6 @@ button:active {
     align-items: center; 
     margin-right: 20px;
 }
-
 .InputContainerSecond {
     display: flex;
     align-items: center;
@@ -821,7 +760,6 @@ button:active {
     margin-top: 30px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
 }
-
 .inputSearchSecond {
     padding: 8px;
     border-radius: 4px;
@@ -836,12 +774,10 @@ button:active {
     font-weight: bold;
     color: black;
 }
-
 .labelforsearch {
     margin-left: 8px; 
     cursor: pointer;
 }
-
   .labelforsearch {
     cursor: text;
     padding: 0px 12px;
@@ -869,7 +805,7 @@ button:active {
     cursor: pointer;
     transition-duration: 0.3s;
   }
-  
+
   .searchIcon path {
     fill: rgb(114, 114, 114);
   }
@@ -887,7 +823,6 @@ button:active {
     align-items: center; 
     margin-bottom: 5px; 
     }
-
     .checkbox-container input[type="checkbox"] {
         margin-right: 10px; 
     }
@@ -905,8 +840,6 @@ button:active {
         background-color: #007bff;
         color: white;
     }
-    
-
 @media (max-width: 1025px) {
     .burger-menu {
         display: flex;
@@ -951,7 +884,6 @@ button:active {
     .cards {
         font-size: 14px;
     }
-
     .nav {
         display: none;
     }
@@ -964,7 +896,6 @@ button:active {
     #generateMatrix, #generateSaddleMatrix{
         font-size: 14px;
     }
-
     .header-down b {
         order: 0;
     }
@@ -976,7 +907,6 @@ button:active {
         height: 25px;
         font-size: 14px;
     }
-
     .question-block select {
         width: 100%;
         height: 35px;
@@ -1011,19 +941,11 @@ button:active {
         height: 40px;
         font-family: 'Roboto', Verdana, Tahoma, sans-serif;
     }
-    
     .inputSearchSecond {
         width: 150px;
         font-weight: bold;
     }
-    #matrixContainer {
-        margin-left: 29%;
-    }
-    #matrixContainer2 {
-        margin-left: 29%;
-    }
 }
-
 @media (max-width: 768px) {
     .InputContainer {
         margin-left:25%;
@@ -1044,21 +966,11 @@ button:active {
         height: 40px;
         font-family: 'Roboto', Verdana, Tahoma, sans-serif;
     }
-    
     .inputSearchSecond {
         width: 70px;
         font-weight: bold;
     }
-    #matrixContainer {
-        margin-left: 22%;
-    }
-    #matrixContainer2 {
-        margin-left: 22%;
-    }
-
 }
-
-
 @media (max-width: 426px) {
     .burger-menu {
         display: flex;
@@ -1085,7 +997,6 @@ button:active {
         color: white;
         font-family: 'Roboto', Verdana, Tahoma, sans-serif;
     }
-
     .nav {
         display: none;
     }
@@ -1095,7 +1006,6 @@ button:active {
         height: auto;
         margin-top: 20px;
     }
-
     .header-down b {
         order: 0;
     }
@@ -1142,7 +1052,6 @@ button:active {
         height: 20px;
         font-size: 10px;
     }
-
     .question-block select {
         width: 100%;
         height: 35px;
@@ -1177,7 +1086,6 @@ button:active {
         font-size: 10px;
         font-family: 'Roboto', Verdana, Tahoma, sans-serif;
     }
-    
     .inputSearchSecond {
         width: 30px;
         font-weight: bold;
@@ -1185,13 +1093,7 @@ button:active {
     .searchIcon {
         width: 8px;
     }
-    #matrixContainer {
-        margin-left: 0%;
-    }
-    #matrixContainer2 {
-        margin-left: 0%;
-    }
-}
+} 
 @media (min-width: 1026px) and (max-width: 1440px) {
     .burger-menu {
         display: flex;
@@ -1203,7 +1105,6 @@ button:active {
     .group label {
         left: 38%;
     }
-    
     .header-down {
         text-align: center;
         align-items: center;
@@ -1232,7 +1133,6 @@ button:active {
         color: white;
         font-family: 'Roboto', Verdana, Tahoma, sans-serif;
     }
-
     .nav {
         display: none;
     }
@@ -1242,7 +1142,6 @@ button:active {
         height: auto;
         margin-top: 20px;
     }
-
     .header-down b {
         order: 0;
     }
@@ -1289,7 +1188,6 @@ button:active {
         height: 30px;
         font-size: 16px;
     }
-
     .question-block select {
         width: 100%;
         height: 35px;
@@ -1336,16 +1234,9 @@ button:active {
         height: 40px;
         font-family: 'Roboto', Verdana, Tahoma, sans-serif;
     }
-    
     .inputSearchSecond {
         width: 200px;
         font-weight: bold;
-    }
-    #matrixContainer {
-        margin-left: 36%;
-    }
-    #matrixContainer2 {
-        margin-left: 36%;
     }
 }
 @media (min-width: 1441px) and (max-width: 2560px) {
@@ -1388,7 +1279,6 @@ button:active {
         color: white;
         font-family: 'Roboto', Verdana, Tahoma, sans-serif;
     }
-
     .nav {
         display: none;
     }
@@ -1398,7 +1288,6 @@ button:active {
         height: auto;
         margin-top: 20px;
     }
-
     .header-down b {
         order: 0;
     }
@@ -1447,7 +1336,6 @@ button:active {
         text-align: left;
     
     }
-
     .question-block select {
         width: 100%;
         height: 50px;
@@ -1491,15 +1379,7 @@ button:active {
         font-family: 'Roboto', Verdana, Tahoma, sans-serif;
         font-weight: bold;
     }
-    
-    #matrixContainer {
-        margin-left: 41%;
-    }
-    #matrixContainer2 {
-        margin-left: 41%;
-    }
 }
-
 #adminSelect {
     width: 100%; 
     padding: 10px;
@@ -1515,19 +1395,16 @@ button:active {
     transition: border-color 0.3s ease, box-shadow 0.3s ease; 
     cursor: pointer; 
 }
-
 #adminSelect:focus {
     border-color: #007bff; 
     outline: none; 
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
-
 #adminSelect option {
     padding: 10px; 
     background-color: #fff; 
     color: #333; 
 }
-
 #adminSelect option:hover {
     background-color: #007bff; 
     color: #fff; 
@@ -1538,5 +1415,28 @@ button:active {
     width: 100%;
 }
 .matrix {
-    color: white; /* Тёмно-серый цвет текста для всей таблицы */
+    color: white; 
+}
+.flashes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+.alert {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    color: #fff;
+    max-width: 400px;
+    text-align: center; 
+}
+.alert-success {
+    background-color: #4caf50;
+}
+.alert-error {
+    background-color: #f44336;
+}
+.alert-warning{
+    background-color: rgb(214, 214, 4);
 }

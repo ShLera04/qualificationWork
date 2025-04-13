@@ -1,0 +1,328 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/page.css">
+    <title>Basic Page Layout</title>
+    <style>
+        /* Ваши стили здесь */
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="nav-item">Настройки</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="box">
+                <h2 class="nameSection">Загрузка файлов</h2>
+                <div class="flashes-container"></div>
+                <div class="input-container">
+                    <input type="file" id="fileInput" class="question-block">
+                    <button id="uploadFileButton">Загрузить файл</button>
+                </div>
+                <div class="input-container">
+                    <input type="number" id="themeIdInput" class="question-block" placeholder="Введите ID темы">
+                    <button id="linkFileToThemeButton">Связать файл с темой</button>
+                </div>
+                <div class="input-container">
+                    <input type="number" id="questionIdInput" class="question-block" placeholder="Введите ID вопроса">
+                    <button id="linkFileToQuestionButton">Связать файл с вопросом</button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="box">
+                <h2 class="nameSection">Скачивание файлов</h2>
+                <div class="flashes-container"></div>
+                <div class="input-container">
+                    <input type="number" id="fileIdInput" class="question-block" placeholder="Введите ID файла">
+                    <button id="downloadFileButton">Скачать файл</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById("uploadFileButton").addEventListener("click", function () {
+                const fileInput = document.getElementById("fileInput");
+                const file = fileInput.files[0];
+
+                if (!file) {
+                    showFlashMessage("Пожалуйста, выберите файл.", "error", '.box');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/upload-file', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showFlashMessage("Файл успешно загружен!", "success", '.box');
+                        // Сохраните file_id для последующего использования
+                        const fileId = data.file_id;
+                        // Вы можете сохранить file_id в скрытом поле или использовать его непосредственно
+                    } else {
+                        showFlashMessage(data.error || "Ошибка при загрузке файла", "error", '.box');
+                    }
+                })
+                .catch(error => {
+                    showFlashMessage("Ошибка сервера", "error", '.box');
+                    console.error('Error:', error);
+                });
+            });
+
+            document.getElementById("linkFileToThemeButton").addEventListener("click", function () {
+                const themeId = document.getElementById("themeIdInput").value;
+
+                if (!themeId || !fileId) {
+                    showFlashMessage("Пожалуйста, укажите ID темы и файла.", "error", '.box');
+                    return;
+                }
+
+                fetch('/link-file-to-theme', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ theme_id: themeId, file_id: fileId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showFlashMessage("Файл успешно связан с темой!", "success", '.box');
+                    } else {
+                        showFlashMessage(data.error || "Ошибка при связывании файла с темой", "error", '.box');
+                    }
+                })
+                .catch(error => {
+                    showFlashMessage("Ошибка сервера", "error", '.box');
+                    console.error('Error:', error);
+                });
+            });
+
+            document.getElementById("linkFileToQuestionButton").addEventListener("click", function () {
+                const questionId = document.getElementById("questionIdInput").value;
+
+                if (!questionId || !fileId) {
+                    showFlashMessage("Пожалуйста, укажите ID вопроса и файла.", "error", '.box');
+                    return;
+                }
+
+                fetch('/link-file-to-question', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question_id: questionId, file_id: fileId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showFlashMessage("Файл успешно связан с вопросом!", "success", '.box');
+                    } else {
+                        showFlashMessage(data.error || "Ошибка при связывании файла с вопросом", "error", '.box');
+                    }
+                })
+                .catch(error => {
+                    showFlashMessage("Ошибка сервера", "error", '.box');
+                    console.error('Error:', error);
+                });
+            });
+        });
+
+        function showFlashMessage(message, type, containerSelector) {
+            let box;
+            if (typeof containerSelector === 'string') {
+                box = document.querySelector(containerSelector);
+            } else if (containerSelector instanceof HTMLElement) {
+                box = containerSelector;
+            } else {
+                console.error('Неверный контейнер:', containerSelector);
+                return;
+            }
+
+            if (!box) {
+                console.error('Контейнер не найден:', containerSelector);
+                return;
+            }
+
+            let flashesContainer = box.querySelector('.flashes-container');
+
+            if (!flashesContainer) {
+                flashesContainer = document.createElement('div');
+                flashesContainer.className = 'flashes-container';
+
+                // Вставляем контейнер после первого h2
+                const h2Element = box.querySelector('h2.nameSection');
+                if (h2Element) {
+                    h2Element.insertAdjacentElement('afterend', flashesContainer);
+                } else {
+                    box.insertBefore(flashesContainer, box.firstChild); // Если h2 не найден, вставляем в начало
+                }
+            }
+
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            flashesContainer.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+                if (flashesContainer.children.length === 0) {
+                    flashesContainer.remove();
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/page.css">
+    <title>Basic Page Layout</title>
+    <style>
+        /* Ваши стили здесь */
+        .file-list {
+            margin-top: 10px;
+        }
+        .file-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1f2a44;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+        .file-item span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .file-item a {
+            background-color: hsl(205, 51%, 93%);
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 9px;
+            font-size: 12px;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+        .file-item a:hover {
+            background-color: #007BFF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="nav-item">Настройки</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="box">
+                <h2 class="nameSection">Скачивание файлов</h2>
+                <div class="flashes-container"></div>
+                <div id="fileList" class="file-list"></div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            loadFiles();
+        });
+
+        function loadFiles() {
+            fetch('/get-all-file-names')
+            .then(response => response.json())
+            .then(fileNames => {
+                const fileList = document.getElementById('fileList');
+                fileList.innerHTML = '';
+                fileNames.forEach(fileName => {
+                    const listItem = document.createElement("div");
+                    listItem.classList.add("file-item");
+                    listItem.innerHTML = `
+                        <span>${fileName}</span>
+                        <a href="/download-file-by-name/${encodeURIComponent(fileName)}" class="download-link">Скачать</a>
+                    `;
+                    fileList.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                showFlashMessage("Ошибка при загрузке файлов", "error", '.box');
+            });
+        }
+
+        function showFlashMessage(message, type, containerSelector) {
+            let box;
+            if (typeof containerSelector === 'string') {
+                box = document.querySelector(containerSelector);
+            } else if (containerSelector instanceof HTMLElement) {
+                box = containerSelector;
+            } else {
+                console.error('Неверный контейнер:', containerSelector);
+                return;
+            }
+
+            if (!box) {
+                console.error('Контейнер не найден:', containerSelector);
+                return;
+            }
+
+            let flashesContainer = box.querySelector('.flashes-container');
+
+            if (!flashesContainer) {
+                flashesContainer = document.createElement('div');
+                flashesContainer.className = 'flashes-container';
+
+                // Вставляем контейнер после первого h2
+                const h2Element = box.querySelector('h2.nameSection');
+                if (h2Element) {
+                    h2Element.insertAdjacentElement('afterend', flashesContainer);
+                } else {
+                    box.insertBefore(flashesContainer, box.firstChild); // Если h2 не найден, вставляем в начало
+                }
+            }
+
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            flashesContainer.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+                if (flashesContainer.children.length === 0) {
+                    flashesContainer.remove();
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

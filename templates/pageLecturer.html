@@ -3,32 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/page.css">
-    <title>Basic Page Layout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page.css') }}">
+    <title>{{ section_name }}</title>
     <style>
-        body {
-            margin-top: 50px; /* Добавляем отступ сверху */
-        }
+        /* Ваши стили здесь */
         .file-list {
             margin-top: 10px;
         }
         .file-item {
-            padding: 5px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 9px;
             margin-top: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: #1f2a44;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+        .file-item span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .file-item a {
+            background-color: #1f2a44;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 9px;
+            font-size: 12px;
+            margin-left: 10px;
             text-decoration: none;
-            color: inherit;
-            overflow: hidden; /* Скрываем переполнение */
-            text-overflow: ellipsis; /* Добавляем многоточие */
-            white-space: nowrap; /* Запрещаем перенос строк */
-            display: inline-block;
-            max-width: 85%; /* Ограничиваем ширину */
+            transition: color 0.3s ease; /* Добавляем плавный переход для свойства color */
+        }
+        .file-item a:hover {
+            color: black;
         }
         .file-item button {
             background-color: hsl(205, 51%, 93%);
@@ -38,137 +53,61 @@
             cursor: pointer;
             border-radius: 9px;
             font-size: 12px;
+            margin-left: 10px;
+            text-decoration: none;
         }
         .file-item button:hover {
-            background-color:hsl(205, 51%, 93%);
+            background-color: #4a5b78;
+            color: white;
         }
-        .file-input-wrapper {
-            position: relative;
-            display: inline-block;
-            background-color:hsl(205, 51%, 93%);
+        .input-container {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0px;
+            width: 100%;
+        }
+        .file-input-button {
+            background-color: hsl(205, 51%, 93%);
             color: black;
             font-family: Roboto, Verdana, Tahoma, sans-serif;
-            display: block;
             padding: 10px 20px;
             border-radius: 9px;
             cursor: pointer;
             text-align: center;
             font-size: 14px;
-            cursor: pointer;
             transition: 0.4s;
-            width: 150px;
-            height: 20px;
             box-shadow: 10px 10px 40px 20px #0000001A;
             font-weight: bold;
+            border: none;
         }
-        .file-input-wrapper:hover {
-            box-shadow: 7px 5px 56px -14px hsl(205, 51%, 93%);
-        }
-        .file-input-wrapper:active {
+        .file-input-button:active {
             transform: scale(0.97);
             box-shadow: 7px 5px 56px -10px hsl(205, 51%, 93%);
         }
-        .file-input-wrapper input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .button-container {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 10px; /* Добавляем отступ между кнопками */
-            margin-top: 10px;
-        }
-        .nav-item {
-            overflow: hidden; /* Скрываем переполнение */
-            text-overflow: ellipsis; /* Добавляем многоточие */
-            white-space: nowrap; /* Запрещаем перенос строк */
-            max-width: 95%; /* Ограничиваем ширину */
-        }
-        @media (max-width: 426px) {
-            .container{
-                margin: 0px 50px;
-                font-size: 12px;
-                align-items: center;
-                text-align: center;
-            }
-            .file-input-wrapper {
-                width: 50%;
-                height: 15px;
-                font-size: 12px;
-                align-items: center;
-                text-align: center;
-            }
-            .button-container {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-
-            }
-            .file-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .file-item button {
-                margin-top: 5px;
-                width: 40%;
-            }
-        }
-        @media (max-width: 426px) {
-            .container{
-                margin: 0px 50px;
-                font-size: 9px;
-                align-items: center;
-                text-align: center;
-            }
-            .file-input-wrapper {
-                width: 50%;
-                height: 10px;
-                font-size: 9px;
-                align-items: center;
-                text-align: center;
-            }
-            .button-container {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-
-            }
-            .file-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .file-item button {
-                width: 40%;
-                margin-top: 5px;
-            }
+        .file-input {
+            display: none; /* Скрываем элемент input[type="file"] */
         }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1 class="nav-item">Название раздела</h1>
+            <h1 class="nav-item">{{ section_name }}</h1>
         </div>
     </header>
     <main>
         <div class="container">
-            <div class="box">
-                <h2>Материалы</h2>
+            <div class="box" id="material">
+                <h2 class="nameSection">Материалы</h2>
+                <div class="flashes-container"></div>
                 <!-- Обертка для элемента выбора файлов -->
                 <div class="button-container">
-                    <div class="file-input-wrapper">
-                        <span>Добавить файл</span>
-                        <input type="file" id="fileInput" multiple>
-                    </div>
+                    <button class="file-input-button" id="fileInputButton">Добавить файл</button>
+                    <input type="file" id="fileInput" class="file-input" multiple>
                 </div>
                 <!-- Список, куда будут добавляться файлы -->
                 <div id="fileList" class="file-list"></div>
+                <div id="downloadFileList" class="file-list"></div>
             </div>
             <div class="box">
                 <h2>Тесты</h2>
@@ -176,76 +115,178 @@
                     <div class="file-input-wrapper" id="createTestButton">
                         <span>Составить тест</span>
                     </div>
-                    <div class="file-input-wrapper" id = "newQuestionButton">
+                    <div class="file-input-wrapper" id="newQuestionButton">
                         <span>Новые вопросы</span>
                     </div>
                 </div>
             </div>
         </div>
     </main>
-    <footer>
-        <!-- <div class="container">
-            <p>&copy; 2024 Your Website. All rights reserved.</p>
-        </div> -->
-    </footer>
+    <footer></footer>
 
     <script>
+        loadFiles();
+
+        document.getElementById("fileInputButton").addEventListener("click", function () {
+            document.getElementById("fileInput").click();
+        });
+
         document.getElementById("fileInput").addEventListener("change", function () {
             const fileInput = document.getElementById("fileInput");
             const fileList = document.getElementById("fileList");
+            const sectionName = document.querySelector('h1.nav-item').textContent; // Получаем section_name из заголовка
 
-            // Проходим по каждому выбранному файлу и добавляем его в список
             Array.from(fileInput.files).forEach(file => {
-                // Создаем элемент для отображения файла
                 const listItem = document.createElement("div");
                 listItem.classList.add("file-item");
 
-                // Создаем ссылку для скачивания файла
-                // const fileLink = document.createElement("a");
-                // fileLink.textContent = file.name; 
-
-    
-                // const reader = new FileReader();
-                // reader.onload = function(event) {
-                //     const fileURL = URL.createObjectURL(file);
-                //     fileLink.href = fileURL;
-                //     fileLink.download = file.name; 
-                // };
-                // reader.readAsDataURL(file);
-                // Создаем ссылку для открытия файла в новой вкладке
                 const fileLink = document.createElement("a");
                 fileLink.textContent = file.name; // Указываем имя файла
                 fileLink.href = URL.createObjectURL(file);
                 fileLink.target = "_blank"; // Открываем ссылку в новой вкладке
 
-                // Добавляем ссылку в элемент списка
                 listItem.appendChild(fileLink);
 
-                // Создаем кнопку для удаления файла
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Удалить";
-                deleteButton.addEventListener("click", function () {
-                    // Удаляем элемент из списка
-                    fileList.removeChild(listItem);
-                    // Удаляем URL-адрес файла
-                    URL.revokeObjectURL(fileLink.href);
+                const uploadButton = document.createElement("button");
+                uploadButton.textContent = "Загрузить";
+                uploadButton.addEventListener("click", function () {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('section_name', sectionName); // Добавляем section_name в форму
+
+                    fetch('/upload-file', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showFlashMessage("Файл успешно загружен!", "success", '.box');
+                            fileList.removeChild(listItem);
+                            loadFiles();
+                        } else {
+                            showFlashMessage(data.error || "Ошибка при загрузке файла", "error", '.box');
+                        }
+                    })
+                    .catch(error => {
+                        showFlashMessage("Ошибка сервера", "error", '.box');
+                        console.error('Error:', error);
+                    });
                 });
 
-                // Добавляем кнопку в элемент списка
-                listItem.appendChild(deleteButton);
-
-                // Добавляем элемент в список файлов
+                listItem.appendChild(uploadButton);
                 fileList.appendChild(listItem);
             });
         });
 
-        // Обработчик события для кнопки "Составить тест"
         document.getElementById("createTestButton").addEventListener("click", function () {
             window.location.href = 'formula';
         });
+
         document.getElementById("newQuestionButton").addEventListener("click", function () {
             window.location.href = 'test';
         });
+
+        function loadFiles() {
+            const sectionName = document.querySelector('h1.nav-item').textContent; // Получаем section_name из заголовка
+
+            fetch(`/get-files-by-theme?theme_name=${encodeURIComponent(sectionName)}`)
+            .then(response => response.json())
+            .then(fileNames => {
+                const fileList = document.getElementById('downloadFileList');
+                fileList.innerHTML = '';
+                fileNames.forEach(fileName => {
+                    const listItem = document.createElement("div");
+                    listItem.classList.add("file-item");
+                    listItem.innerHTML = `
+                        <a href="/download-file-by-name/${encodeURIComponent(fileName)}" class="download-link">${fileName}</a>
+                        <button class="delete-button" data-file-name="${fileName}">Удалить</button>
+                    `;
+                    fileList.appendChild(listItem);
+                });
+
+                // Добавляем обработчики для кнопок удаления
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const fileName = this.getAttribute('data-file-name');
+                        deleteFile(fileName);
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                showFlashMessage("Ошибка при загрузке файлов", "error", '.box');
+            });
+        }
+
+        function deleteFile(fileName) {
+            fetch(`/delete-file-by-name/${encodeURIComponent(fileName)}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showFlashMessage("Файл успешно удален!", "success", '#material');
+                    // Удаляем файл из списка загруженных файлов
+                    const fileList = document.getElementById('downloadFileList');
+                    const listItem = fileList.querySelector(`.file-item [data-file-name="${fileName}"]`);
+                    if (listItem) {
+                        listItem.parentElement.removeChild(listItem);
+                    }
+                    loadFiles();
+                } else {
+                    showFlashMessage(data.error || "Ошибка при удалении файла", "error", '.box');
+                }
+            })
+            .catch(error => {
+                showFlashMessage("Ошибка сервера", "error", '.box');
+                console.error('Error:', error);
+            });
+        }
+
+        function showFlashMessage(message, type, containerSelector) {
+            let box;
+            if (typeof containerSelector === 'string') {
+                box = document.querySelector(containerSelector);
+            } else if (containerSelector instanceof HTMLElement) {
+                box = containerSelector;
+            } else {
+                console.error('Неверный контейнер:', containerSelector);
+                return;
+            }
+
+            if (!box) {
+                console.error('Контейнер не найден:', containerSelector);
+                return;
+            }
+
+            let flashesContainer = box.querySelector('.flashes-container');
+
+            if (!flashesContainer) {
+                flashesContainer = document.createElement('div');
+                flashesContainer.className = 'flashes-container';
+
+                // Вставляем контейнер после первого h2
+                const h2Element = box.querySelector('h2.nameSection');
+                if (h2Element) {
+                    h2Element.insertAdjacentElement('afterend', flashesContainer);
+                } else {
+                    box.insertBefore(flashesContainer, box.firstChild); // Если h2 не найден, вставляем в начало
+                }
+            }
+
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            flashesContainer.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+                if (flashesContainer.children.length === 0) {
+                    flashesContainer.remove();
+                }
+            }, 5000);
+        }
     </script>
 </body>
 </html>

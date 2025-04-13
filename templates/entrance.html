@@ -8,11 +8,11 @@
     <title>Вход</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="..\static\css\entrance.css">
+    <link rel="stylesheet" href="..\static\css\authentication.css">
 </head>
 <body>
-    <form method="POST" action="/entrance.html" class="form">
-        <h1>Вход</h1>
+    <form method="POST" action="/entrance" class="form">
+        <h1>ВХОД</h1>
         <p>в научно-исследовательскую систему</p>
         <h2>"Исследование операций"</h2>
 
@@ -38,23 +38,14 @@
             <span class="toggle-password" onclick="togglePassword('password')"><i class="fas fa-eye"></i></span>
         </div>
 
-        <button id="loginBtn" class="button blue">
+        <button id="loginButton" class="button blue">
             <i class="fa fa-unlock"></i>
             <span><b>Войти</b></span>
         </button>
         <a href="/register" class="register">Зарегистрироваться</a>
-        <!-- <a href="#" class="forget">Забыли пароль?</a> -->
     </form>
 
     <script>
-        // Показ сообщения через параметры URL
-        var urlParams = new URLSearchParams(window.location.search);
-        var message = urlParams.get('message');
-        if (message) {
-            alert(message);
-        }
-
-        // Анимация для полей ввода
         function togglePassword(fieldId) {
             var passwordField = document.getElementById(fieldId);
             if (passwordField) {

@@ -15,6 +15,14 @@ const burgerMenu = document.getElementById('burgerMenu');
 const menuOverlay = document.getElementById('menuOverlay');
 const closeMenu = document.getElementById('closeMenu');
 
+fetch('/get_user_info')
+        .then(response => response.json())
+        .then(data => {
+            if(data.logged_in) {
+            document.querySelector('.username').textContent = data.login;
+            }
+        });
+
 // Обновление кнопок прокрутки
 function updateButtons() {
     const container = document.querySelector('.cards-container');
@@ -324,21 +332,21 @@ document.getElementById('optionSelect').addEventListener('change', function() {
     }
 });
 
-// Загрузка тем из базы данных и отображение их в карточках
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    const cardsContainer = document.getElementById('cardsContainer');
+
+    // Загрузка тем из базы данных и отображение их в карточках
     fetch('/get-themes')
         .then(response => response.json())
         .then(themes => {
-            const cardsContainer = document.getElementById('cardsContainer');
             themes.forEach((theme, index) => {
-                const card = document.createElement('div');
+                const card = document.createElement('a');
                 card.className = 'cards';
+                card.href = `/sectionStudent/${encodeURIComponent(theme.name)}`;
                 card.innerHTML = `
                     <p>Раздел №${index + 1}</p>
                     <p>Тема:</p>
-                    <a href="../page${index + 1}">
-                        <p>"${theme.name}"</p>
-                    </a>
+                    <p>"${theme.name}"</p>
                 `;
                 cardsContainer.appendChild(card);
             });
@@ -375,7 +383,7 @@ document.getElementById('inputSearchSecond').addEventListener('input', function(
     const cards = document.querySelectorAll('.cards');
 
     cards.forEach(card => {
-        const themeName = card.querySelector('a p').textContent.toLowerCase();
+        const themeName = card.textContent.toLowerCase();
         if (themeName.includes(query)) {
             card.style.display = 'block';
         } else {

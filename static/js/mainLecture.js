@@ -1,126 +1,16 @@
 const modal = document.getElementById('modal');
-        const openModalButton = document.getElementById('bottone1');
-        const closeModalButton = document.getElementById('closeModal');
-        const addTopicButton = document.getElementById('addTopicButton');
-        const topicInput = document.getElementById('topicInput');
-
-        const adminModal = document.getElementById('adminModal');
-        const openAdminModalButton = document.getElementById('bottone2');
-        const closeAdminModalButton = document.getElementById('closeAdminModal');
-        const addAdminButton = document.getElementById('addAdminButton');
-        const adminInput = document.getElementById('adminInput');
-
         const cardsContainer = document.getElementById('cardsContainer');
         const burgerMenu = document.getElementById('burgerMenu');
         const menuOverlay = document.getElementById('menuOverlay');
         const closeMenu = document.getElementById('closeMenu');
 
-        // Открываем модальное окно
-        openModalButton.addEventListener('click', () => {
-            modal.style.display = 'flex'; // Показываем окно с flex
-        });
-
-        // Закрываем модальное окно
-        closeModalButton.addEventListener('click', () => {
-            modal.style.display = 'none'; // Скрываем окно
-        });
-
-        openAdminModalButton.addEventListener('click', () => {
-            adminModal.style.display = 'flex';
-        });
-
-        // Закрываем второе модальное окно
-        closeAdminModalButton.addEventListener('click', () => {
-            adminModal.style.display = 'none';
-        });
-
-        // Закрытие модального окна при клике вне его
-        window.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-            if (event.target === adminModal) {
-                adminModal.style.display = 'none';
+        fetch('/get_user_info')
+        .then(response => response.json())
+        .then(data => {
+            if(data.logged_in) {
+            document.querySelector('.username').textContent = data.login;
             }
         });
-
-        // Добавляем тему
-        addTopicButton.addEventListener('click', async () => {
-            const topic = topicInput.value;
-
-            if (topic) {
-                try {
-                    const response = await fetch('/add-theme', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ theme_name: topic })
-                    });
-
-                    const result = await response.json();
-                    if (result.status === 'success') {
-                        // Создаем новую карточку
-                        const newCard = document.createElement('div');
-                        newCard.classList.add('cards');
-                        newCard.innerHTML = `
-                            <p>Раздел №${cardsContainer.children.length + 1}</p>
-                            <p>Тема:</p>
-                            <a href="../page${cardsContainer.children.length + 1}">
-                                <p>"${result.theme.name}"</p>
-                            </a>
-                        `;
-
-                        // Добавляем новую карточку в контейнер
-                        cardsContainer.appendChild(newCard);
-
-                        // Очищаем поле ввода
-                        topicInput.value = '';
-
-                        // Закрываем модальное окно
-                        modal.style.display = 'none';
-
-                        // Обновляем состояние кнопок прокрутки
-                        updateButtons();
-                    } else {
-                        alert(result.message);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Произошла ошибка при добавлении темы.');
-                }
-            }
-        });
-
-        // Добавляем админа
-        addAdminButton.addEventListener('click', async () => {
-            const adminName = adminSelect.value;
-
-            if (adminName) {
-                try {
-                    const response = await fetch('/add-admin', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ admin_name: adminName })
-                    });
-
-                    const result = await response.json();
-                    if (result.status === 'success') {
-                        alert('Админ успешно добавлен!');
-                        adminSelect.value = '';
-                        adminModal.style.display = 'none';
-                    } else {
-                        alert(result.message);
-                    }
-                } catch (error) {
-                    console.error('Ошибка:', error);
-                    alert('Произошла ошибка при добавлении админа.');
-                }
-            }
-        });
-
 
         // Обновление кнопок прокрутки
         function updateButtons() {
@@ -306,20 +196,21 @@ const modal = document.getElementById('modal');
         });
 
         // Загрузка тем из базы данных и отображение их в карточках
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            const cardsContainer = document.getElementById('cardsContainer');
+    
+            // Загрузка тем из базы данных и отображение их в карточках
             fetch('/get-themes')
                 .then(response => response.json())
                 .then(themes => {
-                    const cardsContainer = document.getElementById('cardsContainer');
                     themes.forEach((theme, index) => {
-                        const card = document.createElement('div');
+                        const card = document.createElement('a');
                         card.className = 'cards';
+                        card.href = `/section/${encodeURIComponent(theme.name)}`;
                         card.innerHTML = `
                             <p>Раздел №${index + 1}</p>
                             <p>Тема:</p>
-                            <a href="../page${index + 1}">
-                                <p>"${theme.name}"</p>
-                            </a>
+                            <p>"${theme.name}"</p>
                         `;
                         cardsContainer.appendChild(card);
                     });
@@ -327,24 +218,6 @@ const modal = document.getElementById('modal');
                 })
                 .catch(error => console.error('Error:', error));
         });
-        
-
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('/get-regular-users')
-                .then(response => response.json())
-                .then(users => {
-                    const adminSelect = document.getElementById('adminSelect');
-                    users.forEach(user => {
-                        const option = document.createElement('option');
-                        option.value = user.value;
-                        option.textContent = user.text;
-                        adminSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Ошибка:', error));
-        });
-
-
         // Открытие и закрытие бургер-меню
         burgerMenu.addEventListener('click', () => {
             menuOverlay.classList.toggle('active');
@@ -370,35 +243,49 @@ const modal = document.getElementById('modal');
         });
 
         document.getElementById('inputSearch').addEventListener('input', function() {
-        const query = this.value.toLowerCase();
-        const cards = document.querySelectorAll('.cards');
-
-        cards.forEach(card => {
-            const themeName = card.querySelector('a p').textContent.toLowerCase();
-            if (themeName.includes(query)) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
+            const query = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.cards');
+        
+            cards.forEach(card => {
+                const themeName = card.textContent.toLowerCase();
+                if (themeName.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         });
-    });
+        
     // Генератор матриц с седловыми точками
     document.getElementById('generateSaddleMatrix').addEventListener('click', function() {
         const rows = parseInt(document.getElementById('saddleRows').value);
         const cols = parseInt(document.getElementById('saddleCols').value);
         const k = parseInt(document.getElementById('saddlePointsCount').value);
-        
+    
+         // Очистка контейнера матрицы перед новым запросом
+        const container = document.getElementById('saddleMatrixContainer');
+        container.innerHTML = '';
+        container.className = 'matrix-container';
+
+        // Очистка контейнера результатов перед новым запросом
+        const resultContainer = document.getElementById('saddleMatrixResult');
+        resultContainer.innerHTML = '';
         // Проверка ввода
-        const maxPossible = Math.min(rows, cols);
+        if (rows < 1 || cols < 1) {
+            showFlashMessage("Все значения должны быть положительными числами", 'error', '#saddleGenerator .second_container');
+            return;
+        }
+    
+        const maxPossible = rows * cols;
         if (k > maxPossible) {
-            alert(`Ошибка: количество седловых точек не может превышать ${maxPossible}`);
+            showFlashMessage(`Количество седловых точек не может превышать ${maxPossible}`, 'error', '#saddleGenerator .second_container');
             return;
         }
-        if (rows < 1 || cols < 1 || k < 1) {
-            alert("Все значения должны быть положительными числами");
+        if (k < 0) {
+            showFlashMessage("Количество седловых точек должно быть неотрицательным числом", 'error', '#saddleGenerator .second_container');
             return;
         }
-        
+    
         fetch('/generate_saddle_matrix', {
             method: 'POST',
             headers: {
@@ -417,13 +304,18 @@ const modal = document.getElementById('modal');
             return response.json();
         })
         .then(data => {
+            if (data.error) {
+                showFlashMessage(data.error, 'error', '#saddleGenerator .second_container');
+                return;
+            }
+    
             const container = document.getElementById('saddleMatrixContainer');
             container.innerHTML = '';
             container.className = 'matrix-container';
-            
+    
             const table = document.createElement('table');
             table.className = 'matrix';
-            
+    
             // Создаем заголовок таблицы
             const headerRow = document.createElement('tr');
             headerRow.appendChild(document.createElement('th')); // Пустая ячейка
@@ -432,18 +324,18 @@ const modal = document.getElementById('modal');
                 headerRow.appendChild(th);
             }
             table.appendChild(headerRow);
-            
+    
             // Заполняем матрицу
             for (let i = 0; i < rows; i++) {
                 const row = document.createElement('tr');
                 const rowHeader = document.createElement('th');
                 row.appendChild(rowHeader);
-                
+    
                 for (let j = 0; j < cols; j++) {
                     const cell = document.createElement('td');
                     cell.textContent = data.matrix[i][j];
                     cell.style.color = 'white';
-                    
+    
                     // Проверяем, является ли седловой точкой
                     const isSaddle = data.saddle_points.some(p => p[0] === i && p[1] === j);
                     if (isSaddle) {
@@ -452,17 +344,17 @@ const modal = document.getElementById('modal');
                         cell.style.color = 'black';
                         cell.title = 'Седловая точка';
                     }
-                    
+    
                     row.appendChild(cell);
                 }
                 table.appendChild(row);
             }
-            
+    
             container.appendChild(table);
-            
+    
             // Выводим результаты
             const resultContainer = document.getElementById('saddleMatrixResult');
-            
+    
             if (data.saddle_points.length !== k) {
                 resultContainer.innerHTML += `
                     <p style="color: red;">
@@ -473,10 +365,60 @@ const modal = document.getElementById('modal');
         })
         .catch(error => {
             console.error('Error:', error);
-            alert(`Ошибка: ${error.message}`);
+            showFlashMessage(error.message, 'error', '#saddleGenerator .second_container');
         })
         .finally(() => {
-            button.disabled = false;
-            button.textContent = "Сгенерировать матрицу";
+            this.disabled = false;
+            this.textContent = "Сгенерировать";
         });
     });
+    
+    
+    /**
+ * Универсальная функция для отображения flash-сообщений.
+ * @param {string} message - Текст сообщения.
+ * @param {string} type - Тип сообщения: 'success', 'error', 'warning'.
+ * @param {string|HTMLElement} containerSelector - Селектор или элемент контейнера, в котором будет отображаться сообщение.
+ */
+function showFlashMessage(message, type, containerSelector) {
+    let box;
+    if (typeof containerSelector === 'string') {
+        box = document.querySelector(containerSelector);
+    } else if (containerSelector instanceof HTMLElement) {
+        box = containerSelector;
+    } else {
+        console.error('Неверный контейнер:', containerSelector);
+        return;
+    }
+
+    if (!box) {
+        console.error('Контейнер не найден:', containerSelector);
+        return;
+    }
+
+    let flashesContainer = box.querySelector('.flashes');
+
+    if (!flashesContainer) {
+        flashesContainer = document.createElement('div');
+        flashesContainer.className = 'flashes';
+
+        const h2Element = box.querySelector('h2.nameSection');
+        if (h2Element) {
+            h2Element.insertAdjacentElement('afterend', flashesContainer);
+        } else {
+            box.insertBefore(flashesContainer, box.firstChild);
+        }
+    }
+
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.textContent = message;
+    flashesContainer.appendChild(alertDiv);
+
+    setTimeout(() => {
+        alertDiv.remove();
+        if (flashesContainer.children.length === 0) {
+            flashesContainer.remove();
+        }
+    }, 5000);
+}

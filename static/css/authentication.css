@@ -1,65 +1,44 @@
 body {
+    background: #011a31;
     background-size: cover;
-    background-color: #011a31;
     width: 100%;
     height: 100vh;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: Roboto, Verdana, Tahoma, sans-serif;
+    font-family: 'Roboto', Verdana, Tahoma, sans-serif;
 }
 .form {
-    /* display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background: #03264a;
     border-radius: 12px;
-    padding: 20px;
-    width: 500px;
-    height: 500px;
-    max-width: 100%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); */
-    background: #03264a;
-    border-radius: 12px;
-    padding: 20px;
-    width: 100%;
+    width: 90%;
     max-width: 500px;
     box-sizing: border-box;
+    text-align: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    color: rgb(255, 255, 255);
 }
 .form h1 {
-    margin: 40px 100px;
-    text-align: center;
-    text-transform: uppercase;
-    color: rgb(255, 255, 255);
+    margin: 20px 0;
     font-size: 24px;
 }
 .form p {
-    text-align: center;
     margin: 10px 0;
-    color: rgb(220, 228, 252);
     font-size: 16px;
 }
 .form h2 {
-    text-align: center;
-    margin: 0px 0px 10px;
-    color: rgb(220, 228, 252);
+    margin: 10px 0;
     font-size: 18px;
 }
-
 .group {
     position: relative;
-    /* margin: 5px; */
+    margin: 15px 0;
     width: 100%;
     text-align: center;
+    display: flex;
+    justify-content: center;
 }
-
 .group input {
     text-align: left;
     height: 35px;
@@ -77,10 +56,9 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding-left: 20px; /* Добавлен отступ слева */
-    padding-right: 40px; /* Добавлен отступ справа */
+    padding-left: 20px; 
+    padding-right: 40px; 
 }
-
 .group label {
     position: absolute;
     top: -10px;
@@ -91,41 +69,36 @@ body {
     padding: 0 5px;
     font-size: 16px;
     transition: all 0.5s ease-in-out;
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
 .group input:placeholder-shown + label {
     top: 10px;
     background-color: transparent;
 }
-
 .group input:focus {
     border-color: #3366cc;
 }
-
 .group input:focus + label {
-    top: -10px;
+    top: -5px;
     left: 50%;
+    transform: translateX(-50%);
     background-color: #03264a;
     color: #3366cc;
     font-weight: 600;
     font-size: 16px;
     transition: all 0.5s ease-in-out;
 }
-
 .form a {
     text-align: center;
     display: block;
     color: rgb(220, 228, 252);
-    margin-top: 10px 0;
-    margin: 5px auto;
-    font-size: 14px;
-    font-family: Roboto, Verdana, Tahoma, sans-serif;
+    margin: 10px 0;
+    font-size: 16px;
     font-weight: bold;
     padding: 5px;
 }
-
 .button {
     display: block;
     text-align: center;
@@ -147,42 +120,21 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
-.button.blue {
-    background: hsl(207, 96%, 26%);
+#loginBtn {
+    background: hsl(205, 51%, 93%);
 }
-
-.button.purple {
-    background: #9b59b6;
-}
-
 .button:hover {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-
 .button:hover.blue {
     background: #2e45b8;
 }
-
 .button:active {
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    background: #b3d1ff;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-
 .button i {
     margin-right: 4px;
-}
-
-.button + .button {
-    margin-left: 6px;
-}
-
-.button.blue {
-    background: hsl(0, 0%, 100%);
-}
-
-.button:active.blue {
-    background: #2e45b8;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
@@ -194,17 +146,15 @@ input:-webkit-autofill:active {
 .toggle-password {
     position: absolute;
     top: 50%;
-    right: 15%;
+    right: 22%;
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 18px;
     color: #fff;
 }
-
 .toggle-password:hover {
     color: #3366cc;
 }
-
 @media (max-width: 600px) {
     .form {
         padding: 10px;
@@ -216,7 +166,12 @@ input:-webkit-autofill:active {
         font-size: 14px;
     }
     .button {
-        width: 80%;
+        width: 100%;
+        font-size: 14px;
+    }
+    #loginButton{
+        width: 50%;
+        font-size: 14px;
     }
     .group label {
         font-size: 14px;
@@ -226,17 +181,8 @@ input:-webkit-autofill:active {
         font-size: 14px;
         top: -3px;
     }
-    .form h1 {
-        font-size: 24px;
-    }
-    .form h2 {
-        font-size: 18px;
-    }
-    .form p{
-        font-size: 16px;
-    }
     .toggle-password {
-        right: 10%;
+        right: 3%;
     }
 }
 @media (max-width: 400px) {
@@ -250,7 +196,11 @@ input:-webkit-autofill:active {
         font-size: 14px;
     }
     .button {
-        width: 80%;
+        width: 100%;
+        font-size: 14px;
+    }
+    #loginButton{
+        width: 50%;
         font-size: 14px;
     }
     .group label {
@@ -260,15 +210,6 @@ input:-webkit-autofill:active {
     .group input:focus + label {
         font-size: 14px;
         top: -3px;
-    }
-    .form h1 {
-        font-size: 24px;
-    }
-    .form h2 {
-        font-size: 18px;
-    }
-    .form p{
-        font-size: 16px;
     }
     .toggle-password {
         right: 5%;
@@ -285,8 +226,12 @@ input:-webkit-autofill:active {
         font-size: 12px;
     }
     .button {
-        width: 90%;
+        width: 100%;
         font-size: 12px;
+    }
+    #loginButton{
+        width: 50%;
+        font-size: 14px;
     }
     .group label {
         font-size: 12px;
@@ -295,7 +240,7 @@ input:-webkit-autofill:active {
         font-size: 12px;
     }
     .form h1 {
-        font-size: 18px;
+        font-size: 20px;
     }
     .form p, .form h2 {
         font-size: 14px;
@@ -305,6 +250,7 @@ input:-webkit-autofill:active {
     }
 }
 @media (max-width: 250px) {
+
     .form {
         padding: 10px;
         width: 100%;
@@ -316,8 +262,12 @@ input:-webkit-autofill:active {
         font-size: 5px;
     }
     .button {
-        width: 90%;
+        width: 100%;
         font-size: 10px;
+    }
+    #loginButton{
+        width: 50%;
+        font-size: 14px;
     }
     .group label {
         font-size: 10px;
@@ -342,9 +292,10 @@ input:-webkit-autofill:active {
         right: 5%;
     }
     .group input:not(:placeholder-shown) + label {
-        top: -2px;
+        top: -2px; 
         font-size: 12px;
     }
+
 }
 @media (min-width: 50px) and (max-width: 150px) {
     .form {
@@ -355,29 +306,33 @@ input:-webkit-autofill:active {
     }
     .group input {
         width: 100%;
-        font-size: 10px;
+        font-size: 10px; 
     }
     .button {
-        width: 90%;
-        font-size: 10px;
+        width: 100%;
+        font-size: 10px; 
+    }
+    #loginButton{
+        width: 50%;
+        font-size: 14px;
     }
     .group label {
-        font-size: 10px;
+        font-size: 10px; 
     }
     .group input:focus + label {
-        font-size: 8px;
+        font-size: 8px; 
     }
     .form h1 {
-        font-size: 10px;
+        font-size: 10px; 
     }
     .form p, .form h2 {
-        font-size: 8px;
+        font-size: 8px; 
     }
     .toggle-password {
-        font-size: 8px;
+        font-size: 8px; 
     }
 }
-@media (min-width: 601px) and (max-width: 2560px) {
+@media (min-width: 601px) and (max-width: 1024px) {
     .form {
         padding: 15px;
         width: 80%;
@@ -388,7 +343,11 @@ input:-webkit-autofill:active {
         font-size: 14px;
     }
     .button {
-        width: 35%;
+        width: 90%;
+        font-size: 14px;
+    }
+    #loginButton{
+        width: 40%;
         font-size: 14px;
     }
     .group label {
@@ -400,8 +359,71 @@ input:-webkit-autofill:active {
         top: -3px;
     }
     .toggle-password {
-        right: 19%;
+        right: 17%;
     }
+}
+@media (min-width: 1025px) {
+    .form {
+        padding: 20px;
+        width: 70%;
+        height: auto;
+        max-width: 700px;
+    }
+    .group input {
+        width: 90%;
+    }
+    .button {
+        width: 85%;
+    }
+    #loginButton{
+        width: 30%;
+        font-size: 14px;
+    }
+    .toggle-password {
+        right: 21%;
+    }
+}
+.question-block input[type="text"]:focus,
+.question-block select:focus,
+.question-block input[type="number"]:focus,
+.question-block input[type="file"]:focus {
+    box-shadow: 0 0 5px #3366cc;
+    outline: none;
+    font-family: 'Roboto', Verdana, Tahoma, sans-serif;
+    border-color: #3366cc;
+}
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.question-block textarea,
+.question-block select {
+    width: calc(100% - 20px);
+    left:50%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #03264a;
+    color: rgb(220, 228, 252) !important;
+    font-size: 16px;
+    font-family: 'Roboto', Verdana, Tahoma, sans-serif;
+    border-radius: 12px;
+    box-shadow: inset 0 1px 3px white;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Roboto', Verdana, Tahoma, sans-serif;
+}
+.question-block {
+    width: 425px; 
+    border-radius: 12px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s ease;
+    align-items: center;
+}
+.question-block select option {
+    background: #03264a;
+    color: rgb(220, 228, 252) !important; 
+    padding: 10px;
 }
 .flashes {
     display: flex;
@@ -409,20 +431,17 @@ input:-webkit-autofill:active {
     align-items: center;
     margin: 20px 0;
 }
-
 .alert {
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
     color: #fff;
-    max-width: 400px; /* Убедитесь, что ширина установлена */
-    text-align: center; /* Центрирование текста внутри алерта */
+    max-width: 400px;
+    text-align: center; 
 }
-
 .alert-success {
     background-color: #4caf50;
 }
-
 .alert-error {
     background-color: #f44336;
 }

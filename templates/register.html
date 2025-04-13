@@ -7,11 +7,11 @@
     <meta name="description" content="Зарегистрируйтесь на сайте научно-исследовательской системы 'Исследование операций', чтобы начать обучение по данной дисциплине. Регистрация занимает всего несколько минут.">
     <title>Регистрация</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="..\static\css\register.css">
+    <link rel="stylesheet" href="..\static\css\authentication.css">
 </head>
 <body>
     <form method="POST" class="form">
-        <h1>Регистрация</h1>
+        <h1>РЕГИСТРАЦИЯ</h1>
         <p>в научно-исследовательской системе</p>
         <h2>"Исследование операций"</h2>
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -47,9 +47,9 @@
         <div class="group">
             <div class="question-block">
                 <select id="direction" name="direction">
-                    <option value="" style = "text-align: center;">Выберите направление подготовки</option>
+                    <option disabled selected value="" style = "text-align: center;">Выберите направление подготовки</option>
                     {% for direction in directions %}
-                        <option value="{{ direction.direction_id }}">{{ direction.direction_name }}</option>
+                        <option value="{{ direction }}">{{ direction }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -57,20 +57,20 @@
         <div class="group">
             <div class="question-block">
                 <select id="group" name="group">
-                    <option value="" style = "text-align: center;">Выберите группу</option>
+                    <option disabled selected value="" style = "text-align: center;">Выберите группу</option>
                     {% for group in groups %}
-                        <option value="{{ group.group_id }}">{{ group.group_name }}</option>
-                    {% endfor %}
+                    <option value="{{ group }}">{{ group }}</option>
+                {% endfor %}
                 </select>
             </div>
         </div>      
-        <button id="login" class="button blue">
+        <button id="loginBtn" class="button blue">
             <i class="fa fa-unlock"></i>
             <span><b>Зарегистрироваться</b></span>
         </button>
+        <a href="/entrance" class="entrance">Войти</a>
     </form>
     <script>
-        
         function togglePassword(fieldId) {
             var passwordField = document.getElementById(fieldId);
             var passwordFieldType = passwordField.getAttribute("type");
