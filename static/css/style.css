@@ -1440,15 +1440,15 @@ button:active {
     background-color: rgb(214, 214, 4);
 }
 .matrix-container {
-    background-color: #041027; /* Темный фон контейнера */
+    background-color: #041027;
     padding: 20px;
     border-radius: 8px;
     margin: 20px 0;
 }
 
 .matrix td {
-    color: white ; /* Приоритет для белого цвета */
-    background-color: #041027; /* Цвет фона ячеек */
+    color: white ; 
+    background-color: #041027; 
     min-width: 80px;
     height: 40px;
     border: 2px solid white;

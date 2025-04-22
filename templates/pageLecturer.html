@@ -110,15 +110,18 @@
                 <div id="downloadFileList" class="file-list"></div>
             </div>
             <div class="box">
-                <h2>Тесты</h2>
+                <h2 class="nameSection" id = "#nameSectionTest">Тесты</h2>
+                <div class="flashes-container"></div>
                 <div class="button-container">
-                    <div class="file-input-wrapper" id="createTestButton">
+                    <button class="file-input-wrapper" id="createTestButton">Составить тест</button>
+                    <!-- <div class="file-input-wrapper" id="createTestButton">
                         <span>Составить тест</span>
-                    </div>
+                    </div> -->
                     <div class="file-input-wrapper" id="newQuestionButton">
                         <span>Новые вопросы</span>
                     </div>
                 </div>
+                <div id="testsList" class="file-list"></div>
             </div>
         </div>
     </main>
@@ -126,6 +129,7 @@
 
     <script>
         loadFiles();
+        loadTests();
 
         document.getElementById("fileInputButton").addEventListener("click", function () {
             document.getElementById("fileInput").click();
@@ -180,7 +184,7 @@
         });
 
         document.getElementById("createTestButton").addEventListener("click", function () {
-            window.location.href = 'formula';
+            window.location.href = '/createTest'; // или '/createTest.html' в зависимости от вашей маршрутизации
         });
 
         document.getElementById("newQuestionButton").addEventListener("click", function () {
@@ -302,6 +306,73 @@
                 }
             }, 5000);
         }
+        // Функция для загрузки тестов
+        function loadTests() {
+            const sectionName = document.querySelector('h1.nav-item').textContent;
+
+            fetch(`/get-tests-by-theme?theme_name=${encodeURIComponent(sectionName)}`)
+            .then(response => response.json())
+            .then(tests => {
+                const testsList = document.getElementById('testsList');
+                testsList.innerHTML = '';
+                
+                tests.forEach(test => {
+                    const testItem = document.createElement("div");
+                    testItem.classList.add("file-item");
+                    
+                    // Ссылка на тест
+                    const testLink = document.createElement("a");
+                    testLink.href = `/view-test/${test.test_id}`;
+                    testLink.textContent = test.test_name;
+                    testLink.className = "test-link";
+                    
+                    // Кнопка удаления
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Удалить";
+                    deleteButton.className = "delete-button";
+                    deleteButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        deleteTest(test.test_id);
+                    });
+                    
+                    testItem.appendChild(testLink);
+                    testItem.appendChild(deleteButton);
+                    testsList.appendChild(testItem);
+                });
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                showFlashMessage("Ошибка при загрузке тестов", "error", '.box');
+            });
+        }
+
+
+        function deleteTest(testId) {
+            
+            fetch(`/delete-test/${testId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const container = document.querySelector('.box:has(#testsList)');
+                if (data.success) {
+                    showFlashMessage("Тест успешно удален!", "success", container);
+                    loadTests(); // Обновляем список
+                } else {
+                    showFlashMessage(data.error || "Ошибка при удалении теста", "error", container);
+                }
+            })
+            .catch(error => {
+                showFlashMessage("Ошибка сервера", "error", container);
+                console.error('Error:', error);
+            });
+        }
+
+        // Вызываем загрузку тестов при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFiles();
+            loadTests(); // Добавляем загрузку тестов
+        });
     </script>
 </body>
 </html>

@@ -1,242 +1,338 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ test_name }} - Тестирование</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page.css') }}">
-    <title>Тестирование - {{ test_name }}</title>
     <style>
-        /* Основные стили из предыдущего кода */
+        :root {
+            --primary-color: #4CAF50;
+            --background-dark: #041027;
+            --card-bg: #1f2a44;
+            --text-light: #ffffff;
+            --accent-color: #3a4a6a;
+        }
+
+        /* Общие стили */
+        body {
+            background: var(--background-dark);
+            color: var(--text-light);
+            font-family: 'Roboto', sans-serif;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        .box {
-            background-color: #2a3a5a;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .nameSection {
-            color: #fff;
-            margin-bottom: 15px;
-        }
-        
-        /* Стили для вопросов */
-        .question-container {
+
+        /* Шапка теста */
+        .test-header {
+            text-align: center;
             margin-bottom: 30px;
         }
-        .question-block {
-            background-color: #1f2a44;
-            border-radius: 9px;
-            padding: 20px;
-            margin-bottom: 15px;
+
+        /* Прогресс-бар */
+        .progress-container {
+            margin-bottom: 30px;
         }
+
+        .progress-bar {
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: right;
+            margin-top: 8px;
+            font-size: 0.9em;
+        }
+
+        /* Контейнер вопроса */
+        .question-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .question-header {
+            margin-bottom: 20px;
+        }
+
         .question-number {
-            font-weight: bold;
-            color: #4CAF50;
-            font-size: 18px;
-            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-size: 1.1em;
+            font-weight: 600;
         }
+
         .question-text {
-            color: #fff;
-            font-size: 16px;
-            margin-bottom: 15px;
+            font-size: 1.2em;
+            line-height: 1.4;
+            margin: 15px 0;
         }
-        .question-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            display: block;
+
+        /* Варианты ответов */
+        .options-grid {
+            display: grid;
+            gap: 12px;
         }
-        .options-list {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
+
         .option-item {
-            margin-bottom: 10px;
+            background: #2a3b56;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.2s ease;
         }
+
+        .option-item:hover {
+            background: #324462;
+            transform: translateY(-2px);
+        }
+
         .option-label {
             display: flex;
             align-items: center;
-            color: #fff;
             cursor: pointer;
         }
+
         .option-input {
-            margin-right: 10px;
+            margin-right: 12px;
+            transform: scale(1.2);
         }
-        .text-answer {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            background-color: #fff;
-            color: #333;
-        }
-        .submit-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 9px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        .submit-btn:hover {
-            background-color: #45a049;
-        }
-        .navigation-buttons {
+
+        /* Навигация */
+        .navigation-container {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            align-items: center;
+            margin-top: 30px;
         }
-        .nav-btn {
-            background-color: #3a4a6a;
+
+        .nav-button {
+            background: var(--accent-color);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 9px;
+            padding: 12px 25px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .nav-btn:hover {
-            background-color: #4a5b78;
+
+        .nav-button:hover {
+            background: #4a5b78;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .question-list {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .question-link {
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: var(--accent-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .question-link.current {
+            background: var(--primary-color);
+        }
+
+        .question-link.answered {
+            background: #2e7d32;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .question-text {
+                font-size: 1em;
+            }
+
+            .nav-button {
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1 class="nav-item">{{ test_name }}</h1>
-        </div>
-    </header>
-    <main>
-        <div class="container">
-            <div class="box">
-                <h2 class="nameSection">Тестирование</h2>
-                <div class="flashes-container"></div>
-                
-                <!-- Прогресс-бар -->
-                <div style="margin-bottom: 20px;">
-                    <div style="background-color: #3a4a6a; height: 10px; border-radius: 5px;">
-                        <div style="background-color: #4CAF50; width: 30%; height: 100%; border-radius: 5px;"></div>
-                    </div>
-                    <p style="color: #fff; text-align: right;">Вопрос 3 из 10</p>
-                </div>
-                
-                <!-- Блок вопроса -->
-                <div class="question-container">
-                    <div class="question-block">
-                        <div class="question-number">Вопрос 3</div>
-                        <div class="question-text">
-                            Какое из следующих утверждений правильно описывает принцип инкапсуляции в ООП?
-                        </div>
-                        
-                        <!-- Блок с изображением (если есть) -->
-                        <img src="{{ url_for('static', filename='images/oop.png') }}" alt="Пример изображения" class="question-image">
-                        
-                        <!-- Варианты ответов (для вопросов с выбором) -->
-                        <ul class="options-list">
-                            <li class="option-item">
-                                <label class="option-label">
-                                    <input type="radio" name="answer" class="option-input">
-                                    Это процесс скрытия деталей реализации и предоставления только необходимого интерфейса
-                                </label>
-                            </li>
-                            <li class="option-item">
-                                <label class="option-label">
-                                    <input type="radio" name="answer" class="option-input">
-                                    Это способность объектов разных классов отвечать на одинаковые сообщения
-                                </label>
-                            </li>
-                            <li class="option-item">
-                                <label class="option-label">
-                                    <input type="radio" name="answer" class="option-input">
-                                    Это механизм создания новых классов на основе существующих
-                                </label>
-                            </li>
-                            <li class="option-item">
-                                <label class="option-label">
-                                    <input type="radio" name="answer" class="option-input">
-                                    Это процесс разделения программы на независимые модули
-                                </label>
-                            </li>
-                        </ul>
-                        
-                        <!-- Или поле для ввода ответа (для вопросов с текстовым ответом) -->
-                        <!-- <textarea class="text-answer" placeholder="Введите ваш ответ..."></textarea> -->
-                    </div>
-                    
-                    <!-- Кнопки навигации -->
-                    <div class="navigation-buttons">
-                        <button class="nav-btn" id="prevQuestion">Предыдущий вопрос</button>
-                        <button class="nav-btn" id="nextQuestion">Следующий вопрос</button>
-                    </div>
-                </div>
+    <div class="container">
+        <header class="test-header">
+            <h1>{{ test_name }}</h1>
+        </header>
+
+        <!-- Прогресс-бар -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
             </div>
+            <div class="progress-text" id="progressText"></div>
         </div>
-    </main>
-    <footer></footer>
+
+        <!-- Список вопросов -->
+        <div class="question-list" id="questionNav"></div>
+
+        <!-- Контейнер вопроса -->
+        <div class="question-container">
+            <div class="question-header">
+                <div class="question-number" id="questionNumber"></div>
+                <div class="question-text" id="questionText"></div>
+            </div>
+            
+            <!-- Изображение вопроса -->
+            <img id="questionImage" class="question-image" alt="Иллюстрация вопроса">
+
+            <!-- Варианты ответов -->
+            <div class="options-grid" id="optionsContainer"></div>
+        </div>
+
+        <!-- Навигация -->
+        <div class="navigation-container">
+            <button class="nav-button" id="prevQuestion">← Назад</button>
+            <div>
+                <button class="nav-button" id="submitTest" style="display: none;">Завершить тест</button>
+            </div>
+            <button class="nav-button" id="nextQuestion">Далее →</button>
+        </div>
+    </div>
 
     <script>
-        // Обработчики для кнопок навигации
-        document.getElementById("prevQuestion").addEventListener("click", function() {
-            // Логика перехода к предыдущему вопросу
-            showFlashMessage("Переход к предыдущему вопросу", "info", '.box');
-        });
-        
-        document.getElementById("nextQuestion").addEventListener("click", function() {
-            // Логика перехода к следующему вопросу
-            showFlashMessage("Переход к следующему вопросу", "info", '.box');
-        });
-        
-        // Функция для отображения сообщений (из вашего предыдущего кода)
-        function showFlashMessage(message, type, containerSelector) {
-            let box;
-            if (typeof containerSelector === 'string') {
-                box = document.querySelector(containerSelector);
-            } else if (containerSelector instanceof HTMLElement) {
-                box = containerSelector;
-            } else {
-                console.error('Неверный контейнер:', containerSelector);
-                return;
-            }
+        // Пример данных (должны загружаться с сервера)
+        const questions = [
+            {
+                id: 1,
+                text: "Какое из следующих утверждений правильно описывает принцип инкапсуляции в ООП?",
+                image: "{{ url_for('static', filename='images/oop.png') }}",
+                options: [
+                    { id: 1, text: "Это процесс скрытия деталей реализации..." },
+                    { id: 2, text: "Это способность объектов разных классов..." },
+                    { id: 3, text: "Это механизм создания новых классов..." },
+                    { id: 4, text: "Это процесс разделения программы..." }
+                ]
+            },
+            // ... другие вопросы
+        ];
 
-            if (!box) {
-                console.error('Контейнер не найден:', containerSelector);
-                return;
-            }
+        let currentQuestion = 0;
+        let answers = {};
 
-            let flashesContainer = box.querySelector('.flashes-container');
-
-            if (!flashesContainer) {
-                flashesContainer = document.createElement('div');
-                flashesContainer.className = 'flashes-container';
-
-                const h2Element = box.querySelector('h2.nameSection');
-                if (h2Element) {
-                    h2Element.insertAdjacentElement('afterend', flashesContainer);
-                } else {
-                    box.insertBefore(flashesContainer, box.firstChild);
-                }
-            }
-
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.textContent = message;
-            flashesContainer.appendChild(alertDiv);
-
-            setTimeout(() => {
-                alertDiv.remove();
-                if (flashesContainer.children.length === 0) {
-                    flashesContainer.remove();
-                }
-            }, 3000);
+        function initTest() {
+            renderQuestionNavigation();
+            showQuestion(currentQuestion);
+            updateProgress();
         }
+
+        function showQuestion(index) {
+            const question = questions[index];
+            
+            // Обновление содержимого
+            document.getElementById('questionNumber').textContent = `Вопрос ${index + 1}`;
+            document.getElementById('questionText').textContent = question.text;
+            
+            // Изображение вопроса
+            const imgElement = document.getElementById('questionImage');
+            if (question.image) {
+                imgElement.src = question.image;
+                imgElement.style.display = 'block';
+            } else {
+                imgElement.style.display = 'none';
+            }
+
+            // Варианты ответов
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option-item';
+                optionElement.innerHTML = `
+                    <label class="option-label">
+                        <input type="radio" name="answer" class="option-input" 
+                               value="${option.id}" ${answers[index] === option.id ? 'checked' : ''}>
+                        ${option.text}
+                    </label>
+                `;
+                optionsContainer.appendChild(optionElement);
+            });
+
+            // Обновление навигации
+            document.querySelectorAll('.question-link').forEach(link => {
+                link.classList.remove('current');
+            });
+            document.querySelectorAll('.question-link')[index].classList.add('current');
+        }
+
+        function renderQuestionNavigation() {
+            const navContainer = document.getElementById('questionNav');
+            navContainer.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const link = document.createElement('div');
+                link.className = `question-link ${index === 0 ? 'current' : ''} ${answers[index] ? 'answered' : ''}`;
+                link.textContent = index + 1;
+                link.onclick = () => {
+                    currentQuestion = index;
+                    showQuestion(index);
+                };
+                navContainer.appendChild(link);
+            });
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(answers).length;
+            const progress = (answered / questions.length) * 100;
+            
+            document.getElementById('progress').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = 
+                `Прогресс: ${answered}/${questions.length} вопросов`;
+        }
+
+        // Обработчики событий
+        document.getElementById('prevQuestion').addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        });
+
+        document.getElementById('nextQuestion').addEventListener('click', () => {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        });
+
+        // Сохранение ответов
+        document.getElementById('optionsContainer').addEventListener('change', (e) => {
+            if (e.target.name === 'answer') {
+                answers[currentQuestion] = e.target.value;
+                updateProgress();
+                renderQuestionNavigation();
+            }
+        });
+
+        // Инициализация теста
+        initTest();
     </script>
 </body>
 </html>

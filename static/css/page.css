@@ -159,7 +159,7 @@ button:hover {
     padding: 10px 0px;
     width: 100%;
 }
-.file-input-wrapper {
+/* .file-input-wrapper {
     position: relative;
     display: inline-block;
     background-color: hsl(205, 51%, 93%);
@@ -180,7 +180,7 @@ button:hover {
 .file-input-wrapper:active {
     transform: scale(0.97);
     box-shadow: 7px 5px 56px -10px hsl(205, 51%, 93%);
-}
+} */
 .file-input-wrapper input[type="file"] {
     position: absolute;
     top: 0;
@@ -251,6 +251,12 @@ button:hover {
     text-align: center;
 }
 .flashes-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+.flashes {
     display: flex;
     flex-direction: column;
     align-items: center;

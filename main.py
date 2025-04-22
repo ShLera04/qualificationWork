@@ -45,7 +45,12 @@ def test_page():
     return render_template('test.html')
 
 @app.route('/createTest', methods=['GET', 'POST'])
+@login_required
 def createTest_page():
+    if not session.get('is_admin'):
+        flash('Доступ запрещен', 'error')
+        return render_template('mainStudent.html')
+
     return render_template('createTest.html')
 
 @app.route('/tttt', methods=['GET', 'POST'])
@@ -264,7 +269,133 @@ def add_theme():
         app.logger.error(f"Error in add_theme: {str(e)}")
         flash('Ошибка сервера при добавлении темы', 'error')
         return jsonify({"success": False, "error": "Server error"}), 500
+from flask import flash, redirect, url_for
 
+@app.route('/create-test', methods=['POST'])
+def create_test():
+    try:
+        # Проверка аутентификации
+        if 'user_id' not in session:
+            return jsonify({
+                "success": False,
+                "error": "Для создания теста требуется авторизация"
+            }), 401
+
+        # Валидация данных
+        theme_name = request.form.get('theme')
+        easy = request.form.get('easyQuestions')
+        medium = request.form.get('mediumQuestions')
+        hard = request.form.get('hardQuestions')
+        test_name = request.form.get('nameQuestion') 
+        if not all([theme_name, test_name, easy, medium, hard]):
+            return jsonify({
+                "success": False,
+                "error": "Не все обязательные поля заполнены"
+            }), 400
+
+        try:
+            easy = int(easy)
+            medium = int(medium)
+            hard = int(hard)
+        except ValueError:
+            return jsonify({
+                "success": False,
+                "error": "Количество вопросов должно быть числом"
+            }), 400
+
+        if any(n < 0 for n in [easy, medium, hard]):
+            return jsonify({
+                "success": False,
+                "error": "Количество вопросов не может быть отрицательным"
+            }), 400
+
+        # Поиск темы
+        cur = conn.cursor()
+        cur.execute("SELECT theme_id FROM theme WHERE theme_name = %s", (theme_name,))
+        theme_result = cur.fetchone()
+        
+        if not theme_result:
+            return jsonify({
+                "success": False,
+                "error": "Выбранная тема не существует"
+            }), 404
+
+        # Создание теста
+        theme_id = theme_result[0]
+        test_name = request.form.get('nameQuestion') 
+        creation_date = datetime.now()
+
+        cur.execute("""
+            INSERT INTO test_options (
+                test_name, user_id, theme_id, 
+                difficulty_level, easy_questions, 
+                medium_questions, hard_questions, deadline
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING test_id
+        """, (test_name, session['user_id'], theme_id, 
+              request.form['testDifficulty'], easy, 
+              medium, hard, creation_date))
+        
+        new_test = cur.fetchone()
+        conn.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Тест успешно создан",
+            "test_id": new_test[0],
+            "test_name": test_name
+        }), 201
+
+    except psycopg2.Error as e:
+        conn.rollback()
+        app.logger.error(f"Database error: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": "Ошибка базы данных"
+        }), 500
+
+    except Exception as e:
+        app.logger.error(f"Unexpected error: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": "Внутренняя ошибка сервера"
+        }), 500
+
+    finally:
+        if 'cur' in locals():
+            cur.close()
+@app.route('/get-tests-by-theme')
+def get_tests_by_theme():
+    theme_name = request.args.get('theme_name')
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT test_id, test_name 
+            FROM test_options 
+            WHERE theme_id = (SELECT theme_id FROM theme WHERE theme_name = %s)
+        """, (theme_name,))
+        tests = [{'test_id': row[0], 'test_name': row[1]} for row in cur.fetchall()]
+        return jsonify(tests)
+    except Exception as e:
+        app.logger.error(f"Error: {str(e)}")
+        return jsonify([])
+
+@app.route('/delete-test/<int:test_id>', methods=['DELETE'])
+def delete_test(test_id):
+    try:
+        cur = conn.cursor()
+        cur.execute("DELETE FROM test_options WHERE test_id = %s", (test_id,))
+        conn.commit()
+        return jsonify({"success": True, "message": "Тест удален"})
+    except Exception as e:
+        conn.rollback()
+        app.logger.error(f"Error: {str(e)}")
+        return jsonify({"success": False, "error": "Ошибка при удалении теста"}), 500
+
+@app.route('/view-test/<int:test_id>')
+def view_test(test_id):
+    # Здесь реализуйте логику отображения теста
+    return render_template('viewTest.html', test_id=test_id)
 
 @app.route('/delete-theme/<string:theme_name>', methods=['DELETE'])
 def delete_theme(theme_name):

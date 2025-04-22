@@ -1,45 +1,50 @@
 async function populateSelectOptions(selectId, endpoint) {
     try {
         const response = await fetch(endpoint);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        if (!response.ok) throw new Error('Ошибка сети');
         const data = await response.json();
+        
         const select = document.getElementById(selectId);
-        data.forEach(option => {
+        data.forEach(item => {
             const opt = document.createElement('option');
-            opt.value = option.value;
-            opt.text = option.text;
-            select.add(opt);
+            // Используем поле 'name' из серверного ответа
+            opt.value = item.name;  // Если нужно ID, потребуется изменение на сервере
+            opt.textContent = item.name; // Отображаемое имя
+            select.appendChild(opt);
         });
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Ошибка:', error);
     }
 }
 
-// Заполнение выпадающих списков
-populateSelectOptions('theme', '/get-themes');
-populateSelectOptions('direction', '/get-directions');
-populateSelectOptions('discipline', '/get-disciplines');
-
+// Инициализация после загрузки DOM
+document.addEventListener('DOMContentLoaded', () => {
+    populateSelectOptions('theme', '/get-themes');
+    populateSelectOptions('direction', '/get-directions');
+});
 // Функция для отправки формы
 async function submitForm() {
-    const form = document.getElementById('testForm');
-    const formData = new FormData(form);
+    try {
+        const response = await fetch('/create-test', {
+            method: 'POST',
+            body: new FormData(document.getElementById('testForm'))
+        });
 
-    const response = await fetch('/create-test', {
-        method: 'POST',
-        body: formData
-    });
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Неизвестная ошибка');
+        }
 
-    const result = await response.json();
-    if (result.status === 'success') {
-        alert('Тест создан успешно!');
-    } else {
-        alert('Не удалось создать тест.');
+        // Успешное выполнение
+        showFlashMessage(data.message, 'success');
+        resetForm();
+
+    } catch (error) {
+        // Обработка ошибок
+        showFlashMessage(error.message, 'error');
     }
 }
-
 // Функция для валидации ввода чисел
 function validateNumber(input) {
     if (input.value < 0) {
@@ -85,4 +90,21 @@ function updateTestDifficulty() {
     }
 
     document.getElementById('testDifficulty').value = difficultyLevel;
+}
+
+// Добавьте эти функции в createTest.js
+function showFlashMessage(message, type) {
+    const flashesContainer = document.querySelector('.flashes');
+    flashesContainer.innerHTML = '';
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.textContent = message;
+    flashesContainer.appendChild(alertDiv);
+    setTimeout(() => alertDiv.remove(), 5000);
+}
+
+function resetForm() {
+    document.getElementById('testForm').reset();
+    document.getElementById('totalQuestions').value = '';
+    document.getElementById('testDifficulty').value = '';
 }

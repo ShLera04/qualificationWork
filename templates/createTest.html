@@ -13,23 +13,25 @@
 <body>
     <form id="testForm">
         <h1>Создание теста</h1>
+        <div class="flashes">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
         <div class="question-block">
             <label for="theme">Тема</label>
             <select id="theme" name="theme">
+                <option disabled selected>Выберите тему</option>
                 <!-- Options will be populated dynamically -->
             </select>
         </div>
         <div class="question-block">
-            <label for="direction">Направление подготовки</label>
-            <select id="direction" name="direction">
-                <!-- Options will be populated dynamically -->
-            </select>
-        </div>
-        <div class="question-block">
-            <label for="discipline">Дисциплина</label>
-            <select id="discipline" name="discipline">
-                <!-- Options will be populated dynamically -->
-            </select>
+            <label for="nameQuestion">Название теста</label>
+            <input type="text" id="nameQuestion" name="nameQuestion" >
         </div>
         <div class="question-block">
             <label for="easyQuestions">Количество легких вопросов</label>

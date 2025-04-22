@@ -1,14 +1,49 @@
-2025-04-22 09:00:34,633 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+2025-04-22 21:59:26,935 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
-2025-04-22 09:00:34,633 INFO [33mPress CTRL+C to quit[0m
-2025-04-22 09:00:37,140 INFO 127.0.0.1 - - [22/Apr/2025 09:00:37] "GET /mainLecturer HTTP/1.1" 200 -
-2025-04-22 09:00:37,270 INFO 127.0.0.1 - - [22/Apr/2025 09:00:37] "[36mGET /static/images/home_2.jpg.jpeg HTTP/1.1[0m" 304 -
-2025-04-22 09:00:37,276 INFO 127.0.0.1 - - [22/Apr/2025 09:00:37] "[36mGET /static/images/logo_WUoITg47.png HTTP/1.1[0m" 304 -
-2025-04-22 09:00:37,278 INFO 127.0.0.1 - - [22/Apr/2025 09:00:37] "[36mGET /static/js/mainLecture.js HTTP/1.1[0m" 304 -
-2025-04-22 09:00:37,278 INFO 127.0.0.1 - - [22/Apr/2025 09:00:37] "GET /static/css/style.css HTTP/1.1" 200 -
-2025-04-22 09:00:37,283 INFO 127.0.0.1 - - [22/Apr/2025 09:00:37] "GET /get_user_info HTTP/1.1" 200 -
-2025-04-22 09:00:37,295 INFO 127.0.0.1 - - [22/Apr/2025 09:00:37] "GET /get-themes HTTP/1.1" 200 -
-2025-04-22 09:00:38,243 INFO 127.0.0.1 - - [22/Apr/2025 09:00:38] "POST /calculate_mixed_matrix HTTP/1.1" 200 -
-2025-04-22 09:00:40,385 INFO 127.0.0.1 - - [22/Apr/2025 09:00:40] "POST /generate_saddle_matrix HTTP/1.1" 200 -
-2025-04-22 09:00:42,535 INFO 127.0.0.1 - - [22/Apr/2025 09:00:42] "POST /generate_saddle_matrix HTTP/1.1" 200 -
-2025-04-22 09:00:43,423 INFO 127.0.0.1 - - [22/Apr/2025 09:00:43] "POST /generate_saddle_matrix HTTP/1.1" 200 -
+2025-04-22 21:59:26,936 INFO [33mPress CTRL+C to quit[0m
+2025-04-22 21:59:31,409 INFO 127.0.0.1 - - [22/Apr/2025 21:59:31] "GET /section/Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 21:59:31,465 INFO 127.0.0.1 - - [22/Apr/2025 21:59:31] "[36mGET /static/css/page.css HTTP/1.1[0m" 304 -
+2025-04-22 21:59:31,475 INFO 127.0.0.1 - - [22/Apr/2025 21:59:31] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 21:59:31,476 INFO 127.0.0.1 - - [22/Apr/2025 21:59:31] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 21:59:31,484 INFO 127.0.0.1 - - [22/Apr/2025 21:59:31] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 21:59:31,488 INFO 127.0.0.1 - - [22/Apr/2025 21:59:31] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 21:59:33,747 INFO 127.0.0.1 - - [22/Apr/2025 21:59:33] "DELETE /delete-file-by-name/SPPR_Zadanie_3_Shishkina_Valeria_3821B1FI3%20(2).docx HTTP/1.1" 200 -
+2025-04-22 21:59:33,752 INFO 127.0.0.1 - - [22/Apr/2025 21:59:33] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 21:59:38,923 INFO 127.0.0.1 - - [22/Apr/2025 21:59:38] "DELETE /delete-test/1 HTTP/1.1" 200 -
+2025-04-22 21:59:38,930 INFO 127.0.0.1 - - [22/Apr/2025 21:59:38] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:06,476 INFO 127.0.0.1 - - [22/Apr/2025 22:00:06] "GET /section/Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:06,511 INFO 127.0.0.1 - - [22/Apr/2025 22:00:06] "[36mGET /static/css/page.css HTTP/1.1[0m" 304 -
+2025-04-22 22:00:06,521 INFO 127.0.0.1 - - [22/Apr/2025 22:00:06] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:06,521 INFO 127.0.0.1 - - [22/Apr/2025 22:00:06] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:06,536 INFO 127.0.0.1 - - [22/Apr/2025 22:00:06] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:06,537 INFO 127.0.0.1 - - [22/Apr/2025 22:00:06] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:07,447 INFO 127.0.0.1 - - [22/Apr/2025 22:00:07] "GET /createTest HTTP/1.1" 200 -
+2025-04-22 22:00:07,487 INFO 127.0.0.1 - - [22/Apr/2025 22:00:07] "[36mGET /static/css/createTest.css HTTP/1.1[0m" 304 -
+2025-04-22 22:00:07,488 INFO 127.0.0.1 - - [22/Apr/2025 22:00:07] "[36mGET /static/js/createTest.js HTTP/1.1[0m" 304 -
+2025-04-22 22:00:07,501 INFO 127.0.0.1 - - [22/Apr/2025 22:00:07] "GET /get-themes HTTP/1.1" 200 -
+2025-04-22 22:00:07,503 INFO 127.0.0.1 - - [22/Apr/2025 22:00:07] "GET /get-directions HTTP/1.1" 200 -
+2025-04-22 22:00:22,923 INFO 127.0.0.1 - - [22/Apr/2025 22:00:22] "[35m[1mPOST /create-test HTTP/1.1[0m" 201 -
+2025-04-22 22:00:27,303 INFO 127.0.0.1 - - [22/Apr/2025 22:00:27] "GET /section/Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:27,328 INFO 127.0.0.1 - - [22/Apr/2025 22:00:27] "[36mGET /static/css/page.css HTTP/1.1[0m" 304 -
+2025-04-22 22:00:27,336 INFO 127.0.0.1 - - [22/Apr/2025 22:00:27] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:27,336 INFO 127.0.0.1 - - [22/Apr/2025 22:00:27] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:27,346 INFO 127.0.0.1 - - [22/Apr/2025 22:00:27] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:27,346 INFO 127.0.0.1 - - [22/Apr/2025 22:00:27] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:35,954 INFO 127.0.0.1 - - [22/Apr/2025 22:00:35] "GET /section/wewe HTTP/1.1" 200 -
+2025-04-22 22:00:35,978 INFO 127.0.0.1 - - [22/Apr/2025 22:00:35] "[36mGET /static/css/page.css HTTP/1.1[0m" 304 -
+2025-04-22 22:00:35,986 INFO 127.0.0.1 - - [22/Apr/2025 22:00:35] "GET /get-files-by-theme?theme_name=wewe HTTP/1.1" 200 -
+2025-04-22 22:00:35,986 INFO 127.0.0.1 - - [22/Apr/2025 22:00:35] "GET /get-tests-by-theme?theme_name=wewe HTTP/1.1" 200 -
+2025-04-22 22:00:35,989 INFO 127.0.0.1 - - [22/Apr/2025 22:00:35] "GET /get-tests-by-theme?theme_name=wewe HTTP/1.1" 200 -
+2025-04-22 22:00:35,989 INFO 127.0.0.1 - - [22/Apr/2025 22:00:35] "GET /get-files-by-theme?theme_name=wewe HTTP/1.1" 200 -
+2025-04-22 22:00:38,599 INFO 127.0.0.1 - - [22/Apr/2025 22:00:38] "GET /section/Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:38,632 INFO 127.0.0.1 - - [22/Apr/2025 22:00:38] "[36mGET /static/css/page.css HTTP/1.1[0m" 304 -
+2025-04-22 22:00:38,642 INFO 127.0.0.1 - - [22/Apr/2025 22:00:38] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:38,643 INFO 127.0.0.1 - - [22/Apr/2025 22:00:38] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:38,654 INFO 127.0.0.1 - - [22/Apr/2025 22:00:38] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:38,655 INFO 127.0.0.1 - - [22/Apr/2025 22:00:38] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
+2025-04-22 22:00:41,016 INFO 127.0.0.1 - - [22/Apr/2025 22:00:41] "GET /section/Седловая%20точка HTTP/1.1" 200 -
+2025-04-22 22:00:41,055 INFO 127.0.0.1 - - [22/Apr/2025 22:00:41] "[36mGET /static/css/page.css HTTP/1.1[0m" 304 -
+2025-04-22 22:00:41,062 INFO 127.0.0.1 - - [22/Apr/2025 22:00:41] "GET /get-files-by-theme?theme_name=Седловая%20точка HTTP/1.1" 200 -
+2025-04-22 22:00:41,063 INFO 127.0.0.1 - - [22/Apr/2025 22:00:41] "GET /get-tests-by-theme?theme_name=Седловая%20точка HTTP/1.1" 200 -
+2025-04-22 22:00:41,075 INFO 127.0.0.1 - - [22/Apr/2025 22:00:41] "GET /get-files-by-theme?theme_name=Седловая%20точка HTTP/1.1" 200 -
+2025-04-22 22:00:41,076 INFO 127.0.0.1 - - [22/Apr/2025 22:00:41] "GET /get-tests-by-theme?theme_name=Седловая%20точка HTTP/1.1" 200 -
