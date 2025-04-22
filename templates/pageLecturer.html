@@ -357,7 +357,7 @@
                 const container = document.querySelector('.box:has(#testsList)');
                 if (data.success) {
                     showFlashMessage("Тест успешно удален!", "success", container);
-                    loadTests(); // Обновляем список
+                    loadTests(); 
                 } else {
                     showFlashMessage(data.error || "Ошибка при удалении теста", "error", container);
                 }

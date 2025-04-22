@@ -37,7 +37,11 @@ def login_required(f):
     return decorated_function
 
 @app.route('/addQuestion', methods=['GET', 'POST'])
+@login_required
 def addQuestion_page():
+    if not session.get('is_admin'):
+        # flash('Доступ запрещен', 'error')
+        return render_template('mainStudent.html')
     return render_template('addQuestion.html')
 
 @app.route('/test', methods=['GET', 'POST'])
@@ -48,7 +52,7 @@ def test_page():
 @login_required
 def createTest_page():
     if not session.get('is_admin'):
-        flash('Доступ запрещен', 'error')
+        # flash('Доступ запрещен', 'error')
         return render_template('mainStudent.html')
 
     return render_template('createTest.html')
@@ -75,15 +79,27 @@ def mainStudent_page():
 
 
 @app.route('/pageLecturer')
+@login_required
 def pageLecturer_page():
+    if not session.get('is_admin'):
+        # flash('Доступ запрещен', 'error')
+        return redirect(url_for('pageStudent_page'))
     return render_template('pageLecturer.html')
 
 @app.route('/pageStudent')
+@login_required
 def pageStudent_page():
+    if session.get('is_admin'):
+        # flash('Доступ запрещен', 'error')
+        return redirect(url_for('pageLecturer_page'))
     return render_template('pageStudent.html')
 
 @app.route('/settings')
+@login_required
 def settings_page():
+    if not session.get('is_admin'):
+        # flash('Доступ запрещен', 'error')
+        return redirect(url_for('mainStudent_page'))
     return render_template('settings.html')
 
 @app.route('/register', methods=['GET', 'POST'])
