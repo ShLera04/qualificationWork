@@ -421,3 +421,70 @@ function showFlashMessage(message, type, containerSelector) {
         }
     }, 5000);
 }
+
+// Генератор матриц для смешанных стратегий
+document.getElementById('generateMixedMatrix').addEventListener('click', function() {
+    const x = parseFloat(document.getElementById('strategyX').value);
+    const y = parseFloat(document.getElementById('strategyY').value);
+    const v = parseFloat(document.getElementById('gameValue').value);
+    const a12 = parseFloat(document.getElementById('matrixElementA12').value);
+
+    // Валидация ввода
+    if (isNaN(x) || isNaN(y) || isNaN(v) || isNaN(a12)) {
+        showFlashMessage("Все поля должны быть числами", 'error', '#mixedSaddleGenerator .second_container');
+        return;
+    }
+
+    if (x < 0 || x > 1 || y < 0 || y > 1) {
+        showFlashMessage("Стратегии x и y должны быть между 0 и 1", 'error', '#mixedSaddleGenerator .second_container');
+        return;
+    }
+
+    if (y === 0 || (1 - x) === 0) {
+        showFlashMessage("Недопустимые значения: y не может быть 0, а x не может быть 1", 'error', '#mixedSaddleGenerator .second_container');
+        return;
+    }
+
+    // Отправка запроса на сервер
+    fetch('/calculate_mixed_matrix', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ x, y, v, a12 })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.error); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            showFlashMessage(data.error, 'error', '#mixedSaddleGenerator .second_container');
+            return;
+        }
+
+        // Отображение матрицы
+        const container = document.getElementById('mixedMatrixContainer');
+        container.innerHTML = '';
+        
+        const table = document.createElement('table');
+        table.className = 'matrix';
+        
+        data.matrix.forEach(row => {
+            const tr = document.createElement('tr');
+            row.forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell.toFixed(10).replace(/\.?0+$/, ''); // Форматирование чисел
+                tr.appendChild(td);
+            });
+            table.appendChild(tr);
+        });
+        
+        container.appendChild(table);
+    })
+    .catch(error => {
+        showFlashMessage(error.message, 'error', '#mixedSaddleGenerator .second_container');
+    });
+});

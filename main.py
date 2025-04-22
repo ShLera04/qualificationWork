@@ -759,6 +759,38 @@ def generate_saddle_matrix():
         return jsonify({
             "error": str(e)
         }), 500
+    
+@app.route('/calculate_mixed_matrix', methods=['POST'])
+def calculate_mixed_matrix():
+    try:
+        data = request.get_json()
+        x = float(data['x'])
+        y = float(data['y'])
+        v = float(data['v'])
+        a12 = float(data['a12'])
+
+        # Проверка допустимости значений
+        if not (0 <= x <= 1) or not (0 <= y <= 1):
+            return jsonify({'error': 'Стратегии должны быть в диапазоне [0, 1]'}), 400
+
+        if y == 0 or (1 - x) == 0:
+            return jsonify({'error': 'Недопустимые значения для расчета'}), 400
+
+        # Вычисления
+        a21 = (v * (y - x) + a12 * x * (1 - y)) / (y * (1 - x))
+        a11 = (v - a12 * (1 - y)) / y
+        a22 = (v - a12 * x) / (1 - x)
+
+        # Форматирование результатов
+        matrix = [
+            [round(a11, 10), round(a12, 10)],
+            [round(a21, 10), round(a22, 10)]
+        ]
+
+        return jsonify({'matrix': matrix})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 @app.route('/section/<string:section_name>')
 def section_page(section_name):

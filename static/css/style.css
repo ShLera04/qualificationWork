@@ -455,7 +455,6 @@ p {
 .matrix {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
 }
 .matrix td {
     border: 1px solid white;
@@ -893,7 +892,7 @@ button:active {
         height: auto;
         margin-top: 20px;
     }
-    #generateMatrix, #generateSaddleMatrix{
+    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix{
         font-size: 14px;
     }
     .header-down b {
@@ -1035,7 +1034,7 @@ button:active {
     .button {
         font-size: 12px;
     }
-    #generateMatrix, #generateSaddleMatrix{
+    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix{
         width: 100px;
         height: 35px;
         font-size: 10px;
@@ -1171,7 +1170,7 @@ button:active {
     .button {
         font-size: 16px;
     }
-    #generateMatrix, #generateSaddleMatrix{
+    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix{
         width: 200px;
         height: 50px;
         font-size: 18px;
@@ -1317,7 +1316,7 @@ button:active {
     .button {
         font-size: 16px;
     }
-    #generateMatrix, #generateSaddleMatrix{
+    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix{
         width: 300px;
         height: 60px;
         font-size: 26px;
@@ -1439,4 +1438,18 @@ button:active {
 }
 .alert-warning{
     background-color: rgb(214, 214, 4);
+}
+.matrix-container {
+    background-color: #041027; /* Темный фон контейнера */
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.matrix td {
+    color: white ; /* Приоритет для белого цвета */
+    background-color: #041027; /* Цвет фона ячеек */
+    min-width: 80px;
+    height: 40px;
+    border: 2px solid white;
 }
