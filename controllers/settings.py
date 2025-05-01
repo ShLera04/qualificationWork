@@ -33,12 +33,12 @@ def add_theme():
 
         cur.execute("SELECT theme_id FROM theme WHERE theme_name = %s", (theme_name,))
         if cur.fetchone():
-            return jsonify({"success": False, "error": f"Тема '{theme_name}' уже существует"}), 409
+            return jsonify({"success": False, "error": f"Данная тема уже существует"}), 409
 
         cur.execute("INSERT INTO theme (theme_name) VALUES (%s)", (theme_name,))
         conn.commit()
 
-        return jsonify({"success": True, "message": f"Тема '{theme_name}' успешно добавлена"}), 201
+        return jsonify({"success": True, "message": f"Тема успешно добавлена"}), 201
 
     except psycopg2.Error as e:
         conn.rollback()

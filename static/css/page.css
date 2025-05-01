@@ -31,7 +31,7 @@ img {
     color: white; 
     padding: 30px;
     margin: 20px 0; 
-    border-radius: 5px;
+    border-radius: 10px;
     transition: all 0.3s; 
     width: 30%;
     
@@ -45,15 +45,15 @@ input[type="file"] {
     margin-bottom: 10px; 
     padding: 5px;
     border: none;
-    border-radius: 5px; 
+    border-radius: 10px; 
     background-color: #2a3b56; 
     color: white; 
 }
 
 button {
-    padding: 10px 15px; 
+    padding: 5px 15px; 
     border: none;
-    border-radius: 12px; 
+    border-radius: 10px; 
     background-color: hsl(205, 51%, 93%);
     color: black; 
     cursor: pointer; 
@@ -80,7 +80,7 @@ button:hover {
     margin: 5px 0; 
     padding: 5px; 
     background-color: #2a3b56; 
-    border-radius: 5px; 
+    border-radius: 10px; 
 }
 
 .nav {
@@ -122,7 +122,7 @@ button:hover {
 .theme-item {
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 9px;
+    border-radius: 10px;
     margin-top: 5px;
     display: flex;
     justify-content: space-between;
@@ -145,7 +145,7 @@ button:hover {
     border: none;
     padding: 5px 10px;
     cursor: pointer;
-    border-radius: 9px;
+    border-radius: 10px;
     font-size: 12px;
     margin-left: 10px;
 }
@@ -159,28 +159,6 @@ button:hover {
     padding: 10px 0px;
     width: 100%;
 }
-/* .file-input-wrapper {
-    position: relative;
-    display: inline-block;
-    background-color: hsl(205, 51%, 93%);
-    color: black;
-    font-family: Roboto, Verdana, Tahoma, sans-serif;
-    padding: 10px 20px;
-    border-radius: 9px;
-    cursor: pointer;
-    text-align: center;
-    font-size: 14px;
-    transition: 0.4s;
-    box-shadow: 10px 10px 40px 20px #0000001A;
-    font-weight: bold;
-}
-.file-input-wrapper:hover {
-    box-shadow: 7px 5px 56px -14px hsl(205, 51%, 93%);
-}
-.file-input-wrapper:active {
-    transform: scale(0.97);
-    box-shadow: 7px 5px 56px -10px hsl(205, 51%, 93%);
-} */
 .file-input-wrapper input[type="file"] {
     position: absolute;
     top: 0;
@@ -212,7 +190,7 @@ button:hover {
     height: -40px;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 10px;
     background-color: #f9f9f9;
     transition: background-color 0.3s ease;
 }
@@ -235,7 +213,7 @@ button:hover {
     box-sizing: border-box;
     margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 10px;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -265,7 +243,7 @@ button:hover {
 .alert {
     padding: 10px;
     margin: 10px 0;
-    border-radius: 5px;
+    border-radius: 10px;
     color: #fff;
     max-width: 400px;
     text-align: center; 
@@ -279,34 +257,7 @@ button:hover {
 .alert-warning{
     background-color: rgb(214, 214, 4);
 }
-@media (max-width: 426px) {
-    .container {
-        margin: 0px 50px;
-        font-size: 12px;
-        align-items: center;
-        text-align: center;
-    }
-    .file-input-wrapper {
-        width: 30%;
-        height: 15px;
-        font-size: 12px;
-        align-items: center;
-        text-align: center;
-    }
-    .button-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    .theme-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .theme-item button {
-        margin-top: 5px;
-        width: 30%;
-    }
-}
+
 /* дальше */
 .file-list {
     margin-top: 10px;
@@ -314,7 +265,7 @@ button:hover {
 .file-item {
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 9px;
+    border-radius: 10px;
     margin-top: 5px;
     display: flex;
     justify-content: space-between;
@@ -337,7 +288,7 @@ button:hover {
     border: none;
     padding: 5px 10px;
     cursor: pointer;
-    border-radius: 9px;
+    border-radius: 10px;
     font-size: 12px;
     margin-left: 10px;
     text-decoration: none;
@@ -355,7 +306,7 @@ button:hover {
     color: black;
     font-family: Roboto, Verdana, Tahoma, sans-serif;
     padding: 10px 20px;
-    border-radius: 9px;
+    border-radius: 10px;
     cursor: pointer;
     text-align: center;
     font-size: 14px;
@@ -375,4 +326,51 @@ button:hover {
     height: 100%;
     opacity: 0;
     cursor: pointer;
+}
+@media (max-width: 426px) {
+    .body{
+        font-size: 10px;
+    }
+    .box { 
+        width: 75%;
+        font-size: 10px;
+    }
+    button{
+        font-size: 10px;
+        height: 30px;
+        font-weight: bolder;
+    }
+    .question-block{
+        font-size: 10px;
+        height: -30px;
+    }
+    .theme-item button {
+        font-size: 10px;
+    }
+    .nav-item{
+        font-size: 24px;
+        margin-bottom: 10px;
+        margin-top: -10px;
+    }
+    h2{
+        font-size: 18px;
+    }
+}
+@media (min-width: 427px) and (max-width: 1441px) {
+    .body{
+        font-size: 12px;
+    }
+    .box { 
+        width: 50%;
+        font-size: 12px;
+    }
+    button{
+        font-size: 12px;
+        height: 30px;
+        font-weight: bolder;
+    }
+    .question-block{
+        font-size: 12px;
+        height: -30px;
+    }
 }
