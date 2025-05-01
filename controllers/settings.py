@@ -43,14 +43,10 @@ def add_theme():
     except psycopg2.Error as e:
         conn.rollback()
         current_app.logger.error(f"Database error in add_theme: {str(e)}")
-        # flash('Ошибка базы данных при добавлении темы', 'error')
-        # return jsonify({"success": False, "error": "Database error"}), 500 
         return jsonify({"success": False, "error": "Ошибка базы данных при добавлении темы"}), 500 
     except Exception as e:
         conn.rollback()
         current_app.logger.error(f"Error in add_theme: {str(e)}")
-        # flash('Ошибка сервера при добавлении темы', 'error')
-        # return jsonify({"success": False, "error": "Server error"}), 500
         return jsonify({"success": False, "error": "Ошибка сервера при добавлении темы"}), 500
 
 @settings_bp.route('/delete-theme/<string:theme_name>', methods=['DELETE'])
@@ -90,7 +86,6 @@ def get_admins():
         return jsonify(admins_list)
     except psycopg2.Error as e:
         current_app.logger.error(f"Database error in get_admins: {str(e)}")
-        # return jsonify({"error": "Database error"}), 500
         return jsonify({"error": "Ошибка базы данных"}), 500
 
 @settings_bp.route('/get-students-for-admin', methods=['GET'])
@@ -305,7 +300,7 @@ def change_student_direction():
     new_direction_name = data.get('new_direction_name')
 
     if not student_name or not new_direction_name:
-        return jsonify({"success": False, "error": "Student name and new direction name are required"}), 400
+        return jsonify({"success": False, "error": "Необходимо указать имя пользователя и новое направление подготовки"}), 400
 
     cur = None
     try:
