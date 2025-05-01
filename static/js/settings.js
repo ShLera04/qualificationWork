@@ -29,7 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .catch(error => {
-            showFlashMessage('Ошибка сервера', 'error', '.box:nth-child(1)');
+            const errorMessage = error.error || "Ошибка сервера";
+            showFlashMessage(errorMessage || 'Ошибка сервера', 'error', '.box:nth-child(1)');
             console.error('Error:', error);
         });
     });
@@ -38,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const studentDropdown = document.getElementById("studentDropdownForAdmin");
         const studentName = studentDropdown.options[studentDropdown.selectedIndex].text;
         if (studentName.trim() === "") {
-            showFlashMessage("Пожалуйста, выберите пользователя.", "error", '.box:nth-child(2)');
+            showFlashMessage("Пожалуйста, выберите пользователя", "error", '.box:nth-child(2)');
             return;
         }
 
@@ -52,18 +53,19 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showFlashMessage(data.message || "Администратор успешно добавлен!", "success", '.box:nth-child(2)');
+                showFlashMessage(data.message || "Администратор успешно добавлен", "success", '.box:nth-child(2)');
                 loadAdmins(); 
                 loadStudentsForAdmin();
                 loadStudentsForDelete();
                 loadStudentsForGroupChange();
                 loadStudentsForDirectionChange();
             } else {
-                showFlashMessage(data.error || "Ошибка при добавлении администратора.", "error", '.box:nth-child(2)');
+                showFlashMessage(data.error || "Ошибка при добавлении администратора", "error", '.box:nth-child(2)');
             }
         })
         .catch(error => {
-            showFlashMessage("Ошибка сервера", "error", '.box:nth-child(2)');
+            const errorMessage = error.error || "Ошибка сервера";
+            showFlashMessage(errorMessage, "error", '.box:nth-child(2)');
             console.error('Error:', error);
         });
     });
@@ -74,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const groupName = groupDropdown.options[groupDropdown.selectedIndex].text;
 
         if (directionName.trim() === "" || groupName.trim() === "") {
-            showFlashMessage("Пожалуйста, выберите направление подготовки и группу.", "error", '#deleteStudentsBox');
+            showFlashMessage("Пожалуйста, выберите направление подготовки и группу", "error", '#deleteStudentsBox');
             return;
         }
 
@@ -85,10 +87,15 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({ direction_name: directionName, group_name: groupName })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => Promise.reject(err));
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                showFlashMessage("Студенты успешно удалены!", "success", '#deleteStudentsBox');
+                showFlashMessage(data.message || "Студенты успешно удалены", "success", '#deleteStudentsBox');
                 loadAdmins(); 
                 loadStudentsForAdmin(); 
                 loadStudentsForDelete();
@@ -96,11 +103,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 loadStudentsForDirectionChange();
                 loadDirectionsForChange();
             } else {
-                showFlashMessage("Ошибка при удалении студентов.", "error", '#deleteStudentsBox');
+                showFlashMessage(data.message, "error", '#deleteStudentsBox');
             }
         })
         .catch(error => {
-            showFlashMessage("Ошибка сервера", "error", '#deleteStudentsBox');
+            const errorMessage = error.error || "Ошибка сервера";
+            showFlashMessage(errorMessage, "error", '#deleteStudentsBox');
             console.error('Error:', error);
         });
     });
@@ -278,10 +286,6 @@ function loadAdmins() {
 }
 
 function deleteAdmin(adminName) {
-    if (!confirm(`Вы уверены, что хотите удалить администратора "${adminName}"?`)) {
-        return;
-    }
-
     fetch(`/delete-admin/${encodeURIComponent(adminName)}`, {
         method: 'DELETE'
     })
@@ -306,7 +310,7 @@ function deleteAdmin(adminName) {
         const alertDiv = document.createElement('div');
         alertDiv.className = data.success ? 'alert alert-success' : 'alert alert-error';
         alertDiv.textContent = data.success
-            ? data.message || `Администратор "${adminName}" успешно удален`
+            ? data.message || `Администратор успешно удален`
             : data.error || 'Ошибка при удалении администратора';
 
         flashesContainer.appendChild(alertDiv);
@@ -414,14 +418,14 @@ document.getElementById("deleteStudentButton").addEventListener("click", functio
     const studentDropdown = document.getElementById("studentDropdownForDelete");
 
     if (studentDropdown.options.length === 0) {
-        showFlashMessage("Список студентов пуст.", "error", '#deleteStudentBox');
+        showFlashMessage("Список студентов пуст", "error", '#deleteStudentBox');
         return;
     }
 
     const studentName = studentDropdown.options[studentDropdown.selectedIndex].text;
 
     if (studentName.trim() === "") {
-        showFlashMessage("Пожалуйста, выберите студента.", "error", '#deleteStudentBox');
+        showFlashMessage("Пожалуйста, выберите студента", "error", '#deleteStudentBox');
         return;
     }
 
@@ -431,18 +435,19 @@ document.getElementById("deleteStudentButton").addEventListener("click", functio
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showFlashMessage("Студент успешно удален!", "success", '#deleteStudentBox');
+            showFlashMessage(data.message || "Пользователь успешно удален", "success", '#deleteStudentBox');
             loadStudentsForDelete();
             loadStudentsForAdmin();
             loadStudentsForGroupChange();
             loadStudentsForDirectionChange();
 
         } else {
-            showFlashMessage("Ошибка при удалении студента.", "error", '#deleteStudentBox');
+            showFlashMessage(data.message, "error", '#deleteStudentBox');
         }
     })
     .catch(error => {
-        showFlashMessage("Ошибка сервера", "error", '#deleteStudentBox');
+        const errorMessage = error.error || "Ошибка сервера";
+        showFlashMessage(errorMessage, "error", '#deleteStudentBox');
         console.error('Error:', error);
     });
 });
@@ -479,7 +484,7 @@ document.getElementById("changeStudentGroupButton").addEventListener("click", fu
         const newGroupName = groupDropdown.options[groupDropdown.selectedIndex].text;
 
         if (studentName.trim() === "" || newGroupName.trim() === "") {
-            showFlashMessage("Пожалуйста, выберите студента и новую группу.", "error", '#changeStudentGroupBox');
+            showFlashMessage("Пожалуйста, выберите студента и новую группу", "error", '#changeStudentGroupBox');
             return;
         }
 
@@ -493,17 +498,18 @@ document.getElementById("changeStudentGroupButton").addEventListener("click", fu
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showFlashMessage("Группа успешно изменена!", "success", '#changeStudentGroupBox');
+                showFlashMessage(data.message, "success", '#changeStudentGroupBox');
                 loadStudentsForAdmin();
                 loadStudentsForGroupChange();
                 loadStudentsForDirectionChange();
                 loadStudentsForDelete();
             } else {
-                showFlashMessage(data.error || "Ошибка при изменении группы.", "error", '#changeStudentGroupBox');
+                showFlashMessage(data.error || "Ошибка при изменении группы", "error", '#changeStudentGroupBox');
             }
         })
         .catch(error => {
-            showFlashMessage("Ошибка сервера", "error", '#changeStudentGroupBox');
+            const errorMessage = error.error || "Ошибка сервера";
+            showFlashMessage(errorMessage, "error", '#changeStudentGroupBox');
             console.error('Error:', error);
         });
     });
@@ -564,7 +570,7 @@ document.getElementById("changeStudentDirectionButton").addEventListener("click"
     const newDirectionName = directionDropdown.options[directionDropdown.selectedIndex].text;
 
     if (studentName.trim() === "" || newDirectionName.trim() === "") {
-        showFlashMessage("Пожалуйста, выберите студента и новое направление.", "error", '#changeStudentDirectionBox');
+        showFlashMessage("Пожалуйста, выберите студента и новое направление", "error", '#changeStudentDirectionBox');
         return;
     }
 
@@ -578,17 +584,18 @@ document.getElementById("changeStudentDirectionButton").addEventListener("click"
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showFlashMessage("Направление успешно изменено!", "success", '#changeStudentDirectionBox');
+            showFlashMessage(data.message ||"Направление успешно изменено", "success", '#changeStudentDirectionBox');
             loadStudentsForAdmin();
             loadStudentsForGroupChange();
             loadStudentsForDirectionChange();
             loadStudentsForDelete();
         } else {
-            showFlashMessage(data.error || "Ошибка при изменении направления.", "error", '#changeStudentDirectionBox');
+            showFlashMessage(data.error || "Ошибка при изменении направления", "error", '#changeStudentDirectionBox');
         }
     })
     .catch(error => {
-        showFlashMessage("Ошибка сервера", "error", '#changeStudentDirectionBox');
+        const errorMessage = error.error || "Ошибка сервера";
+        showFlashMessage(errorMessage || "Ошибка сервера", "error", '#changeStudentDirectionBox');
         console.error('Error:', error);
     });
 });
