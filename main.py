@@ -15,6 +15,9 @@ from flask import session
 import numpy as np
 from models.dataBaseModels import conn
 from functools import wraps
+from datetime import datetime, timedelta
+from controllers.authentication import auth_bp
+from controllers.authentication import login_required
 
 logging.basicConfig(filename="main.log",
                     level=logging.INFO,
@@ -26,15 +29,10 @@ config.read('config.ini')
 
 app = Flask(__name__)
 app.secret_key = config.get('app', 'secret_key')
+app.config['SESSION_PERMANENT'] = False
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not session.get('logged_in'):
-            flash('Пожалуйста, войдите в систему для доступа к этой странице', 'warning')
-            return redirect(url_for('entrance_page'))
-        return f(*args, **kwargs)
-    return decorated_function
+app.register_blueprint(auth_bp)
 
 @app.route('/addQuestion', methods=['GET', 'POST'])
 @login_required
@@ -102,137 +100,6 @@ def settings_page():
         return redirect(url_for('mainStudent_page'))
     return render_template('settings.html')
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    cur = conn.cursor()
-    
-    try:
-        cur.execute("SELECT group_name FROM groups ORDER BY group_name")
-        groups = [group[0] for group in cur.fetchall()]
-        
-        cur.execute("SELECT direction_name FROM direction ORDER BY direction_name")
-        directions = [direction[0] for direction in cur.fetchall()]
-        
-        if request.method == 'POST':
-            login = request.form['name']
-            email = request.form['email']
-            password = request.form['password']
-            repetpassword = request.form['repetpassword']
-            direction_name = request.form.get('direction', '').strip()
-            group_name = request.form.get('group', '').strip()
-            print(direction_name, group_name)
-
-            if not direction_name or not group_name:
-                flash("Пожалуйста, выберите корректное направление подготовки и группу", 'warning')
-                return redirect(url_for('register'))
-
-            if password != repetpassword:
-                flash('Пароли не совпадают', 'error')
-                return redirect(url_for('register'))
-            
-            if not is_strong_password(password):
-                flash('Пароль должен содержать минимум 8 символов, включая заглавные и строчные буквы, цифры и специальные символы', 'error')
-                return redirect(url_for('register'))
-
-            cur.execute("SELECT * FROM users WHERE login = %s", (login,))
-            if cur.fetchone():
-                flash('Пользователь с таким логином уже существует', 'error')
-                return redirect(url_for('register'))
-
-            cur.execute("SELECT * FROM users WHERE email = %s", (email,))
-            if cur.fetchone():
-                flash('Пользователь с таким email уже существует', 'error')
-                return redirect(url_for('register'))
-
-            cur.execute("SELECT direction_id FROM direction WHERE direction_name = %s", (direction_name,))
-            direction_result = cur.fetchone()
-            if not direction_result:
-                flash('Выбранное направление не найдено', 'error')
-                return redirect(url_for('register'))
-            direction_id = direction_result[0]
-
-            cur.execute("SELECT group_id FROM groups WHERE group_name = %s", (group_name,))
-            group_result = cur.fetchone()
-            if not group_result:
-                flash('Выбранная группа не найдена', 'error')
-                return redirect(url_for('register'))
-            group_id = group_result[0]
-
-            hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=16)
-            created_at = datetime.now(pytz.timezone('Europe/Moscow'))
-
-            try:
-                cur.execute(
-                    "INSERT INTO users (login, password, email, is_admin, direction_id, created_at) "
-                    "VALUES (%s, %s, %s, %s, %s, %s) RETURNING user_id",
-                    (login, hashed_password, email, False, direction_id, created_at)
-                )
-                user_id = cur.fetchone()[0]
-
-                cur.execute(
-                    "INSERT INTO students (user_id, group_id) "
-                    "VALUES (%s, %s)",
-                    (user_id, group_id)
-                )
-
-                conn.commit()
-                flash('Регистрация прошла успешно', 'success')
-                return redirect(url_for('register'))
-                
-            except Exception as e:
-                conn.rollback()
-                flash(f'Ошибка при регистрации: {str(e)}', 'error')
-                app.logger.error(f"Registration error: {str(e)}")
-                
-    except Exception as e:
-        flash(f'Ошибка при обработке запроса: {str(e)}', 'error')
-        app.logger.error(f"Request processing error: {str(e)}")
-
-    return render_template('register.html', groups=groups, directions=directions)
-
-@app.route('/entrance', methods=['GET', 'POST'])
-def entrance_page():
-    if request.method == 'POST':
-        cur = None
-        try:
-            login = request.form.get('login')
-            password = request.form.get('password')
-
-            if not login or not password:
-                flash('Заполните все поля', 'error')
-                return redirect(url_for('entrance_page'))
-
-            cur = conn.cursor()
-
-            cur.execute("SELECT user_id, password, is_admin, login FROM users WHERE login = %s", (login,))
-            user = cur.fetchone()
-
-            if not user:
-                flash('Неверный логин или пароль', 'error')
-                return redirect(url_for('entrance_page'))
-
-            if check_password_hash(user[1], password):
-                session['user_id'] = user[0]
-                session['is_admin'] = user[2]
-                session['login'] = user[3]
-                session['logged_in'] = True
-                
-                if user[2]:
-                    return redirect(url_for('mainLecturer_page'))
-                else:
-                    return redirect(url_for('mainStudent_page'))
-            else:
-                flash('Неверный логин или пароль', 'error')
-                return redirect(url_for('entrance_page'))
-
-        except Exception as e:
-            flash(f'Ошибка входа: {str(e)}', 'error')
-            app.logger.error(f"Login error: {str(e)}")
-            return redirect(url_for('entrance_page'))
-
-    return render_template('entrance.html')
-
-
 @app.route('/get-themes', methods=['GET'])
 def get_themes():
     cur = None
@@ -285,7 +152,6 @@ def add_theme():
         app.logger.error(f"Error in add_theme: {str(e)}")
         flash('Ошибка сервера при добавлении темы', 'error')
         return jsonify({"success": False, "error": "Server error"}), 500
-from flask import flash, redirect, url_for
 
 @app.route('/create-test', methods=['POST'])
 def create_test():
@@ -973,21 +839,21 @@ def nash_equilibrium():
         return jsonify(result)
     else:
         return jsonify([])
-@app.route('/logout')
-def logout():
-    session.pop('user_id', None)
-    session.pop('is_admin', None)
-    session.pop('login', None)
-    session.pop('logged_in', None)
-    flash('Вы успешно вышли из системы', 'success')
-    return redirect(url_for('entrance_page'))
+# @app.route('/logout')
+# def logout():
+#     session.pop('user_id', None)
+#     session.pop('is_admin', None)
+#     session.pop('login', None)
+#     session.pop('logged_in', None)
+#     flash('Вы успешно вышли из системы', 'success')
+#     return redirect(url_for('entrance_page'))
 
-@app.route('/get_user_info')
-def get_user_info():
-    return jsonify({
-        'logged_in': session.get('logged_in', False),
-        'login': session.get('login', 'Гость')
-    })
+# @app.route('/get_user_info')
+# def get_user_info():
+#     return jsonify({
+#         'logged_in': session.get('logged_in', False),
+#         'login': session.get('login', 'Гость')
+#     })
 
 @app.route('/upload-file', methods=['POST'])
 def upload_file():
@@ -1108,8 +974,5 @@ def get_files_by_theme():
         app.logger.error(f"Error getting files by theme: {str(e)}")
         return jsonify({"success": False, "error": "Ошибка при получении файлов"}), 500
 
-def is_strong_password(password):
-    pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&+-])[A-Za-z\d@$!%*?&+-]{8,}$')
-    return bool(pattern.match(password))
 if __name__ == '__main__':
     app.run()

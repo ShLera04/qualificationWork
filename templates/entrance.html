@@ -7,7 +7,6 @@
     <meta name="description" content="Выполните вход в научно-исследовательскую систему 'Исследование операций', чтобы начать обучение по данной дисциплине.">
     <title>Вход</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="..\static\css\authentication.css">
 </head>
 <body>
@@ -29,7 +28,7 @@
         {% endwith %}
 
         <div class="group">
-            <input type="text" placeholder="‎" name="login" required id="login">
+            <input type="text" placeholder="‎" name="login" required id="login" value="{{ login if login else '' }}">
             <label for="login">Логин</label>
         </div>
         <div class="group">
@@ -58,5 +57,6 @@
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
