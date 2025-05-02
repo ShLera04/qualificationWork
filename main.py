@@ -16,6 +16,7 @@ from functools import wraps
 from datetime import datetime, timedelta
 from controllers.authentication import auth_bp, login_required
 from controllers.settings import settings_bp
+from controllers.algorithms import algo_bp
 
 logging.basicConfig(filename="main.log",
                     level=logging.INFO,
@@ -32,6 +33,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(settings_bp)
+app.register_blueprint(algo_bp)
 
 @app.route('/addQuestion', methods=['GET', 'POST'])
 @login_required
@@ -275,181 +277,6 @@ def delete_file_by_name(file_name):
         app.logger.error(f"Error deleting file: {str(e)}")
         return jsonify({"success": False, "error": "Ошибка при удалении файла"}), 500
 
-
-def is_saddle_point(matrix, row, col):
-    element = matrix[row][col]
-    if element != min(matrix[row]):
-        return False
-    if element != max(matrix[i][col] for i in range(len(matrix))):
-        return False
-    return True
-
-def find_saddle_points_for_both(matrix_a, matrix_b):
-    def find_saddle_points(matrix):
-        saddle_points = []
-        if not matrix:
-            return saddle_points
-        row_min = [min(row) for row in matrix]
-        col_max = [max(col) for col in zip(*matrix)]
-        for i in range(len(matrix)):
-            for j in range(len(matrix[i])):
-                if matrix[i][j] == row_min[i] and matrix[i][j] == col_max[j]:
-                    saddle_points.append((i, j))
-        return saddle_points
-
-    return {
-        "matrix_a": find_saddle_points(matrix_a),
-        "matrix_b": find_saddle_points(matrix_b)
-    }
-
-def is_pareto_optimal(matrix_a, matrix_b):
-    pareto_optimal_points = []
-    n = len(matrix_a)
-    m = len(matrix_a[0])
-
-    for i in range(n):
-        for j in range(m):
-            current_a = matrix_a[i][j]
-            current_b = matrix_b[i][j]
-            is_optimal = True
-            for x in range(n):
-                for y in range(m):
-                    if (matrix_a[x][y] >= current_a and
-                        matrix_b[x][y] >= current_b and
-                        (matrix_a[x][y] > current_a or matrix_b[x][y] > current_b)):
-                        is_optimal = False
-                        break
-                if not is_optimal:
-                    break
-            if is_optimal:
-                pareto_optimal_points.append((i, j, current_a, current_b))
-
-    return pareto_optimal_points
-
-def is_nash_equilibrium(matrix_a, matrix_b):
-    nash_points = []
-    n = len(matrix_a)
-    m = len(matrix_a[0])
-
-    for i in range(n):
-        for j in range(m):
-            current_a = matrix_a[i][j]
-            current_b = matrix_b[i][j]
-            is_nash = True
-
-            for k in range(n):
-                if matrix_a[k][j] > current_a:
-                    is_nash = False
-                    break
-
-            if is_nash:
-                for l in range(m):
-                    if matrix_b[i][l] > current_b:
-                        is_nash = False
-                        break
-
-            if is_nash:
-                nash_points.append((i, j, current_a, current_b))
-
-    return nash_points
-
-def generate_matrix_with_saddle_points(rows, cols, saddle_points_count, max_attempts=100):
-    attempts = 0
-    while attempts < max_attempts:
-        attempts += 1
-        matrix = np.random.randint(0, 100, size=(rows, cols)).tolist()
-
-        def find_saddle_points(matrix):
-            saddle_points = []
-            for i in range(len(matrix)):
-                for j in range(len(matrix[0])):
-                    if (matrix[i][j] == min(matrix[i]) and
-                        matrix[i][j] == max([row[j] for row in matrix])):
-                        saddle_points.append([i, j])
-            return saddle_points
-
-        current_saddle_points = find_saddle_points(matrix)
-        while len(current_saddle_points) < saddle_points_count:
-            i, j = np.random.randint(0, rows), np.random.randint(0, cols)
-            matrix[i] = [max(x, matrix[i][j]) for x in matrix[i]]
-            for row in matrix:
-                row[j] = min(row[j], matrix[i][j])
-            current_saddle_points = find_saddle_points(matrix)
-
-        while len(current_saddle_points) > saddle_points_count:
-            idx = np.random.randint(0, len(current_saddle_points))
-            i, j = current_saddle_points[idx]
-            matrix[i][j] = np.random.randint(0, 100)
-            current_saddle_points = find_saddle_points(matrix)
-
-        if len(current_saddle_points) == saddle_points_count:
-            return {
-                "matrix": matrix,
-                "saddle_points": current_saddle_points,
-                "rows": rows,
-                "cols": cols,
-                "k": saddle_points_count
-            }
-
-    raise ValueError("Не удалось сгенерировать матрицу с заданным количеством седловых точек")
-
-
-@app.route('/generate_saddle_matrix', methods=['POST'])
-def generate_saddle_matrix():
-    try:
-        data = request.get_json()
-        rows = int(data['rows'])
-        cols = int(data['cols'])
-        k = int(data['k'])
-        
-        if k > rows * cols:
-            return jsonify({
-                "error": f"Количество седловых точек не может превышать {rows * cols}"
-            }), 400
-        
-        result = generate_matrix_with_saddle_points(rows, cols, k)
-        return jsonify(result)
-    except ValueError as ve:
-        return jsonify({
-            "error": str(ve)
-        }), 500
-    except Exception as e:
-        return jsonify({
-            "error": str(e)
-        }), 500
-    
-@app.route('/calculate_mixed_matrix', methods=['POST'])
-def calculate_mixed_matrix():
-    try:
-        data = request.get_json()
-        x = float(data['x'])
-        y = float(data['y'])
-        v = float(data['v'])
-        a12 = float(data['a12'])
-
-        # Проверка допустимости значений
-        if not (0 <= x <= 1) or not (0 <= y <= 1):
-            return jsonify({'error': 'Стратегии должны быть в диапазоне [0, 1]'}), 400
-
-        if y == 0 or (1 - x) == 0:
-            return jsonify({'error': 'Недопустимые значения для расчета'}), 400
-
-        # Вычисления
-        a21 = (v * (y - x) + a12 * x * (1 - y)) / (y * (1 - x))
-        a11 = (v - a12 * (1 - y)) / y
-        a22 = (v - a12 * x) / (1 - x)
-
-        # Форматирование результатов
-        matrix = [
-            [round(a11, 10), round(a12, 10)],
-            [round(a21, 10), round(a22, 10)]
-        ]
-
-        return jsonify({'matrix': matrix})
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 400
-
 @app.route('/section/<string:section_name>')
 def section_page(section_name):
     return render_template('pageLecturer.html', section_name=section_name)
@@ -457,33 +284,6 @@ def section_page(section_name):
 @app.route('/sectionStudent/<string:section_name>')
 def section_student_page(section_name):
     return render_template('pageStudent.html', section_name=section_name)
-
-@app.route('/saddle_points', methods=['POST'])
-def saddle_points():
-    data = request.get_json()
-    matrix_a = data['matrix_a']
-    matrix_b = data['matrix_b']
-    result = find_saddle_points_for_both(matrix_a, matrix_b)
-    return jsonify(result)
-
-@app.route('/pareto_optimal', methods=['POST'])
-def pareto_optimal():
-    data = request.get_json()
-    matrix_a = data['matrix_a']
-    matrix_b = data['matrix_b']
-    result = is_pareto_optimal(matrix_a, matrix_b)
-    return jsonify(result)
-
-@app.route('/nash_equilibrium', methods=['POST'])
-def nash_equilibrium():
-    data = request.get_json()
-    matrix_a = data['matrix_a']
-    matrix_b = data['matrix_b']
-    result = is_nash_equilibrium(matrix_a, matrix_b)
-    if result:
-        return jsonify(result)
-    else:
-        return jsonify([])
 
 @app.route('/upload-file', methods=['POST'])
 def upload_file():
@@ -503,12 +303,10 @@ def upload_file():
 
     cur = conn.cursor()
     try:
-        # Вставка файла в таблицу files
         cur.execute("INSERT INTO files (file_name, file_data) VALUES (%s, %s) RETURNING file_id",
                     (file_name, file_data))
         file_id = cur.fetchone()[0]
 
-        # Получение theme_id по section_name
         cur.execute("SELECT theme_id FROM theme WHERE theme_name = %s", (section_name,))
         theme_id = cur.fetchone()
 
@@ -517,7 +315,6 @@ def upload_file():
 
         theme_id = theme_id[0]
 
-        # Вставка записи в таблицу theme_files
         cur.execute("INSERT INTO theme_files (theme_id, file_id) VALUES (%s, %s)",
                     (theme_id, file_id))
 
@@ -546,7 +343,6 @@ def download_file_by_name(file_name):
         if mime_type is None:
             mime_type = 'application/octet-stream'
 
-        # Для PDF устанавливаем inline, для других типов - attachment
         disposition = 'inline' if file_name.lower().endswith('.pdf') else 'attachment'
         
         response = make_response(send_file(
