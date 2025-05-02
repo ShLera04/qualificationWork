@@ -28,7 +28,7 @@ config.read('config.ini')
 
 app = Flask(__name__)
 app.secret_key = config.get('app', 'secret_key')
-is_test = config.get('app', 'is_test')
+is_test = config['app']['is_test']
 app.config['SESSION_PERMANENT'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
