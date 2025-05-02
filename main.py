@@ -28,7 +28,7 @@ config.read('config.ini')
 
 app = Flask(__name__)
 app.secret_key = config.get('app', 'secret_key')
-is_test = config['app']['is_test']
+is_test = config.getboolean('app', 'is_test')
 app.config['SESSION_PERMANENT'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
@@ -402,6 +402,8 @@ def get_files_by_theme():
         return jsonify({"success": False, "error": "Ошибка при получении файлов"}), 500
 
 if __name__ == '__main__':
+    istest = False
+    print(is_test)
     if is_test:
         app.run()
     else:
