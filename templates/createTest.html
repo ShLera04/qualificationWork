@@ -11,51 +11,82 @@
 
 </head>
 <body>
-    <form id="testForm">
-        <h1>Создание теста</h1>
-        <div class="flashes">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+    <header>
+        <div class="container">
+            <div class="header-line">
+                <img src="..\static\images\logo_WUoITg47.png" alt="Логотип">
+                <div class="burger-menu" id="burgerMenu">
+                    <span class="burger-line"></span>
+                    <span class="burger-line"></span>
+                    <span class="burger-line"></span>
+                </div>
+            </div>
         </div>
-        <div class="question-block">
-            <label for="theme">Тема</label>
-            <select id="theme" name="theme">
-                <option disabled selected>Выберите тему</option>
-            </select>
+    </header>
+    <!-- Бургер-меню -->
+    <div class="menu-overlay" id="menuOverlay">
+        <div class="menu-content">
+            <div class="menu-header">
+                <span class="username">Гость</span>
+                <span class="close-btn" id="closeMenu">&times;</span>
+            </div>
+            <div class="menu-links">
+                <a class="menu-item" href="#first">ГЛАВНАЯ</a>
+                <a class="menu-item" href="#teoriya">МАТЕРИАЛЫ</a>
+                <a class="menu-item" href="#functionality">ФУНКЦИОНАЛЬНОСТЬ</a>
+                <a class="menu-item"href="/settings">НАСТРОЙКИ</a>
+                <a class="menu-item" href="/logout">ВЫХОД</a>
+            </div>
         </div>
-        <div class="question-block">
-            <label for="nameQuestion">Название теста</label>
-            <input type="text" id="nameQuestion" name="nameQuestion" >
-        </div>
-        <div class="question-block">
-            <label for="easyQuestions">Количество легких вопросов</label>
-            <input type="number" id="easyQuestions" name="easyQuestions" min="0" oninput="validateNumber(this); updateTotalQuestions(); updateTestDifficulty()">
-        </div>
-        <div class="question-block">
-            <label for="mediumQuestions">Количество вопросов средней сложности</label>
-            <input type="number" id="mediumQuestions" name="mediumQuestions" min="0" oninput="validateNumber(this); updateTotalQuestions(); updateTestDifficulty()">
-        </div>
-        <div class="question-block">
-            <label for="hardQuestions">Количество сложных вопросов</label>
-            <input type="number" id="hardQuestions" name="hardQuestions" min="0" oninput="validateNumber(this); updateTotalQuestions(); updateTestDifficulty()">
-        </div>
-        <div class="question-block">
-            <label for="totalQuestions">Общее количество вопросов</label>
-            <input type="number" id="totalQuestions" name="totalQuestions" min="0" readonly>
-        </div>
-        <div class="question-block">
-            <label for="testDifficulty">Сложность теста</label>
-            <input type="text" id="testDifficulty" name="testDifficulty" readonly>
-        </div>
-        <div class="button-container">
-            <button type="button" onclick="submitForm()" class="submit">Создать тест</button>
-        </div>
-    </form>
+    </div>
+    <main>
+        <form id="testForm">
+            <h1>Создание теста</h1>
+            <div class="flashes">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div class="question-block">
+                <label for="theme">Тема</label>
+                <select id="theme" name="theme">
+                    <option disabled selected>Выберите тему</option>
+                </select>
+            </div>
+            <div class="question-block">
+                <label for="nameQuestion">Название теста</label>
+                <input type="text" id="nameQuestion" name="nameQuestion" >
+            </div>
+            <div class="question-block">
+                <label for="easyQuestions">Количество легких вопросов</label>
+                <input type="number" id="easyQuestions" name="easyQuestions" min="0" oninput="validateNumber(this); updateTotalQuestions(); updateTestDifficulty()">
+            </div>
+            <div class="question-block">
+                <label for="mediumQuestions">Количество вопросов средней сложности</label>
+                <input type="number" id="mediumQuestions" name="mediumQuestions" min="0" oninput="validateNumber(this); updateTotalQuestions(); updateTestDifficulty()">
+            </div>
+            <div class="question-block">
+                <label for="hardQuestions">Количество сложных вопросов</label>
+                <input type="number" id="hardQuestions" name="hardQuestions" min="0" oninput="validateNumber(this); updateTotalQuestions(); updateTestDifficulty()">
+            </div>
+            <div class="question-block">
+                <label for="totalQuestions">Общее количество вопросов</label>
+                <input type="number" id="totalQuestions" name="totalQuestions" min="0" readonly>
+            </div>
+            <div class="question-block">
+                <label for="testDifficulty">Сложность теста</label>
+                <input type="text" id="testDifficulty" name="testDifficulty" readonly>
+            </div>
+            <div class="button-container">
+                <button type="button" onclick="submitForm()" class="submit">Создать тест</button>
+            </div>
+        </form>
+    </main>
 </body>
+<!-- <script src="..\static\js\createTest.js"></script> -->
 <script src="..\static\js\createTest.js"></script>
 </html>

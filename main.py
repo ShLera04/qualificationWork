@@ -36,6 +36,12 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(settings_bp)
 app.register_blueprint(algo_bp)
 
+
+@app.route('/createTestcopy', methods=['GET', 'POST'])
+@login_required
+def createTestcopy_page():
+    return render_template('createTestcopy.html')
+
 @app.route('/addQuestion', methods=['GET', 'POST'])
 @login_required
 def addQuestion_page():

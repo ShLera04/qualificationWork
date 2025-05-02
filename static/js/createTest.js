@@ -1,3 +1,17 @@
+const modal = document.getElementById('modal');
+const cardsContainer = document.getElementById('cardsContainer');
+const burgerMenu = document.getElementById('burgerMenu');
+const menuOverlay = document.getElementById('menuOverlay');
+const closeMenu = document.getElementById('closeMenu');
+
+fetch('/get_user_info')
+.then(response => response.json())
+.then(data => {
+    if(data.logged_in) {
+    document.querySelector('.username').textContent = data.login;
+    }
+});
+
 async function populateSelectOptions(selectId, endpoint) {
     try {
         const response = await fetch(endpoint);
@@ -99,3 +113,25 @@ function resetForm() {
     document.getElementById('totalQuestions').value = '';
     document.getElementById('testDifficulty').value = '';
 }
+burgerMenu.addEventListener('click', () => {
+    menuOverlay.classList.toggle('active');
+});
+
+closeMenu.addEventListener('click', () => {
+    menuOverlay.classList.remove('active');
+});
+
+// Закрытие бургер-меню при клике вне его
+menuOverlay.addEventListener('click', (event) => {
+    if (event.target === menuOverlay) {
+        menuOverlay.classList.remove('active');
+    }
+});
+
+// Закрытие бургер-меню при выборе пункта меню
+const menuItems = document.querySelectorAll('.menu-item');
+menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+        menuOverlay.classList.remove('active');
+    });
+});
