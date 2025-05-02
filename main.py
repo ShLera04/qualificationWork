@@ -1,9 +1,8 @@
-from flask import Flask, request, render_template, redirect, jsonify, url_for, flash
+from flask import Flask, request, render_template, redirect, jsonify, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import send_file, make_response
 import mimetypes
 import io
-from datetime import datetime
 import pytz
 import re
 import random
@@ -11,14 +10,12 @@ import psycopg2
 from psycopg2 import sql
 import logging
 import configparser, sys
-from flask import session
 import numpy as np
 from models.dataBaseModels import conn
 from functools import wraps
 from datetime import datetime, timedelta
-from controllers.authentication import auth_bp
+from controllers.authentication import auth_bp, login_required
 from controllers.settings import settings_bp
-from controllers.authentication import login_required
 
 logging.basicConfig(filename="main.log",
                     level=logging.INFO,
