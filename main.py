@@ -401,4 +401,4 @@ def get_files_by_theme():
         return jsonify({"success": False, "error": "Ошибка при получении файлов"}), 500
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000) 
