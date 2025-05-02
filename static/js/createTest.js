@@ -7,9 +7,8 @@ async function populateSelectOptions(selectId, endpoint) {
         const select = document.getElementById(selectId);
         data.forEach(item => {
             const opt = document.createElement('option');
-            // Используем поле 'name' из серверного ответа
-            opt.value = item.name;  // Если нужно ID, потребуется изменение на сервере
-            opt.textContent = item.name; // Отображаемое имя
+            opt.value = item.name; 
+            opt.textContent = item.name; 
             select.appendChild(opt);
         });
     } catch (error) {
@@ -17,12 +16,10 @@ async function populateSelectOptions(selectId, endpoint) {
     }
 }
 
-// Инициализация после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
     populateSelectOptions('theme', '/get-themes');
     populateSelectOptions('direction', '/get-directions');
 });
-// Функция для отправки формы
 async function submitForm() {
     try {
         const response = await fetch('/create-test', {
@@ -35,24 +32,20 @@ async function submitForm() {
         if (!response.ok) {
             throw new Error(data.error || 'Неизвестная ошибка');
         }
-
-        // Успешное выполнение
         showFlashMessage(data.message, 'success');
         resetForm();
 
     } catch (error) {
-        // Обработка ошибок
         showFlashMessage(error.message, 'error');
     }
 }
-// Функция для валидации ввода чисел
+
 function validateNumber(input) {
     if (input.value < 0) {
         input.value = 0;
     }
 }
 
-// Функция для обновления общего количества вопросов
 function updateTotalQuestions() {
     const easyQuestions = parseInt(document.getElementById('easyQuestions').value) || 0;
     const mediumQuestions = parseInt(document.getElementById('mediumQuestions').value) || 0;
@@ -61,7 +54,6 @@ function updateTotalQuestions() {
     document.getElementById('totalQuestions').value = totalQuestions;
 }
 
-// Функция для обновления сложности теста
 function updateTestDifficulty() {
     const easyQuestions = parseInt(document.getElementById('easyQuestions').value) || 0;
     const mediumQuestions = parseInt(document.getElementById('mediumQuestions').value) || 0;
@@ -92,7 +84,6 @@ function updateTestDifficulty() {
     document.getElementById('testDifficulty').value = difficultyLevel;
 }
 
-// Добавьте эти функции в createTest.js
 function showFlashMessage(message, type) {
     const flashesContainer = document.querySelector('.flashes');
     flashesContainer.innerHTML = '';

@@ -40,6 +40,7 @@ form {
     display: block;
     margin-bottom: 5px;
     color: #333;
+    font-size: 16px;
 }
 .question-block input[type="text"],
 .question-block select,
@@ -61,6 +62,9 @@ form {
     box-shadow: 0 0 5px #03264a;
     outline: none;
 }
+.question-block input{
+    height: 25px;
+}
 .button-container {
     display: flex;
     justify-content: center;
@@ -76,7 +80,7 @@ button {
     transition: background-color 0.3s; 
     font-family: Roboto, Verdana, Tahoma, sans-serif;
     font-weight: bolder;
-    font-size: 14px;
+    font-size: 16px;
     height: 40px;
 } 
 button:active {
@@ -135,4 +139,33 @@ input[type="file"],
 }
 .alert-warning{
     background-color: rgb(214, 214, 4);
+}
+@media (max-width: 426px) {
+    .body{
+        font-size: 10px;
+    }
+    button{
+        font-size: 10px;
+        height: 35px;
+        font-weight: bolder;
+    }
+    .question-block{
+        font-size: 10px !important;
+        height: -30px;
+    }
+    .question-block input{
+        font-size: 10px !important;
+        height: 10px !important;
+    }
+    .question-block label{
+        font-size: 10px !important;
+    }
+    .nav-item{
+        font-size: 24px;
+        margin-bottom: 10px;
+        margin-top: -10px;
+    }
+    h1{
+        font-size: 18px;
+    }
 }

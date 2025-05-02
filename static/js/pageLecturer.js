@@ -73,18 +73,15 @@ function loadFiles() {
             const listItem = document.createElement("div");
             listItem.classList.add("file-item");
             
-            // Создаем ссылку для файла
             const fileLink = document.createElement("a");
             fileLink.href = `/download-file-by-name/${encodeURIComponent(fileName)}`;
             fileLink.textContent = fileName;
             fileLink.className = "download-link";
             
-            // Для PDF открываем в новой вкладке, остальные - скачиваем
             if (fileName.toLowerCase().endsWith('.pdf')) {
                 fileLink.target = "_blank";
             } else {
                 fileLink.addEventListener('click', function(e) {
-                    // Для не-PDF файлов добавляем атрибут download
                     e.preventDefault();
                     const downloadLink = document.createElement('a');
                     downloadLink.href = this.href;
@@ -95,7 +92,6 @@ function loadFiles() {
                 });
             }
             
-            // Создаем кнопку удаления
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Удалить";
             deleteButton.className = "delete-button";
@@ -176,7 +172,7 @@ function showFlashMessage(message, type, containerSelector) {
         }
     }, 5000);
 }
-// Функция для загрузки тестов
+
 function loadTests() {
     const sectionName = document.querySelector('h1.nav-item').textContent;
 
@@ -190,13 +186,11 @@ function loadTests() {
             const testItem = document.createElement("div");
             testItem.classList.add("file-item");
             
-            // Ссылка на тест
             const testLink = document.createElement("a");
             testLink.href = `/view-test/${test.test_id}`;
             testLink.textContent = test.test_name;
             testLink.className = "test-link";
             
-            // Кнопка удаления
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Удалить";
             deleteButton.className = "delete-button";

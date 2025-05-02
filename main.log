@@ -1,36 +1,8 @@
-2025-05-02 13:01:32,556 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+2025-05-02 13:46:36,976 INFO [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:5000
-2025-05-02 13:01:32,556 INFO [33mPress CTRL+C to quit[0m
-2025-05-02 13:01:35,628 INFO 127.0.0.1 - - [02/May/2025 13:01:35] "GET /sectionStudent/Основные%20понятия HTTP/1.1" 200 -
-2025-05-02 13:01:35,718 INFO 127.0.0.1 - - [02/May/2025 13:01:35] "[36mGET /static/css/page.css HTTP/1.1[0m" 304 -
-2025-05-02 13:01:35,719 INFO 127.0.0.1 - - [02/May/2025 13:01:35] "GET /static/js/pageStudent.js HTTP/1.1" 200 -
-2025-05-02 13:01:35,730 INFO 127.0.0.1 - - [02/May/2025 13:01:35] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
-2025-05-02 13:01:35,731 INFO 127.0.0.1 - - [02/May/2025 13:01:35] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
-2025-05-02 13:01:40,306 INFO 127.0.0.1 - - [02/May/2025 13:01:40] "GET /download-file-by-name/DB%20diagramm%20(1)%20(2)%20(8).pdf HTTP/1.1" 200 -
-2025-05-02 13:01:44,621 INFO 127.0.0.1 - - [02/May/2025 13:01:44] "GET /download-file-by-name/SPPR_Zadanie_3_Shishkina_Valeria_3821B1FI3%20(2)%20(6).docx HTTP/1.1" 200 -
-2025-05-02 13:01:52,679 INFO 127.0.0.1 - - [02/May/2025 13:01:52] "[32mGET /logout HTTP/1.1[0m" 302 -
-2025-05-02 13:01:52,685 INFO 127.0.0.1 - - [02/May/2025 13:01:52] "GET /entrance HTTP/1.1" 200 -
-2025-05-02 13:01:52,700 INFO 127.0.0.1 - - [02/May/2025 13:01:52] "[36mGET /static/css/authentication.css HTTP/1.1[0m" 304 -
-2025-05-02 13:01:59,137 INFO 127.0.0.1 - - [02/May/2025 13:01:59] "[32mPOST /entrance HTTP/1.1[0m" 302 -
-2025-05-02 13:01:59,143 INFO 127.0.0.1 - - [02/May/2025 13:01:59] "GET /mainLecturer HTTP/1.1" 200 -
-2025-05-02 13:01:59,161 INFO 127.0.0.1 - - [02/May/2025 13:01:59] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
-2025-05-02 13:01:59,163 INFO 127.0.0.1 - - [02/May/2025 13:01:59] "[36mGET /static/js/mainLecture.js HTTP/1.1[0m" 304 -
-2025-05-02 13:01:59,164 INFO 127.0.0.1 - - [02/May/2025 13:01:59] "[36mGET /static/images/logo_WUoITg47.png HTTP/1.1[0m" 304 -
-2025-05-02 13:01:59,165 INFO 127.0.0.1 - - [02/May/2025 13:01:59] "[36mGET /static/images/home_2.jpg.jpeg HTTP/1.1[0m" 304 -
-2025-05-02 13:01:59,170 INFO 127.0.0.1 - - [02/May/2025 13:01:59] "GET /get_user_info HTTP/1.1" 200 -
-2025-05-02 13:01:59,176 INFO 127.0.0.1 - - [02/May/2025 13:01:59] "GET /get-themes HTTP/1.1" 200 -
-2025-05-02 13:02:00,476 INFO 127.0.0.1 - - [02/May/2025 13:02:00] "GET /section/Основные%20понятия HTTP/1.1" 200 -
-2025-05-02 13:02:00,494 INFO 127.0.0.1 - - [02/May/2025 13:02:00] "[36mGET /static/css/page.css HTTP/1.1[0m" 304 -
-2025-05-02 13:02:00,494 INFO 127.0.0.1 - - [02/May/2025 13:02:00] "GET /static/js/pageLecturer.js HTTP/1.1" 200 -
-2025-05-02 13:02:00,505 INFO 127.0.0.1 - - [02/May/2025 13:02:00] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
-2025-05-02 13:02:00,505 INFO 127.0.0.1 - - [02/May/2025 13:02:00] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
-2025-05-02 13:02:00,509 INFO 127.0.0.1 - - [02/May/2025 13:02:00] "GET /get-tests-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
-2025-05-02 13:02:00,509 INFO 127.0.0.1 - - [02/May/2025 13:02:00] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
-2025-05-02 13:02:05,701 INFO 127.0.0.1 - - [02/May/2025 13:02:05] "[35m[1mPOST /upload-file HTTP/1.1[0m" 201 -
-2025-05-02 13:02:05,706 INFO 127.0.0.1 - - [02/May/2025 13:02:05] "GET /get-files-by-theme?theme_name=Основные%20понятия HTTP/1.1" 200 -
-2025-05-02 13:02:11,837 INFO 127.0.0.1 - - [02/May/2025 13:02:11] "GET /download-file-by-name/__emitted_0.png%20(2)%20(3).jpg HTTP/1.1" 200 -
-2025-05-02 13:02:14,333 INFO 127.0.0.1 - - [02/May/2025 13:02:14] "GET /createTest HTTP/1.1" 200 -
-2025-05-02 13:02:14,357 INFO 127.0.0.1 - - [02/May/2025 13:02:14] "[36mGET /static/css/createTest.css HTTP/1.1[0m" 304 -
-2025-05-02 13:02:14,358 INFO 127.0.0.1 - - [02/May/2025 13:02:14] "[36mGET /static/js/createTest.js HTTP/1.1[0m" 304 -
-2025-05-02 13:02:14,385 INFO 127.0.0.1 - - [02/May/2025 13:02:14] "GET /get-themes HTTP/1.1" 200 -
-2025-05-02 13:02:14,388 INFO 127.0.0.1 - - [02/May/2025 13:02:14] "GET /get-directions HTTP/1.1" 200 -
+2025-05-02 13:46:36,976 INFO [33mPress CTRL+C to quit[0m
+2025-05-02 13:46:38,936 INFO 127.0.0.1 - - [02/May/2025 13:46:38] "GET /createTest HTTP/1.1" 200 -
+2025-05-02 13:46:39,024 INFO 127.0.0.1 - - [02/May/2025 13:46:39] "GET /static/css/createTest.css HTTP/1.1" 200 -
+2025-05-02 13:46:39,025 INFO 127.0.0.1 - - [02/May/2025 13:46:39] "[36mGET /static/js/createTest.js HTTP/1.1[0m" 304 -
+2025-05-02 13:46:39,059 INFO 127.0.0.1 - - [02/May/2025 13:46:39] "GET /get-directions HTTP/1.1" 200 -
+2025-05-02 13:46:39,059 INFO 127.0.0.1 - - [02/May/2025 13:46:39] "GET /get-themes HTTP/1.1" 200 -
