@@ -11,7 +11,7 @@ form {
     border-radius: 1rem;
     box-shadow: 0 0.4rem 2rem rgba(0, 0, 0, 0.1);
     padding: 4rem;
-    max-width: 35vw;
+    max-width: 30vw;
     width: 100%;
     margin: 10vh auto;
     overflow: hidden;
@@ -143,7 +143,7 @@ input[type="file"],
 header {
     background: #041027;
     padding-left: 1rem;
-    padding: 1rem 0rem;
+    padding: 1rem 1rem;
     color: white;
     display: flex;
     align-items: center;
@@ -198,9 +198,9 @@ main {
 h1 {
     margin: 0;
     text-align: center;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     color: white;
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-family: 'Roboto', Verdana, Tahoma, sans-serif;
 }
 
@@ -327,7 +327,7 @@ h1 {
         font-size: 0.6rem;
     }
     form{
-        max-width: 50vw;
+        max-width: 80vw;
     }
     button {
         font-size: 0.6rem;
@@ -336,10 +336,17 @@ h1 {
     }
     .question-block {
         font-size: 0.6rem !important;
+        height: 3rem !important;
     }
     .question-block input {
         font-size: 0.6rem !important;
+        height: 1.5rem !important;
+        padding: 0.5rem 0.5rem !important;
+    }
+    .question-block select {
+        font-size: 0.6rem !important;
         height: 2rem !important;
+        padding: 0.5rem 0.5rem !important;
     }
     .question-block label {
         font-size: 0.6rem !important;
@@ -348,7 +355,23 @@ h1 {
         font-size: 1.2rem;
     }
     .menu-overlay{
-        width: 40vw;
+        width: 60vw;
+    }
+    .menu-item {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+    .menu-header {
+        margin-bottom: 0.5rem;
+    }
+    form{
+        padding: 2rem 1rem;
+    }
+    .flashes{
+        margin: 1rem 0;
+    }
+    .menu-header .username {
+        font-size: 1rem;
     }
 }
 
@@ -374,6 +397,11 @@ h1 {
         font-size: 0.8rem !important;
         height: 2rem !important;
     }
+    .question-block select {
+        font-size: 0.8rem !important;
+        height: 2rem !important;
+        padding: 0.4rem 0.4rem !important;
+    }
     .question-block label {
         font-size: 0.8rem !important;
     }
@@ -393,9 +421,14 @@ h1 {
         max-width: 50vw;
     }
     h1{
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
     .menu-overlay{
         width: 20vw;
+    }
+    .question-block select {
+        font-size: 0.8rem !important;
+        height: 2rem !important;
+        padding: 0.4rem 0.4rem !important;
     }
 }
