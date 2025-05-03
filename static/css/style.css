@@ -991,6 +991,11 @@ button:active {
     .flashes{
         font-size: 14px;
     }
+    .prediction-button {
+        padding: 4px;
+        font-size: 9px;
+        height: 30px;
+    }
 }
 @media (max-width: 768px) {
     .text-overlay {
@@ -1032,6 +1037,11 @@ button:active {
     }
     .flashes{
         font-size: 10px;
+    }
+    .prediction-button {
+        padding: 3px 3px;
+        font-size: 8px;
+        height: 25px;
     }
 }
 @media (max-width: 426px) {
@@ -1169,6 +1179,11 @@ button:active {
     }
     .flashes{
         font-size: 10px;
+    }
+    .prediction-button {
+        padding: 3px 3px;
+        font-size: 6px;
+        height: 20px;
     }
 } 
 @media (min-width: 1026px) and (max-width: 1440px) {
@@ -1329,6 +1344,11 @@ button:active {
     }
     .flashes{
         font-size: 16px;
+    }
+    .prediction-button {
+        padding: 5px;
+        font-size: 10px;
+        height: 30px;
     }
 }
 @media (min-width: 1441px) and (max-width: 2560px) {
