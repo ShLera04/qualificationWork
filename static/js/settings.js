@@ -1,3 +1,16 @@
+const modal = document.getElementById('modal');
+const cardsContainer = document.getElementById('cardsContainer');
+const burgerMenu = document.getElementById('burgerMenu');
+const menuOverlay = document.getElementById('menuOverlay');
+const closeMenu = document.getElementById('closeMenu');
+
+fetch('/get_user_info')
+.then(response => response.json())
+.then(data => {
+    if(data.logged_in) {
+    document.querySelector('.username').textContent = data.login;
+    }
+});
 document.addEventListener('DOMContentLoaded', function () {
     loadThemes();
     loadStudentsForAdmin();
@@ -640,3 +653,26 @@ function loadStudentsForDirectionChange() {
     })
     .catch(error => console.error('Ошибка:', error));
 }
+
+burgerMenu.addEventListener('click', () => {
+    menuOverlay.classList.toggle('active');
+});
+
+closeMenu.addEventListener('click', () => {
+    menuOverlay.classList.remove('active');
+});
+
+// Закрытие бургер-меню при клике вне его
+menuOverlay.addEventListener('click', (event) => {
+    if (event.target === menuOverlay) {
+        menuOverlay.classList.remove('active');
+    }
+});
+
+// Закрытие бургер-меню при выборе пункта меню
+const menuItems = document.querySelectorAll('.menu-item');
+menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+        menuOverlay.classList.remove('active');
+    });
+});
