@@ -51,6 +51,7 @@ def addQuestion_page():
     return render_template('addQuestion.html')
 
 @app.route('/test', methods=['GET', 'POST'])
+@login_required
 def test_page():
     return render_template('test.html')
 
@@ -64,6 +65,7 @@ def createTest_page():
     return render_template('createTest.html')
 
 @app.route('/tttt', methods=['GET', 'POST'])
+@login_required
 def tttt_page():
     return render_template('tttt.html')
 
@@ -101,6 +103,7 @@ def pageStudent_page():
     return render_template('pageStudent.html')
 
 @app.route('/get-themes', methods=['GET'])
+@login_required
 def get_themes():
     cur = None
     try:
@@ -119,6 +122,7 @@ def get_themes():
         return jsonify({"error": "Ошибка базы данных"}), 500
 
 @app.route('/create-test', methods=['POST'])
+@login_required
 def create_test():
     try:
         # Проверка аутентификации
@@ -212,6 +216,7 @@ def create_test():
         if 'cur' in locals():
             cur.close()
 @app.route('/get-tests-by-theme')
+@login_required
 def get_tests_by_theme():
     theme_name = request.args.get('theme_name')
     try:
@@ -228,6 +233,7 @@ def get_tests_by_theme():
         return jsonify([])
 
 @app.route('/delete-test/<int:test_id>', methods=['DELETE'])
+@login_required
 def delete_test(test_id):
     try:
         cur = conn.cursor()
@@ -240,11 +246,13 @@ def delete_test(test_id):
         return jsonify({"success": False, "error": "Ошибка при удалении теста"}), 500
 
 @app.route('/view-test/<int:test_id>')
+@login_required
 def view_test(test_id):
     # Здесь реализуйте логику отображения теста
     return render_template('viewTest.html', test_id=test_id)
 
 @app.route('/get-directions', methods=['GET'])
+@login_required
 def get_directions():
     cur = None
     try:
@@ -258,6 +266,7 @@ def get_directions():
         return jsonify({"error": "Database error"}), 500
 
 @app.route('/get-groups', methods=['GET'])
+@login_required
 def get_groups():
     cur = None
     try:
@@ -271,6 +280,7 @@ def get_groups():
         return jsonify({"error": "Database error"}), 500
 
 @app.route('/delete-file-by-name/<string:file_name>', methods=['DELETE'])
+@login_required
 def delete_file_by_name(file_name):
     cur = conn.cursor()
     try:
@@ -285,14 +295,17 @@ def delete_file_by_name(file_name):
         return jsonify({"success": False, "error": "Ошибка при удалении файла"}), 500
 
 @app.route('/section/<string:section_name>')
+@login_required
 def section_page(section_name):
     return render_template('pageLecturer.html', section_name=section_name)
 
 @app.route('/sectionStudent/<string:section_name>')
+@login_required
 def section_student_page(section_name):
     return render_template('pageStudent.html', section_name=section_name)
 
 @app.route('/upload-file', methods=['POST'])
+@login_required
 def upload_file():
     if 'file' not in request.files:
         return jsonify({"success": False, "error": "Файл не найден"}), 400
@@ -334,6 +347,7 @@ def upload_file():
 
 
 @app.route('/download-file-by-name/<string:file_name>', methods=['GET'])
+@login_required
 def download_file_by_name(file_name):
     cur = conn.cursor()
     try:
@@ -368,6 +382,7 @@ def download_file_by_name(file_name):
     
 
 @app.route('/get-all-file-names', methods=['GET'])
+@login_required
 def get_all_file_names():
     cur = conn.cursor()
     try:
@@ -379,6 +394,7 @@ def get_all_file_names():
         return jsonify({"success": False, "error": "Ошибка при получении имен файлов"}), 500
     
 @app.route('/get-files-by-theme', methods=['GET'])
+@login_required
 def get_files_by_theme():
     theme_name = request.args.get('theme_name')
     if not theme_name:
@@ -408,7 +424,6 @@ def get_files_by_theme():
         return jsonify({"success": False, "error": "Ошибка при получении файлов"}), 500
 
 if __name__ == '__main__':
-    istest = False
     print(is_test)
     if is_test:
         app.run()

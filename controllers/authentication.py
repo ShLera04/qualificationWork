@@ -175,6 +175,7 @@ def logout():
     return redirect(url_for('auth.entrance_page'))
 
 @auth_bp.route('/get_user_info')
+@login_required
 def get_user_info():
     return jsonify({
         'logged_in': session.get('logged_in', False),

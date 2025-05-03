@@ -50,6 +50,7 @@ def add_theme():
         return jsonify({"success": False, "error": "Ошибка сервера при добавлении темы"}), 500
 
 @settings_bp.route('/delete-theme/<string:theme_name>', methods=['DELETE'])
+@login_required
 def delete_theme(theme_name):
     cur = None
     try:
@@ -76,6 +77,7 @@ def delete_theme(theme_name):
         return jsonify({"success": False, "error": "Ошибка сервера при удалении темы"}), 500
     
 @settings_bp.route('/get-admins', methods=['GET'])
+@login_required
 def get_admins():
     cur = None
     try:
@@ -89,6 +91,7 @@ def get_admins():
         return jsonify({"error": "Ошибка базы данных"}), 500
 
 @settings_bp.route('/get-students-for-admin', methods=['GET'])
+@login_required
 def get_students_for_admin():
     cur = None
     try:
@@ -102,6 +105,7 @@ def get_students_for_admin():
         return jsonify({"error": "Ошибка базы данных"}), 500
 
 @settings_bp.route('/add-admin', methods=['POST'])
+@login_required
 def add_admin():
     if not request.is_json:
         return jsonify({"success": False, "error": "Некорректный формат запроса"}), 400
@@ -133,6 +137,7 @@ def add_admin():
         return jsonify({"success": False, "error": "Ошибка сервера"}), 500
 
 @settings_bp.route('/delete-admin/<string:admin_name>', methods=['DELETE'])
+@login_required
 def delete_admin(admin_name):
     cur = None
     try:
@@ -161,6 +166,7 @@ def delete_admin(admin_name):
         return jsonify({"success": False, "error": "Ошибка сервера при удалении администратора"}), 500
 
 @settings_bp.route('/delete-students', methods=['DELETE'])
+@login_required
 def delete_students():
     if not request.is_json:
         return jsonify({"success": False, "error": "Некорректный формат запроса"}), 400
@@ -218,6 +224,7 @@ def delete_students():
 
 
 @settings_bp.route('/delete-student/<string:student_name>', methods=['DELETE'])
+@login_required
 def delete_student(student_name):
     cur = None
     try:
@@ -245,6 +252,7 @@ def delete_student(student_name):
     
 
 @settings_bp.route('/change-student-group', methods=['POST'])
+@login_required
 def change_student_group():
     if not request.is_json:
         return jsonify({"success": False, "error": "Некорректный формат запроса"}), 400
@@ -291,6 +299,7 @@ def change_student_group():
         return jsonify({"success": False, "error": "Ошибка сервера"}), 500
 
 @settings_bp.route('/change-student-direction', methods=['POST'])
+@login_required
 def change_student_direction():
     if not request.is_json:
         return jsonify({"success": False, "error": "Некорректный формат запроса"}), 400

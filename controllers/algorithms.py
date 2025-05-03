@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 import numpy as np
-
+from controllers.authentication import login_required
 algo_bp = Blueprint('algorithms', __name__)
 
 def is_saddle_point(matrix, row, col):
@@ -122,6 +122,7 @@ def generate_matrix_with_saddle_points(rows, cols, saddle_points_count, max_atte
 
 
 @algo_bp.route('/generate_saddle_matrix', methods=['POST'])
+@login_required
 def generate_saddle_matrix():
     try:
         data = request.get_json()
@@ -146,6 +147,7 @@ def generate_saddle_matrix():
         }), 500
     
 @algo_bp.route('/calculate_mixed_matrix', methods=['POST'])
+@login_required
 def calculate_mixed_matrix():
     try:
         data = request.get_json()
@@ -175,6 +177,7 @@ def calculate_mixed_matrix():
         return jsonify({'error': str(e)}), 400
     
 @algo_bp.route('/saddle_points', methods=['POST'])
+@login_required
 def saddle_points():
     data = request.get_json()
     matrix_a = data['matrix_a']
@@ -183,6 +186,7 @@ def saddle_points():
     return jsonify(result)
 
 @algo_bp.route('/pareto_optimal', methods=['POST'])
+@login_required
 def pareto_optimal():
     data = request.get_json()
     matrix_a = data['matrix_a']
@@ -191,6 +195,7 @@ def pareto_optimal():
     return jsonify(result)
 
 @algo_bp.route('/nash_equilibrium', methods=['POST'])
+@login_required
 def nash_equilibrium():
     data = request.get_json()
     matrix_a = data['matrix_a']
