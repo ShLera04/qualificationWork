@@ -9,7 +9,166 @@ body {
     overflow-x: hidden;
     background: #041027;
     font-family: Roboto, Verdana, Tahoma, sans-serif;
-    margin-top: 50px; 
+}
+
+header {
+    background: #041027;
+    padding-left: 1rem;
+    padding: 1rem 1rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-line {
+    display: flex;
+    justify-content: flex-start; /* Выравниваем элементы по левому краю */
+    align-items: center;
+    width: 100%;
+    gap: 20px; /* Добавляем отступ между элементами */
+}
+
+.header-line img {
+    height: 5vh;
+    width: auto;
+    margin-right: 0;
+}
+.burger-menu {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    margin-left: 0;
+    font-family: 'Roboto', Verdana, Tahoma, sans-serif;
+}
+
+.burger-line {
+    width: 1.5rem;
+    height: 0.2rem;
+    background-color: white;
+    margin: 0.25rem 0;
+    transition: 0.4s;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 2.8rem;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 15vw;
+    background: #041027;
+    box-shadow: -0.2rem 0 0.8rem rgba(0, 0, 0, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.menu-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.menu-header img {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+.menu-header .username {
+    flex: 1;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: white;
+}
+
+.close-btn {
+    font-size: 2.4rem;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.close-btn:hover {
+    color: #007bff;
+}
+
+.menu-links {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.menu-item {
+    text-decoration: none;
+    color: white;
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-family: 'Roboto', Verdana, Tahoma, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+
+}
+
+.menu-footer .menu-item {
+    background-color: #041027;
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 1.2rem;
+    text-align: center;
+    width: 100%;
+    box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+}
+
+.menu-footer .menu-item:hover {
+    background-color: #007bff;
+}
+
+.menu-item:hover {
+    background-color: #041027;
+    color: #007bff;
+}
+
+.menu-footer {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    width: calc(100% - 4rem);
+    display: flex;
+    justify-content: center;
+    z-index: 1001;
+}
+
+.menu-overlay.active {
+    transform: translateX(0);
 }
 
 img {
@@ -18,14 +177,22 @@ img {
     height: auto;
     display: block;
 }
-
+.container .nav-item {
+    margin-top: 2rem; 
+}
 .container {
     display: flex;
     justify-content: center; 
     align-items: center;
     flex-direction: column; 
 }
-
+.containerr {
+    width: 90vw;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .box {
     background-color: #1f2a44; 
     color: white; 
@@ -383,7 +550,7 @@ button:active {
     opacity: 0;
     cursor: pointer;
 }
-@media (max-width: 426px) {
+/* @media (max-width: 426px) {
     .body{
         font-size: 10px;
     }
@@ -416,27 +583,141 @@ button:active {
     h2{
         font-size: 18px;
     }
-}
-@media (min-width: 427px) and (max-width: 1441px) {
-    .body{
-        font-size: 12px;
+}*/
+
+
+@media (max-width: 426px) {
+    body {
+        font-size: 0.6rem;
     }
     .box { 
-        width: 50%;
-        font-size: 12px;
+        width: 75%;
+        font-size: 0.6rem;
     }
-    button{
-        font-size: 12px;
-        height: 30px;
+    button {
+        font-size: 0.6rem;
+        height: 2rem;
         font-weight: bolder;
     }
     .file-item button{
-        font-size: 12px !important;
+        font-size: 0.6rem !important;
         font-weight: bolder;
-        height: 30px;
+        height: 1.8rem;
     }
-    .question-block{
-        font-size: 12px;
-        height: -30px;
+    .question-block {
+        font-size: 0.6rem !important;
+        height: 3rem !important;
+    }
+    .question-block input {
+        font-size: 0.6rem !important;
+        height: 1.5rem !important;
+        padding: 0.5rem 0.5rem !important;
+    }
+    .question-block select {
+        font-size: 0.6rem !important;
+        height: 2rem !important;
+        padding: 0.5rem 0.5rem !important;
+    }
+    .question-block label {
+        font-size: 0.6rem !important;
+    }
+    h1 {
+        font-size: 1.2rem;
+    }
+    .menu-overlay{
+        width: 60vw;
+    }
+    .menu-item {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+    .menu-header {
+        margin-bottom: 0.5rem;
+    }
+    form{
+        padding: 2rem 1rem;
+    }
+    .flashes{
+        margin: 1rem 0;
+    }
+    .menu-header .username {
+        font-size: 1rem;
+    }
+    .close-btn {
+        font-size: 1.8rem;
+    }
+}
+
+@media (min-width: 426px) and (max-width: 1026px) {
+    body {
+        font-size: 0.8rem;
+    }
+    .header-line{
+        padding: 0rem 1rem;
+    }
+    .box { 
+        width: 50%;
+        font-size: 0.8rem;
+    }
+    form{
+        max-width: 60vw;
+    }
+    button {
+        font-size: 0.8rem;
+        height: 2rem;
+        font-weight: bolder;
+    }
+    .file-item button{
+        font-size: 0.6rem !important;
+        font-weight: bolder;
+        height: 2rem;
+    }
+    .question-block {
+        font-size: 0.8rem !important;
+    }
+    .question-block input {
+        font-size: 0.8rem !important;
+        height: 2rem !important;
+    }
+    .question-block select {
+        font-size: 0.8rem !important;
+        height: 2rem !important;
+        padding: 0.4rem 0.4rem !important;
+    }
+    .question-block label {
+        font-size: 0.8rem !important;
+    }
+    h1 {
+        font-size: 1.5rem;
+    }
+    .menu-overlay{
+        width: 32vw;
+    }
+    .container .nav-item{
+        margin-top: 0rem;
+    }
+}
+
+@media (min-width:1026px ) and (max-width: 1441px) {
+    body {
+        font-size: 0.8rem;
+    }
+    .box { 
+        width: 50%;
+        font-size: 0.8rem;
+    }
+    h1{
+        font-size: 1.5rem;
+    }
+    .menu-overlay{
+        width: 20vw;
+    }
+    .question-block select {
+        font-size: 0.8rem !important;
+        height: 2rem !important;
+        padding: 0.4rem 0.4rem !important;
+    }
+    .container .nav-item{
+        margin-top: 0rem;
     }
 }

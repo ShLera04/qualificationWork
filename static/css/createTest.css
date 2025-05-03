@@ -243,7 +243,7 @@ h1 {
 .menu-header {
     display: flex;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .menu-header img {
@@ -281,7 +281,7 @@ h1 {
 .menu-item {
     text-decoration: none;
     color: white;
-    padding: 1rem;
+    padding: 0.5rem;
     font-size: 1rem;
     font-family: 'Roboto', Verdana, Tahoma, sans-serif;
     transition: background-color 0.3s, color 0.3s;
