@@ -3,7 +3,6 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', Verdana, Tahoma, sans-serif;
-    min-height: 100vh;
 }
 
 form {
@@ -320,6 +319,123 @@ h1 {
 
 .menu-overlay.active {
     transform: translateX(0);
+}
+
+.dynamic-fields {
+    margin-top: 1rem;
+    display: none;
+}
+
+.option-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.option-container input[type="radio"],
+.option-container input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.add-option-btn {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background-color: #4a5b78;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.add-option-btn:hover {
+    background-color: #3a4a68;
+}
+
+.image-preview {
+    max-width: 200px;
+    max-height: 200px;
+    margin-top: 10px;
+    display: none;
+}
+.image-upload-container {
+    margin-top: 15px;
+}
+.remove-image-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.file-upload-container {
+    margin-top: 15px;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-input-button {
+    padding: 0.5rem 1rem;
+    background-color: #1f2a44;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+}
+
+.file-input-button:hover {
+    background-color: #4a5b78;
+}
+
+.file-list {
+    margin-top: 1rem;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background-color: hsl(205, 51%, 93%);
+    border-radius: 0.5rem;
+}
+
+.file-name {
+    flex-grow: 1;
+    margin-right: 1rem;
+}
+
+.upload-button {
+    padding: 0.3rem 0.8rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    cursor: pointer;
+}
+
+.upload-button:hover {
+    background-color: #45a049;
+}
+
+.delete-button {
+    padding: 0.3rem 0.8rem;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+.delete-button:hover {
+    background-color: #d32f2f;
 }
 
 @media (max-width: 425px) {

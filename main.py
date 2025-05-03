@@ -1,6 +1,9 @@
 from flask import Flask, request, render_template, redirect, jsonify, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import send_file, make_response
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import FileStorage
+import os
 import mimetypes
 import io
 import pytz
@@ -422,6 +425,153 @@ def get_files_by_theme():
     except Exception as e:
         app.logger.error(f"Error getting files by theme: {str(e)}")
         return jsonify({"success": False, "error": "Ошибка при получении файлов"}), 500
+
+
+@app.route('/create-question', methods=['POST'])
+@login_required
+def create_question():
+    if not session.get('is_admin'):
+        return jsonify({'status': 'error', 'message': 'Доступ запрещен'}), 403
+
+    try:
+        # Получаем данные из формы
+        theme_name = request.form.get('theme')
+        question_text = request.form.get('formulationQuestion')
+        difficulty_level = request.form.get('difficulty-level')
+        question_type = request.form.get('question-type')
+        score = request.form.get('score')  # Получаем баллы из формы
+
+        # Валидация обязательных полей
+        if not all([theme_name, question_text, difficulty_level, question_type, score]):
+            return jsonify({'status': 'error', 'message': 'Не все обязательные поля заполнены'}), 400
+
+        # Проверяем, что score - число
+        try:
+            score = int(score)
+            if score <= 0:
+                return jsonify({'status': 'error', 'message': 'Баллы должны быть положительным числом'}), 400
+        except ValueError:
+            return jsonify({'status': 'error', 'message': 'Баллы должны быть числом'}), 400
+
+        cur = conn.cursor()
+
+        # 1. Находим ID темы
+        cur.execute("SELECT theme_id FROM theme WHERE theme_name = %s", (theme_name,))
+        theme = cur.fetchone()
+        if not theme:
+            return jsonify({'status': 'error', 'message': 'Тема не найдена'}), 404
+
+        theme_id = theme[0]
+        question_type_db = 'с вводом значения' if question_type == 'value' else 'с единственным выбором ответа'
+
+        # 2. Вставляем вопрос в базу данных (добавляем score)
+        cur.execute(
+            """INSERT INTO questions (theme_id, question_text, difficulty_level, question_type, score)
+               VALUES (%s, %s, %s, %s, %s) RETURNING question_id""",
+            (theme_id, question_text, difficulty_level, question_type_db, score)
+        )
+        question_id = cur.fetchone()[0]
+
+        # 3. Обрабатываем ответы в зависимости от типа вопроса
+        if question_type == 'value':
+            correct_value = request.form.get('correct-value')
+            if not correct_value:
+                conn.rollback()
+                return jsonify({'status': 'error', 'message': 'Не указано правильное значение'}), 400
+
+            cur.execute(
+                """INSERT INTO answers (question_id, answer_text, is_correct)
+                   VALUES (%s, %s, %s)""",
+                (question_id, correct_value, True)
+            )
+
+        elif question_type == 'single':
+            options = []
+            i = 1
+            while True:
+                option = request.form.get(f'option-{i}')
+                if option is None:
+                    break
+                options.append(option)
+                i += 1
+
+            correct_option = int(request.form.get('correct-option', 0))
+
+            if len(options) < 2:
+                conn.rollback()
+                return jsonify({'status': 'error', 'message': 'Должно быть минимум 2 варианта ответа'}), 400
+
+            if not (1 <= correct_option <= len(options)):
+                conn.rollback()
+                return jsonify({'status': 'error', 'message': 'Не выбран правильный вариант'}), 400
+
+            for i, option_text in enumerate(options, start=1):
+                cur.execute(
+                    """INSERT INTO answers (question_id, answer_text, is_correct)
+                       VALUES (%s, %s, %s)""",
+                    (question_id, option_text, i == correct_option)
+                )
+
+        # 4. Обрабатываем загруженные файлы
+        if 'fileInput' in request.files:  # Изменили с 'file' на 'fileInput'
+            files = request.files.getlist('fileInput')  # Соответствует id в HTML
+            for file in files:
+                if file and file.filename != '' and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    file_data = file.read()
+
+                    try:
+                        # Вставляем файл в базу
+                        cur.execute(
+                            """INSERT INTO files (file_name, file_data)
+                            VALUES (%s, %s) RETURNING file_id""",
+                            (filename, file_data)  # Убрали psycopg2.Binary()
+                        )
+                        file_id = cur.fetchone()[0]
+
+                        # Связываем файл с вопросом
+                        cur.execute(
+                            """INSERT INTO question_files (question_id, file_id)
+                            VALUES (%s, %s)""",
+                            (question_id, file_id)
+                        )
+                        conn.commit()  # Коммитим после каждого файла
+
+                    except Exception as e:
+                        conn.rollback()
+                        app.logger.error(f"Error processing file {filename}: {str(e)}")
+                        continue  # Продолжаем обработку других файлов
+
+        conn.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Вопрос успешно добавлен',
+            'question_id': question_id
+        })
+
+    except psycopg2.Error as e:
+        conn.rollback()
+        app.logger.error(f"Database error in create_question: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': 'Ошибка базы данных при добавлении вопроса'
+        }), 500
+    except Exception as e:
+        conn.rollback()
+        app.logger.error(f"Unexpected error in create_question: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': 'Внутренняя ошибка сервера'
+        }), 500
+    finally:
+        if 'cur' in locals():
+            cur.close()
+
+
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'doc', 'docx'}
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 if __name__ == '__main__':
     print(is_test)

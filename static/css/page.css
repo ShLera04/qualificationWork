@@ -204,6 +204,21 @@ img {
     
 }
 
+/* #test-form {
+    background-color: #1f2a44; 
+    color: white; 
+    padding: 30px;
+    margin: 20px 0; 
+    border-radius: 10px;
+    transition: all 0.3s; 
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+} */
+
 .box h2 {
     margin-bottom: 30px; 
 }
