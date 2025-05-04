@@ -70,16 +70,17 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('fileInput').addEventListener('change', function() {
         const fileList = document.getElementById('fileList');
         fileList.innerHTML = '';
-        
-        Array.from(this.files).forEach(file => {
+    
+        const file = this.files[0]; // Получаем только первый файл
+        if (file) {
             const fileItem = document.createElement('div');
             fileItem.className = 'file-item';
             fileItem.innerHTML = `
                 <span class="file-name">${file.name}</span>
-                <button type="button" class="delete-button" onclick="this.parentNode.remove()">×</button>
+                <button type="button" class="delete-button" onclick="this.parentNode.remove()">Удалить</button>
             `;
             fileList.appendChild(fileItem);
-        });
+        }
     });
     
     // Обработчики для бургер-меню
@@ -167,7 +168,7 @@ function toggleQuestionFields() {
     const questionType = document.getElementById('question-type').value;
     
     // Скрываем все динамические поля
-    document.querySelectorAll('.dynamic-fields').forEach(field => {
+    document.querySelectorAll('.dynamic-fields-question-block').forEach(field => {
         field.style.display = 'none';
     });
     
@@ -260,7 +261,7 @@ async function submitForm(event) {
             alert('Вопрос успешно добавлен!');
             form.reset();
             removeImage(); // Сбрасываем изображение
-            document.querySelectorAll('.dynamic-fields').forEach(field => {
+            document.querySelectorAll('.dynamic-fields-question-block').forEach(field => {
                 field.style.display = 'none';
             });
             document.getElementById('options-container').querySelectorAll('.option-container').forEach(option => {
@@ -314,7 +315,7 @@ function resetForm() {
     form.reset();
     
     // Очистка динамических полей
-    document.querySelectorAll('.dynamic-fields').forEach(field => {
+    document.querySelectorAll('.dynamic-fields-question-block').forEach(field => {
         field.style.display = 'none';
     });
     

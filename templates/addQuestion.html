@@ -81,23 +81,23 @@
             </div>
 
 
-            <div class="question-block file-upload-container">
+            <div class="question-block-file-upload-container">
                 <label>Прикрепленные файлы</label>
-                <button type="button" id="fileInputButton" class="file-input-button">Добавить файл</button>
-                <input type="file" id="fileInput" class="file-input" multiple>
+                <button type="button" id="fileInputButton" class="file-input-button">Добавить</button>
+                <input type="file" id="fileInput" class="file-input">
                 <div id="fileList" class="file-list"></div>
             </div>
 
-            <div id="value-fields" class="dynamic-fields question-block">
+            <div id="value-fields" class="dynamic-fields-question-block">
                 <label for="correct-value">Правильный ответ (число)</label>
                 <input type="number" id="correct-value" name="correct-value" step="any">
             </div>
             
             <!-- Динамические поля для вопроса с выбором ответа -->
-            <div id="single-fields" class="dynamic-fields question-block">
+            <div id="single-fields" class="dynamic-fields-question-block">
                 <div id="options-container">
                     <label>Варианты ответов</label>
-                    <button type="button" class="add-option-btn" onclick="addOption()">Добавить вариант</button>
+                    <button type="button" class="add-option-btn" onclick="addOption()">Добавить</button>
                 </div>
             </div>
     

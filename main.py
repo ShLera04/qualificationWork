@@ -512,35 +512,37 @@ def create_question():
                     (question_id, option_text, i == correct_option)
                 )
 
-        # 4. Обрабатываем загруженные файлы
+        # 4. Обрабатываем загруженный файл
         if 'fileInput' in request.files:  # Изменили с 'file' на 'fileInput'
-            files = request.files.getlist('fileInput')  # Соответствует id в HTML
-            for file in files:
-                if file and file.filename != '' and allowed_file(file.filename):
-                    filename = secure_filename(file.filename)
-                    file_data = file.read()
+            file = request.files['fileInput']  # Получаем только первый файл
+            if file and file.filename != '' and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_data = file.read()
 
-                    try:
-                        # Вставляем файл в базу
-                        cur.execute(
-                            """INSERT INTO files (file_name, file_data)
-                            VALUES (%s, %s) RETURNING file_id""",
-                            (filename, file_data)  # Убрали psycopg2.Binary()
-                        )
-                        file_id = cur.fetchone()[0]
+                try:
+                    # Вставляем файл в базу
+                    cur.execute(
+                        """INSERT INTO files (file_name, file_data)
+                        VALUES (%s, %s) RETURNING file_id""",
+                        (filename, file_data)  # Убрали psycopg2.Binary()
+                    )
+                    file_id = cur.fetchone()[0]
 
-                        # Связываем файл с вопросом
-                        cur.execute(
-                            """INSERT INTO question_files (question_id, file_id)
-                            VALUES (%s, %s)""",
-                            (question_id, file_id)
-                        )
-                        conn.commit()  # Коммитим после каждого файла
+                    # Связываем файл с вопросом
+                    cur.execute(
+                        """INSERT INTO question_files (question_id, file_id)
+                        VALUES (%s, %s)""",
+                        (question_id, file_id)
+                    )
+                    conn.commit()  # Коммитим после каждого файла
 
-                    except Exception as e:
-                        conn.rollback()
-                        app.logger.error(f"Error processing file {filename}: {str(e)}")
-                        continue  # Продолжаем обработку других файлов
+                except Exception as e:
+                    conn.rollback()
+                    app.logger.error(f"Error processing file {filename}: {str(e)}")
+                    return jsonify({
+                        'status': 'error',
+                        'message': 'Ошибка при обработке файла'
+                    }), 500
 
         conn.commit()
         return jsonify({
@@ -566,6 +568,7 @@ def create_question():
     finally:
         if 'cur' in locals():
             cur.close()
+
 
 
 def allowed_file(filename):

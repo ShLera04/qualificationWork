@@ -72,7 +72,7 @@ document.getElementById("createTestButton").addEventListener("click", function (
 });
 
 document.getElementById("newQuestionButton").addEventListener("click", function () {
-    window.location.href = 'test';
+    window.location.href = '/addQuestion';
 });
 
 function loadFiles() {
