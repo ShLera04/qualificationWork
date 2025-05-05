@@ -13,6 +13,10 @@ def is_strong_password(password):
     pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&+-])[A-Za-z\d@$!%*?&+-]{8,}$')
     return bool(pattern.match(password))
 
+def is_valid_email(email):
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -53,6 +57,10 @@ def register():
             repetpassword = request.form['repetpassword']
             direction_name = request.form.get('direction', '').strip()
             group_name = request.form.get('group', '').strip()
+
+            if  not is_valid_email(email):
+                flash("Пожалуйста, введите корректный адрес электронной почты", 'warning')
+                return render_template('register.html', groups=groups, directions=directions, form=form_data)
 
             if not direction_name or not group_name:
                 flash("Пожалуйста, выберите корректное направление подготовки и группу", 'warning')
@@ -109,6 +117,12 @@ def register():
 
                 conn.commit()
                 flash('Регистрация прошла успешно', 'success')
+                form_data = {
+                    'name': '',
+                    'email': '',
+                    'direction': '',
+                    'group': ''
+                }
                 return redirect(url_for('auth.register'))
                 
             except Exception as e:
