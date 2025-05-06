@@ -14,6 +14,9 @@ fetch('/get_user_info')
 
 loadFiles();
 loadTests();
+function openTest(testName) {
+    window.location.href = `/view-test/${encodeURIComponent(testName)}`;
+}
 function loadFiles() {
     const sectionName = document.querySelector('h1.nav-item').textContent;
 
@@ -98,42 +101,42 @@ function forceDownload(url, fileName) {
     link.click();
     document.body.removeChild(link);
 }
-        function loadTests() {
-    const sectionName = document.querySelector('h1.nav-item').textContent;
+function loadTests() {
+        const sectionName = document.querySelector('h1.nav-item').textContent;
 
-    fetch(`/get-tests-by-theme?theme_name=${encodeURIComponent(sectionName)}`)
-    .then(response => response.json())
-    .then(tests => {
-        const testsList = document.getElementById('testsListStudent');
-        testsList.innerHTML = '';
-        
-        tests.forEach(test => {
-            const testItem = document.createElement("div");
-            testItem.classList.add("file-item");
-            
-            const testLink = document.createElement("a");
-            testLink.href = `/view-test/${test.test_id}`;
-            testLink.textContent = test.test_name;
-            testLink.className = "test-link";
-            
-            const openButton = document.createElement("button");
-            openButton.textContent = "Открыть";
-            openButton.className = "delete-button";
-            openButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                openTest(test.test_id);
+        fetch(`/get-tests-by-theme?theme_name=${encodeURIComponent(sectionName)}`)
+        .then(response => response.json())
+        .then(tests => {
+            const testsList = document.getElementById('testsListStudent');
+            testsList.innerHTML = '';
+
+            tests.forEach(test => {
+                const testItem = document.createElement("div");
+                testItem.classList.add("file-item");
+
+                const testLink = document.createElement("a");
+                testLink.href = `/view-test/${encodeURIComponent(test.test_name)}`;
+                testLink.textContent = test.test_name;
+                testLink.className = "test-link";
+
+                const openButton = document.createElement("button");
+                openButton.textContent = "Открыть";
+                openButton.className = "delete-button";
+                openButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openTest(test.test_name);
+                });
+
+                testItem.appendChild(testLink);
+                testItem.appendChild(openButton);
+                testsList.appendChild(testItem);
             });
-
-            testItem.appendChild(testLink);
-            testItem.appendChild(openButton);
-            testsList.appendChild(testItem);
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            showFlashMessage("Ошибка при загрузке тестов", "error", '.box');
         });
-    })
-    .catch(error => {
-        console.error('Ошибка:', error);
-        showFlashMessage("Ошибка при загрузке тестов", "error", '.box');
-    });
-}
+    }
 document.addEventListener('DOMContentLoaded', function() {
     loadFiles();
     loadTests();

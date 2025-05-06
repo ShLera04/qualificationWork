@@ -56,7 +56,8 @@ function scrollRight() {
 // Инициализация состояния кнопок при загрузке
 updateButtons();
 document.querySelector('.cards-container').addEventListener('scroll', updateButtons);
-    function generateButtons(containerId, rows, cols) {
+    
+function generateButtons(containerId, rows, cols) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
     for (let i = 0; i < rows; i++) {
@@ -65,9 +66,6 @@ document.querySelector('.cards-container').addEventListener('scroll', updateButt
             button.className = 'prediction-button';
             button.textContent = `(${i}, ${j})`;
             button.dataset.value = `(${i}, ${j})`;
-            button.addEventListener('click', function() {
-                button.classList.toggle('selected');
-            });
             container.appendChild(button);
         }
     }
@@ -122,24 +120,11 @@ document.getElementById('generateMatrix').addEventListener('click', function() {
     generateButtons('saddlePointsPrediction2', rows, cols);
     generateButtons('nashEquilibriumPrediction', rows, cols);
     generateButtons('paretoOptimalPrediction', rows, cols);
+    setupPredictionButtons('saddlePointsPrediction1', 'noSaddlePoints1');
+    setupPredictionButtons('saddlePointsPrediction2', 'noSaddlePoints2');
+    setupPredictionButtons('nashEquilibriumPrediction', 'noNashEquilibrium');
+    setupPredictionButtons('paretoOptimalPrediction', 'noParetoOptimal');
 });
-
-document.getElementById('noSaddlePoints1').addEventListener('click', function() {
-    this.classList.toggle('selected');
-});
-
-document.getElementById('noSaddlePoints2').addEventListener('click', function() {
-    this.classList.toggle('selected');
-});
-
-document.getElementById('noNashEquilibrium').addEventListener('click', function() {
-    this.classList.toggle('selected');
-});
-
-document.getElementById('noParetoOptimal').addEventListener('click', function() {
-    this.classList.toggle('selected');
-});
-
 
 function getMatrix(containerId) {
     const rows = parseInt(document.getElementById('rows').value);
@@ -158,24 +143,6 @@ function getMatrix(containerId) {
 
     return matrix;
 }
-
-// function displayResult(result, title) {
-//     const resultsContainer = document.getElementById('results');
-//     resultsContainer.innerHTML = `<h3>${title}</h3>`;
-//     if (result.length > 0) {
-//         result.forEach(point => {
-//             resultsContainer.innerHTML += `(${point[0]}, ${point[1]})<br>`;
-//         });
-//     } else {
-//         if (title === 'Седловые точки') {
-//             resultsContainer.innerHTML += 'Седловые точки не найдены.<br>';
-//         } else if (title === 'Равновесие по Нэшу') {
-//             resultsContainer.innerHTML += 'Равновесие по Нэшу не найдено.<br>';
-//         } else if (title === 'Оптимальность по Парето') {
-//             resultsContainer.innerHTML += 'Парето-оптимальные точки не найдены.<br>';
-//         }
-//     }
-// }
 
 function displayResult(result, title) {
     const resultsContainer = document.getElementById('results');
@@ -276,6 +243,11 @@ document.getElementById('optionSelect').addEventListener('change', function() {
     const selectedOption = this.value;
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = ''; 
+    if (!isMatrixFilled('matrixContainer') || !isMatrixFilled('matrixContainer2')) {
+        alert('Пожалуйста, заполните обе матрицы перед выбором опции!');
+        this.value = 'Доступные опции'; 
+        return;
+    }
     if (selectedOption === 'saddlePoints') {
         const matrix1 = getMatrix('matrixContainer');
         const matrix2 = getMatrix('matrixContainer2');
@@ -391,3 +363,62 @@ document.getElementById('inputSearchSecond').addEventListener('input', function(
         }
     });
 });
+function setupPredictionButtons(containerId, noButtonId) {
+    const container = document.getElementById(containerId);
+    const noButton = document.getElementById(noButtonId);
+    
+    if (!container || !noButton) {
+        console.error('Container or noButton not found', {containerId, noButtonId});
+        return;
+    }
+
+    // Обработчик для кнопки "НЕТ"
+    noButton.addEventListener('click', function() {
+        const isSelected = this.classList.toggle('selected');
+        
+        // Блокируем/разблокируем все другие кнопки
+        const otherButtons = container.querySelectorAll('.prediction-button');
+        otherButtons.forEach(button => {
+            button.disabled = isSelected;
+            if (isSelected) {
+                button.classList.remove('selected');
+                button.style.backgroundColor = '';
+            }
+        });
+        
+        // Визуально выделяем кнопку "НЕТ"
+        this.style.backgroundColor = isSelected ? '#0095C7' : '';
+    });
+    
+    // Обработчики для обычных кнопок
+    container.querySelectorAll('.prediction-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const isSelected = this.classList.toggle('selected');
+            
+            // Визуально выделяем выбранную кнопку
+            this.style.backgroundColor = isSelected ? '#0095C7' : '';
+            
+            // Проверяем, есть ли выбранные кнопки
+            const anySelected = Array.from(container.querySelectorAll('.prediction-button'))
+                                   .some(btn => btn.classList.contains('selected'));
+            
+            // Обновляем состояние кнопки "НЕТ"
+            noButton.disabled = anySelected;
+            if (anySelected) {
+                noButton.classList.remove('selected');
+                noButton.style.backgroundColor = '';
+            }
+        });
+    });
+}
+
+function isMatrixFilled(containerId) {
+    const inputs = document.getElementById(containerId).querySelectorAll('input');
+    for (const input of inputs) {
+        if (input.value === '' || isNaN(input.value)) {
+            return false;
+        }
+    }
+    return true;
+}
+

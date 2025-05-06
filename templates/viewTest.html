@@ -172,7 +172,7 @@
             .nav-button {
                 padding: 10px 20px;
             }
-        }
+        } */
     </style>
 </head>
 <body>
@@ -198,7 +198,7 @@
                 <div class="question-number" id="questionNumber"></div>
                 <div class="question-text" id="questionText"></div>
             </div>
-            
+
             <!-- Изображение вопроса -->
             <img id="questionImage" class="question-image" alt="Иллюстрация вопроса">
 
@@ -217,24 +217,12 @@
     </div>
 
     <script>
-        // Пример данных (должны загружаться с сервера)
-        const questions = [
-            {
-                id: 1,
-                text: "Какое из следующих утверждений правильно описывает принцип инкапсуляции в ООП?",
-                image: "{{ url_for('static', filename='images/oop.png') }}",
-                options: [
-                    { id: 1, text: "Это процесс скрытия деталей реализации..." },
-                    { id: 2, text: "Это способность объектов разных классов..." },
-                    { id: 3, text: "Это механизм создания новых классов..." },
-                    { id: 4, text: "Это процесс разделения программы..." }
-                ]
-            },
-            // ... другие вопросы
-        ];
+        // Вопросы передаются через шаблон
+        const initialQuestions = JSON.parse('{{ questions | safe }}');
 
         let currentQuestion = 0;
         let answers = {};
+        let questions = initialQuestions;
 
         function initTest() {
             renderQuestionNavigation();
@@ -244,15 +232,15 @@
 
         function showQuestion(index) {
             const question = questions[index];
-            
+
             // Обновление содержимого
             document.getElementById('questionNumber').textContent = `Вопрос ${index + 1}`;
-            document.getElementById('questionText').textContent = question.text;
-            
+            document.getElementById('questionText').textContent = question.question_text;
+
             // Изображение вопроса
             const imgElement = document.getElementById('questionImage');
             if (question.image) {
-                imgElement.src = question.image;
+                imgElement.src = `{{ url_for('static', filename='images/') }}${question.image}`;
                 imgElement.style.display = 'block';
             } else {
                 imgElement.style.display = 'none';
@@ -261,15 +249,15 @@
             // Варианты ответов
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = '';
-            
-            question.options.forEach(option => {
+
+            question.answers.forEach(option => {
                 const optionElement = document.createElement('div');
                 optionElement.className = 'option-item';
                 optionElement.innerHTML = `
                     <label class="option-label">
-                        <input type="radio" name="answer" class="option-input" 
-                               value="${option.id}" ${answers[index] === option.id ? 'checked' : ''}>
-                        ${option.text}
+                        <input type="radio" name="answer" class="option-input"
+                               value="${option.answer_id}" ${answers[index] === option.answer_id ? 'checked' : ''}>
+                        ${option.answer_text}
                     </label>
                 `;
                 optionsContainer.appendChild(optionElement);
@@ -285,7 +273,7 @@
         function renderQuestionNavigation() {
             const navContainer = document.getElementById('questionNav');
             navContainer.innerHTML = '';
-            
+
             questions.forEach((q, index) => {
                 const link = document.createElement('div');
                 link.className = `question-link ${index === 0 ? 'current' : ''} ${answers[index] ? 'answered' : ''}`;
@@ -301,9 +289,9 @@
         function updateProgress() {
             const answered = Object.keys(answers).length;
             const progress = (answered / questions.length) * 100;
-            
+
             document.getElementById('progress').style.width = `${progress}%`;
-            document.getElementById('progressText').textContent = 
+            document.getElementById('progressText').textContent =
                 `Прогресс: ${answered}/${questions.length} вопросов`;
         }
 

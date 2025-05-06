@@ -20,7 +20,7 @@ from datetime import datetime, timedelta
 from controllers.authentication import auth_bp, login_required
 from controllers.settings import settings_bp
 from controllers.algorithms import algo_bp
-
+import json 
 logging.basicConfig(filename="main.log",
                     level=logging.INFO,
                     format="%(asctime)s %(levelname)s %(message)s",
@@ -248,11 +248,125 @@ def delete_test(test_id):
         app.logger.error(f"Error: {str(e)}")
         return jsonify({"success": False, "error": "Ошибка при удалении теста"}), 500
 
-@app.route('/view-test/<int:test_id>')
+from flask import jsonify
+
+@app.route('/get-test-questions/<string:test_name>')
 @login_required
-def view_test(test_id):
-    # Здесь реализуйте логику отображения теста
-    return render_template('viewTest.html', test_id=test_id)
+def get_test_questions(test_name):
+    try:
+        cur = conn.cursor()
+        # Получаем настройки теста
+        cur.execute("""
+            SELECT easy_questions, medium_questions, hard_questions, theme_id
+            FROM test_options
+            WHERE test_name = %s
+        """, (test_name,))
+        test_settings = cur.fetchone()
+
+        if not test_settings:
+            return jsonify({"error": "Тест не найден"}), 404
+
+        easy_questions, medium_questions, hard_questions, theme_id = test_settings
+
+        # Получаем вопросы по уровню сложности и количеству
+        questions = []
+
+        if easy_questions > 0:
+            cur.execute("""
+                SELECT question_id, question_text, difficulty_level, question_type, score
+                FROM questions
+                WHERE theme_id = %s AND difficulty_level = 'легкий'
+                ORDER BY RANDOM()
+                LIMIT %s
+            """, (theme_id, easy_questions))
+            questions.extend(cur.fetchall())
+
+        if medium_questions > 0:
+            cur.execute("""
+                SELECT question_id, question_text, difficulty_level, question_type, score
+                FROM questions
+                WHERE theme_id = %s AND difficulty_level = 'средний'
+                ORDER BY RANDOM()
+                LIMIT %s
+            """, (theme_id, medium_questions))
+            questions.extend(cur.fetchall())
+
+        if hard_questions > 0:
+            cur.execute("""
+                SELECT question_id, question_text, difficulty_level, question_type, score
+                FROM questions
+                WHERE theme_id = %s AND difficulty_level = 'сложный'
+                ORDER BY RANDOM()
+                LIMIT %s
+            """, (theme_id, hard_questions))
+            questions.extend(cur.fetchall())
+
+        # Преобразуем вопросы в список словарей
+        formatted_questions = []
+        for question in questions:
+            question_id = question[0]
+            cur.execute("""
+                SELECT answer_id, answer_text, is_correct
+                FROM answers
+                WHERE question_id = %s
+            """, (question_id,))
+            answers = cur.fetchall()
+
+            cur.execute("""
+                SELECT f.file_name
+                FROM files f
+                JOIN question_files qf ON f.file_id = qf.file_id
+                WHERE qf.question_id = %s
+            """, (question_id,))
+            image = cur.fetchone()[0] if cur.rowcount > 0 else None
+
+            formatted_questions.append({
+                "question_id": question_id,
+                "question_text": question[1],
+                "difficulty_level": question[2],
+                "question_type": question[3],
+                "score": question[4],
+                "answers": answers,
+                "image": image
+            })
+
+        return jsonify(formatted_questions)
+
+    except Exception as e:
+        app.logger.error(f"Error: {str(e)}")
+        return jsonify({"error": "Ошибка при загрузке вопросов"}), 500
+
+
+@app.route('/view-test/<string:test_name>')
+@login_required
+def view_test(test_name):
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT test_id, test_name FROM test_options WHERE test_name = %s", (test_name,))
+        test = cur.fetchone()
+
+        if not test:
+            return render_template('error.html', message="Тест не найден"), 404
+
+        test_id, test_name = test
+
+        # Получаем вопросы для теста
+        response = get_test_questions(test_name)
+        if response.status_code != 200:
+            return render_template('error.html', message="Ошибка при загрузке вопросов"), 500
+
+        questions = response.get_json()
+
+        # Сериализация данных в JSON
+        questions_json = json.dumps(questions)
+
+        return render_template('viewTest.html', test_id=test_id, test_name=test_name, questions=questions_json)
+    except Exception as e:
+        app.logger.error(f"Error: {str(e)}")
+        return render_template('error.html', message="Ошибка при загрузке теста"), 500
+
+
+
 
 @app.route('/get-directions', methods=['GET'])
 @login_required
