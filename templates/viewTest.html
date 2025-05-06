@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page.css') }}">
     <style>
         :root {
-            --primary-color: #4CAF50;
+            --primary-color: hsl(205, 51%, 83%);
             --background-dark: #041027;
             --card-bg: #1f2a44;
             --text-light: #ffffff;
@@ -30,16 +30,18 @@
         /* Шапка теста */
         .test-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 5px;
         }
 
         /* Прогресс-бар */
         .progress-container {
-            margin-bottom: 30px;
+            margin-bottom: 5px;
+            width: 300px;
         }
 
         .progress-bar {
             height: 12px;
+            max-width: 100%;
             background: var(--accent-color);
             border-radius: 6px;
             overflow: hidden;
@@ -48,15 +50,10 @@
 
         .progress-fill {
             height: 100%;
+
             background: var(--primary-color);
             width: 0;
             transition: width 0.3s ease;
-        }
-
-        .progress-text {
-            text-align: right;
-            margin-top: 8px;
-            font-size: 0.9em;
         }
 
         /* Контейнер вопроса */
@@ -66,6 +63,7 @@
             padding: 25px;
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 50%;
         }
 
         .question-header {
@@ -113,12 +111,35 @@
             transform: scale(1.2);
         }
 
+        /* Поле для ввода */
+        .input-field {
+            width: 96%;
+            padding: 10px;
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-light);
+        }
+
+        /* Контейнер для изображения */
+        .image-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
         /* Навигация */
         .navigation-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 30px;
+            gap: 20px; 
         }
 
         .nav-button {
@@ -156,8 +177,79 @@
         }
 
         .question-link.answered {
-            background: #2e7d32;
+            background:hsl(205, 51%, 83%);
+            
         }
+        /* Контейнер для изображения - исправленная версия */
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            overflow: hidden; /* На случай, если изображение будет больше контейнера */
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 400px;
+            height: auto;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: block; /* Важно для корректного центрирования */
+            margin: 0 auto; /* Дополнительное центрирование */
+        }
+        .results-container {
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+            margin: auto; /* Изменено с margin: 0 auto */
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            
+            /* Новые свойства для вертикального центрирования */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            
+            /* Дополнительно для лучшего отображения */
+            width: 90%; /* Чтобы не прилипал к краям на мобильных */
+            max-height: 90vh; /* Максимальная высота */
+            overflow-y: auto; /* Прокрутка если контент не помещается */
+        }
+        
+        .results-title {
+            color: var(--primary-color);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        
+        .results-text {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .home-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .home-button:hover {
+            background: hsl(205, 51%, 83%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }   
 
         /* Адаптивность */
         @media (max-width: 768px) {
@@ -172,7 +264,33 @@
             .nav-button {
                 padding: 10px 20px;
             }
-        } */
+            .image-container img {
+                max-height: 250px;
+            }
+        }
+        @media (max-width: 425px) {
+            .container {
+                padding: 15px;
+                width: 75%
+            }
+            .option-item{
+                padding: 5px;
+            }
+            .option-input{
+                transform: scale(0.7);
+            }
+            .question-container {
+                width: 100%
+            }
+
+            .question-text {
+                font-size: 1em;
+            }
+
+            .nav-button {
+                padding: 0px 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -186,7 +304,6 @@
             <div class="progress-bar">
                 <div class="progress-fill" id="progress"></div>
             </div>
-            <div class="progress-text" id="progressText"></div>
         </div>
 
         <!-- Список вопросов -->
@@ -200,103 +317,97 @@
             </div>
 
             <!-- Изображение вопроса -->
-            <img id="questionImage" class="question-image" alt="Иллюстрация вопроса">
+            <div class="image-container" id="imageContainer" style="display: none;">
+                <img id="questionImage" class="question-image" alt="Иллюстрация вопроса">
+            </div>
 
-            <!-- Варианты ответов -->
+            <!-- Варианты ответов или поле для ввода -->
             <div class="options-grid" id="optionsContainer"></div>
+            <input type="text" id="inputField" class="input-field" style="display: none;">
         </div>
 
         <!-- Навигация -->
         <div class="navigation-container">
-            <button class="nav-button" id="prevQuestion">← Назад</button>
-            <div>
-                <button class="nav-button" id="submitTest" style="display: none;">Завершить тест</button>
-            </div>
-            <button class="nav-button" id="nextQuestion">Далее →</button>
+            <button class="nav-button" id="prevQuestion">Назад</button>
+            <button class="nav-button" id="submitTest">Завершить тест</button>
+            <button class="nav-button" id="nextQuestion">Далее</button>
         </div>
     </div>
+</body>
+<script>
+    // Вопросы передаются через шаблон в виде JSON-строки
+    const initialQuestions = JSON.parse('{{ questions | safe }}');
 
-    <script>
-        // Вопросы передаются через шаблон
-        const initialQuestions = JSON.parse('{{ questions | safe }}');
+    let currentQuestion = 0;
+    let answers = {}; // Объект для хранения ответов пользователя
+    let questions = initialQuestions;
 
-        let currentQuestion = 0;
-        let answers = {};
-        let questions = initialQuestions;
+    function initTest() {
+        renderQuestionNavigation();
+        showQuestion(currentQuestion);
+        updateProgress();
+        
+        // Инициализация обработчиков событий
+        setupEventListeners();
+    }
 
-        function initTest() {
-            renderQuestionNavigation();
-            showQuestion(currentQuestion);
-            updateProgress();
-        }
+    function showQuestion(index) {
+    const question = questions[index];
+    
+    // Обновление содержимого
+    document.getElementById('questionNumber').textContent = `Вопрос ${index + 1}`;
+    document.getElementById('questionText').textContent = question.question_text;
 
-        function showQuestion(index) {
-            const question = questions[index];
+    // Изображение вопроса
+    const imageContainer = document.getElementById('imageContainer');
+    const imgElement = document.getElementById('questionImage');
 
-            // Обновление содержимого
-            document.getElementById('questionNumber').textContent = `Вопрос ${index + 1}`;
-            document.getElementById('questionText').textContent = question.question_text;
+    if (question.image) {
+        imgElement.src = `data:image/jpeg;base64,${question.image}`;
+        imageContainer.style.display = 'block';
+    } else {
+        imageContainer.style.display = 'none';
+    }
 
-            // Изображение вопроса
-            const imgElement = document.getElementById('questionImage');
-            if (question.image) {
-                imgElement.src = `{{ url_for('static', filename='images/') }}${question.image}`;
-                imgElement.style.display = 'block';
-            } else {
-                imgElement.style.display = 'none';
-            }
+    // Варианты ответов или поле для ввода
+    const optionsContainer = document.getElementById('optionsContainer');
+    const inputField = document.getElementById('inputField');
+    optionsContainer.innerHTML = '';
+    inputField.style.display = 'none';
 
-            // Варианты ответов
-            const optionsContainer = document.getElementById('optionsContainer');
-            optionsContainer.innerHTML = '';
+    if (question.question_type === 'с вводом значения') {
+        inputField.style.display = 'block';
+        inputField.value = answers[index] || '';
+    } else if (question.question_type === 'с единственным выбором ответа') {
+        question.answers.forEach(option => {
+            const optionElement = document.createElement('div');
+            optionElement.className = 'option-item';
+            
+            // Исправлено сравнение - приводим оба значения к строке
+            const isChecked = String(answers[index]) === String(option.answer_id);
+            
+            optionElement.innerHTML = `
+                <label class="option-label">
+                    <input type="radio" name="answer" class="option-input"
+                           value="${option.answer_id}" ${isChecked ? 'checked' : ''}>
+                    ${option.answer_text}
+                </label>
+            `;
+            optionsContainer.appendChild(optionElement);
+        });
+    }
 
-            question.answers.forEach(option => {
-                const optionElement = document.createElement('div');
-                optionElement.className = 'option-item';
-                optionElement.innerHTML = `
-                    <label class="option-label">
-                        <input type="radio" name="answer" class="option-input"
-                               value="${option.answer_id}" ${answers[index] === option.answer_id ? 'checked' : ''}>
-                        ${option.answer_text}
-                    </label>
-                `;
-                optionsContainer.appendChild(optionElement);
-            });
+    // Обновление навигации
+    document.querySelectorAll('.question-link').forEach(link => {
+        link.classList.remove('current');
+    });
+    document.querySelectorAll('.question-link')[index].classList.add('current');
+}
 
-            // Обновление навигации
-            document.querySelectorAll('.question-link').forEach(link => {
-                link.classList.remove('current');
-            });
-            document.querySelectorAll('.question-link')[index].classList.add('current');
-        }
-
-        function renderQuestionNavigation() {
-            const navContainer = document.getElementById('questionNav');
-            navContainer.innerHTML = '';
-
-            questions.forEach((q, index) => {
-                const link = document.createElement('div');
-                link.className = `question-link ${index === 0 ? 'current' : ''} ${answers[index] ? 'answered' : ''}`;
-                link.textContent = index + 1;
-                link.onclick = () => {
-                    currentQuestion = index;
-                    showQuestion(index);
-                };
-                navContainer.appendChild(link);
-            });
-        }
-
-        function updateProgress() {
-            const answered = Object.keys(answers).length;
-            const progress = (answered / questions.length) * 100;
-
-            document.getElementById('progress').style.width = `${progress}%`;
-            document.getElementById('progressText').textContent =
-                `Прогресс: ${answered}/${questions.length} вопросов`;
-        }
-
-        // Обработчики событий
+    function setupEventListeners() {
+        // Обработчики для кнопок навигации
         document.getElementById('prevQuestion').addEventListener('click', () => {
+            saveCurrentAnswer();
             if (currentQuestion > 0) {
                 currentQuestion--;
                 showQuestion(currentQuestion);
@@ -304,13 +415,14 @@
         });
 
         document.getElementById('nextQuestion').addEventListener('click', () => {
+            saveCurrentAnswer();
             if (currentQuestion < questions.length - 1) {
                 currentQuestion++;
                 showQuestion(currentQuestion);
             }
         });
 
-        // Сохранение ответов
+        // Обработчик изменений в вариантах ответов
         document.getElementById('optionsContainer').addEventListener('change', (e) => {
             if (e.target.name === 'answer') {
                 answers[currentQuestion] = e.target.value;
@@ -319,8 +431,143 @@
             }
         });
 
-        // Инициализация теста
-        initTest();
-    </script>
-</body>
+        // Обработчик ввода текста
+        document.getElementById('inputField').addEventListener('input', (e) => {
+            answers[currentQuestion] = e.target.value;
+            updateProgress();
+            renderQuestionNavigation();
+        });
+
+        // Обработчик завершения теста
+        document.getElementById('submitTest').addEventListener('click', submitTest);
+    }
+
+    function saveCurrentAnswer() {
+    const question = questions[currentQuestion];
+    
+    if (question.question_type === 'с вводом значения') {
+        const inputValue = document.getElementById('inputField').value;
+        answers[currentQuestion] = inputValue;
+    } else if (question.question_type === 'с единственным выбором ответа') {
+        const selectedOption = document.querySelector('input[name="answer"]:checked');
+        if (selectedOption) {
+            // Сохраняем значение как строку для единообразия
+            answers[currentQuestion] = String(selectedOption.value);
+        }
+    }
+    
+    updateProgress();
+    renderQuestionNavigation();
+}
+    function renderQuestionNavigation() {
+        const navContainer = document.getElementById('questionNav');
+        navContainer.innerHTML = '';
+
+        questions.forEach((q, index) => {
+            const link = document.createElement('div');
+            link.className = `question-link ${index === currentQuestion ? 'current' : ''} ${answers[index] ? 'answered' : ''}`;
+            link.textContent = index + 1;
+            link.onclick = () => {
+                saveCurrentAnswer();
+                currentQuestion = index;
+                showQuestion(index);
+            };
+            navContainer.appendChild(link);
+        });
+    }
+
+    function updateProgress() {
+        const answered = Object.keys(answers).filter(key => answers[key] !== undefined).length;
+        const progress = (answered / questions.length) * 100;
+
+        document.getElementById('progress').style.width = `${progress}%`;
+    }
+    function showResults(correctAnswers, totalQuestions, mark) {
+        // Очищаем контейнер страницы
+        document.querySelector('.container').innerHTML = `
+            <div class="results-container">
+                <h2 class="results-title">Тест завершен!</h2>
+                <div class="results-text">
+                    <p>Вы ответили правильно на <strong>${correctAnswers} из ${totalQuestions}</strong> вопросов</p>
+                    <p>Ваша оценка: <strong>${mark}</strong></p>
+                </div>
+                <button class="home-button" id="goHome">Вернуться на главную</button>
+            </div>
+        `;
+        
+        // Добавляем обработчик для кнопки
+        document.getElementById('goHome').addEventListener('click', () => {
+            window.location.href = '/mainStudent'; // Или другой URL вашей главной страницы
+        });
+    }
+
+
+    async function submitTest() {
+        saveCurrentAnswer();
+        
+        let correctAnswers = 0;
+        let totalScore = 0;
+        let userScore = 0;
+        
+        questions.forEach((question, index) => {
+            const userAnswer = answers[index];
+            totalScore += question.max_score || 1;
+
+            if (question.question_type === 'с вводом значения') {
+                const correctAnswer = question.answers.find(a => a.is_correct)?.answer_text;
+                if (String(userAnswer).trim() === String(correctAnswer).trim()) {
+                    correctAnswers++;
+                    userScore += question.max_score || 1;
+                }
+            } else if (question.question_type === 'с единственным выбором ответа') {
+                const correctAnswerId = question.answers.find(a => a.is_correct)?.answer_id;
+                if (userAnswer == correctAnswerId) {
+                    correctAnswers++;
+                    userScore += question.max_score || 1;
+                }
+            }
+        });
+
+        const percentage = (userScore / totalScore) * 100;
+        
+        let mark;
+        if (percentage >= 90) mark = 5;
+        else if (percentage >= 76) mark = 4;
+        else if (percentage >= 60) mark = 3;
+        else mark = 2;
+
+        try {
+            const response = await fetch('/save_attempt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    test_id: JSON.parse('{{ test_id|tojson|safe }}'),
+                    mark: mark,
+                    score: userScore,
+                    total_score: totalScore,
+                    correct_answers: correctAnswers,
+                    total_questions: questions.length
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                // Вместо alert показываем красивый экран результатов
+                showResults(correctAnswers, questions.length, mark);
+            } else {
+                showResults(correctAnswers, questions.length, mark);
+                console.error('Ошибка сохранения:', result.message);
+            }
+        } catch (error) {
+            showResults(correctAnswers, questions.length, mark);
+            console.error('Ошибка:', error);
+        }
+    }
+
+    // Инициализация теста
+    initTest();
+</script>
 </html>

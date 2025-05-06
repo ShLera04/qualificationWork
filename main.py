@@ -250,6 +250,8 @@ def delete_test(test_id):
 
 from flask import jsonify
 
+import base64
+
 @app.route('/get-test-questions/<string:test_name>')
 @login_required
 def get_test_questions(test_name):
@@ -310,15 +312,18 @@ def get_test_questions(test_name):
                 FROM answers
                 WHERE question_id = %s
             """, (question_id,))
-            answers = cur.fetchall()
+            answers = [{"answer_id": row[0], "answer_text": row[1], "is_correct": row[2]} for row in cur.fetchall()]
 
             cur.execute("""
-                SELECT f.file_name
+                SELECT f.file_name, f.file_data
                 FROM files f
                 JOIN question_files qf ON f.file_id = qf.file_id
                 WHERE qf.question_id = %s
             """, (question_id,))
-            image = cur.fetchone()[0] if cur.rowcount > 0 else None
+            file_data = cur.fetchone()
+            image_base64 = None
+            if file_data:
+                image_base64 = base64.b64encode(file_data[1]).decode('utf-8')
 
             formatted_questions.append({
                 "question_id": question_id,
@@ -327,7 +332,7 @@ def get_test_questions(test_name):
                 "question_type": question[3],
                 "score": question[4],
                 "answers": answers,
-                "image": image
+                "image": image_base64
             })
 
         return jsonify(formatted_questions)
@@ -335,6 +340,7 @@ def get_test_questions(test_name):
     except Exception as e:
         app.logger.error(f"Error: {str(e)}")
         return jsonify({"error": "Ошибка при загрузке вопросов"}), 500
+
 
 
 @app.route('/view-test/<string:test_name>')
@@ -351,11 +357,7 @@ def view_test(test_name):
         test_id, test_name = test
 
         # Получаем вопросы для теста
-        response = get_test_questions(test_name)
-        if response.status_code != 200:
-            return render_template('error.html', message="Ошибка при загрузке вопросов"), 500
-
-        questions = response.get_json()
+        questions = get_test_questions(test_name).get_json()
 
         # Сериализация данных в JSON
         questions_json = json.dumps(questions)
@@ -366,8 +368,29 @@ def view_test(test_name):
         return render_template('error.html', message="Ошибка при загрузке теста"), 500
 
 
+@app.route('/save_attempt', methods=['POST'])
+def save_attempt():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Необходима авторизация'})
 
-
+    data = request.get_json()
+    
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO attempts (user_id, test_id, mark, attempt_data)
+            VALUES (%s, %s, %s, NOW())
+            RETURNING attempt_id
+        """, (session['user_id'], data['test_id'], data['mark']))
+        
+        attempt_id = cur.fetchone()[0]
+        
+        conn.commit()
+        return jsonify({'success': True, 'attempt_id': attempt_id})
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'success': False, 'message': str(e)})
+    
 @app.route('/get-directions', methods=['GET'])
 @login_required
 def get_directions():
