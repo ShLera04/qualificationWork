@@ -676,3 +676,75 @@ menuItems.forEach(item => {
         menuOverlay.classList.remove('active');
     });
 });
+
+function loadThemesForResults() {
+    fetch('/get-themes')
+    .then(response => response.json())
+    .then(themes => {
+        const themeDropdown = document.getElementById('themeDropdown');
+        themeDropdown.innerHTML = '<option disabled selected value="">Выберите тему</option>';
+        themes.forEach(theme => {
+            const option = document.createElement("option");
+            option.value = theme.name;
+            option.text = theme.name;
+            themeDropdown.appendChild(option);
+        });
+    })
+    .catch(error => console.error('Ошибка:', error));
+}
+
+document.getElementById('themeDropdown').addEventListener('change', function() {
+    const themeName = this.value;
+    if (themeName) {
+        fetch(`/get-tests-by-theme?theme_name=${encodeURIComponent(themeName)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(tests => {
+            const testDropdown = document.getElementById('testDropdown');
+            testDropdown.innerHTML = '<option disabled selected value="">Выберите тест</option>';
+            
+            if (tests.length === 0) {
+                const option = document.createElement("option");
+                option.value = '';
+                option.text = 'Нет доступных тестов';
+                option.disabled = true;
+                testDropdown.appendChild(option);
+            } else {
+                tests.forEach(test => {
+                    const option = document.createElement("option");
+                    option.value = test.test_name;
+                    option.text = test.test_name;
+                    testDropdown.appendChild(option);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const testDropdown = document.getElementById('testDropdown');
+            testDropdown.innerHTML = '<option disabled selected value="">Ошибка загрузки тестов</option>';
+        });
+    }
+});
+
+document.getElementById('generatePDFButton').addEventListener('click', function() {
+    const themeDropdown = document.getElementById('themeDropdown');
+    const testDropdown = document.getElementById('testDropdown');
+    
+    const themeName = themeDropdown.value; // Получаем значение выбранной опции
+    const testName = testDropdown.value;   // Получаем значение выбранной опции
+
+    if (!themeName || !testName) {
+        alert('Пожалуйста, выберите тему и тест');
+    } else {
+        window.location.href = `/generate-test-results-pdf?theme_name=${encodeURIComponent(themeName)}&test_name=${encodeURIComponent(testName)}`;
+    }
+});
+
+// Загружаем темы при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    loadThemesForResults();
+});

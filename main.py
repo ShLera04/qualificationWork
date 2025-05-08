@@ -21,6 +21,17 @@ from controllers.authentication import auth_bp, login_required
 from controllers.settings import settings_bp
 from controllers.algorithms import algo_bp
 import json 
+
+from flask import send_file
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from io import BytesIO
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 logging.basicConfig(filename="main.log",
                     level=logging.INFO,
                     format="%(asctime)s %(levelname)s %(message)s",
@@ -351,8 +362,8 @@ def view_test(test_name):
         cur.execute("SELECT test_id, test_name FROM test_options WHERE test_name = %s", (test_name,))
         test = cur.fetchone()
 
-        if not test:
-            return render_template('error.html', message="Тест не найден"), 404
+        # if not test:
+        #     return render_template('error.html', message="Тест не найден"), 404
 
         test_id, test_name = test
 
@@ -764,7 +775,102 @@ def create_question():
     finally:
         if 'cur' in locals():
             cur.close()
+@app.route('/generate-test-results-pdf', methods=['GET'])
+@login_required
+def generate_test_results_pdf():
+    theme_name = request.args.get('theme_name')
+    test_name = request.args.get('test_name')
 
+    try:
+        # Регистрация шрифта
+        pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
+
+        cur = conn.cursor()
+
+        # Получаем ID темы
+        cur.execute("SELECT theme_id FROM theme WHERE theme_name = %s", (theme_name,))
+        theme = cur.fetchone()
+        if not theme:
+            return jsonify({"success": False, "error": "Тема не найдена"}), 404
+
+        theme_id = theme[0]
+
+        # Получаем ID теста
+        cur.execute("SELECT test_id FROM test_options WHERE test_name = %s AND theme_id = %s", (test_name, theme_id))
+        test = cur.fetchone()
+        if not test:
+            return jsonify({"success": False, "error": "Тест не найден"}), 404
+
+        test_id = test[0]
+
+        # Получаем результаты теста с информацией о пользователе, его направлении подготовки и группе
+        cur.execute("""
+            SELECT u.login, a.mark, a.attempt_data, d.direction_name, g.group_name
+            FROM attempts a
+            JOIN users u ON a.user_id = u.user_id
+            LEFT JOIN students s ON u.user_id = s.user_id
+            LEFT JOIN direction d ON u.direction_id = d.direction_id
+            LEFT JOIN groups g ON s.group_id = g.group_id
+            WHERE a.test_id = %s
+            ORDER BY a.attempt_data DESC
+        """, (test_id,))
+
+        results = cur.fetchall()
+
+        # Генерация PDF
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter)
+        elements = []
+
+        styles = getSampleStyleSheet()
+        styles['Title'].fontName = 'Arial'
+        styles['Normal'].fontName = 'Arial'
+
+        title1 = Paragraph(f"Результаты теста: {test_name}",  styles['Title'] )
+        title2 = Paragraph(f"Тема: {theme_name})", styles['Title'])
+
+        elements.append(title1)
+        elements.append(title2)
+
+        data = [["Пользователь", "Оценка", "Дата попытки", "Направление подготовки", "Группа"]]
+        for result in results:
+            data.append([
+                result[0],
+                str(result[1]),
+                result[2].strftime('%Y-%m-%d %H:%M:%S'),
+                result[3] or '',
+                result[4] or ''
+            ])
+
+        table = Table(data)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, -1), 'Arial'),  # Применяем шрифт ко всей таблице
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+
+        elements.append(table)
+        doc.build(elements)
+        buffer.seek(0)
+
+        return send_file(
+            buffer,
+            as_attachment=True,
+            download_name=f'results_{theme_name}_{test_name}.pdf',
+            mimetype='application/pdf'
+        )
+
+    except Exception as e:
+        app.logger.error(f"Error generating test results PDF: {str(e)}")
+        return jsonify({"success": False, "error": "Ошибка при генерации PDF с результатами теста"}), 500
+    finally:
+        if 'cur' in locals():
+            cur.close()
 
 
 def allowed_file(filename):

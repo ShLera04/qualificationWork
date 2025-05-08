@@ -177,9 +177,7 @@ img {
     height: auto;
     display: block;
 }
-/* .container .nav-item {
-    margin-top: 2rem; 
-} */
+
 .container {
     display: flex;
     justify-content: center; 
