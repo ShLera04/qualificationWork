@@ -782,12 +782,10 @@ def generate_test_results_pdf():
     test_name = request.args.get('test_name')
 
     try:
-        # Регистрация шрифта
         pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
 
         cur = conn.cursor()
 
-        # Получаем ID темы
         cur.execute("SELECT theme_id FROM theme WHERE theme_name = %s", (theme_name,))
         theme = cur.fetchone()
         if not theme:
@@ -795,7 +793,6 @@ def generate_test_results_pdf():
 
         theme_id = theme[0]
 
-        # Получаем ID теста
         cur.execute("SELECT test_id FROM test_options WHERE test_name = %s AND theme_id = %s", (test_name, theme_id))
         test = cur.fetchone()
         if not test:
@@ -803,7 +800,6 @@ def generate_test_results_pdf():
 
         test_id = test[0]
 
-        # Получаем результаты теста с информацией о пользователе, его направлении подготовки и группе
         cur.execute("""
             SELECT u.login, a.mark, a.attempt_data, d.direction_name, g.group_name
             FROM attempts a
@@ -817,7 +813,6 @@ def generate_test_results_pdf():
 
         results = cur.fetchall()
 
-        # Генерация PDF
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter)
         elements = []
@@ -847,7 +842,7 @@ def generate_test_results_pdf():
             ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, -1), 'Arial'),  # Применяем шрифт ко всей таблице
+            ('FONTNAME', (0, 0), (-1, -1), 'Arial'),
             ('FONTSIZE', (0, 0), (-1, 0), 14),
             ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
             ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
