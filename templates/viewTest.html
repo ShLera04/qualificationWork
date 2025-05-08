@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ test_name }} - Тестирование</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/page.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/page.css') }}"> -->
     <style>
         :root {
             --primary-color: hsl(205, 51%, 83%);
@@ -13,30 +13,36 @@
             --text-light: #ffffff;
             --accent-color: #3a4a6a;
         }
-
+    
         /* Общие стили */
         body {
             background: var(--background-dark);
             color: var(--text-light);
             font-family: 'Roboto', sans-serif;
         }
-
-        .container {
+    
+        #mainTestContainer {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            align-items: center;
+            gap: 20px;
         }
-
+    
         /* Шапка теста */
         .test-header {
             text-align: center;
-            margin-bottom: 5px;
+            margin-bottom: 20px;
         }
-
+    
         /* Прогресс-бар */
         .progress-container {
-            margin-bottom: 5px;
-            width: 300px;
+            margin-bottom: 20px;
+            margin: 0 auto; 
+            width: 100%;
+            max-width: 300px;
+            align-items: center;
+            justify-content: center;
         }
 
         .progress-bar {
@@ -46,28 +52,33 @@
             border-radius: 6px;
             overflow: hidden;
             position: relative;
+            display: flex;
         }
 
         .progress-fill {
             height: 100%;
-
             background: var(--primary-color);
             width: 0;
             transition: width 0.3s ease;
         }
 
+    
         /* Контейнер вопроса */
         .question-container {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 25px;
+            margin: 0 auto; 
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             width: 50%;
+            display: flex;
+            flex-direction: column;
         }
 
         .question-header {
             margin-bottom: 20px;
+            text-align: left !important; /* Изменено на left для выравнивания по левому краю */
         }
 
         .question-number {
@@ -80,12 +91,15 @@
             font-size: 1.2em;
             line-height: 1.4;
             margin: 15px 0;
+            text-align: left; /* Изменено на left для выравнивания по левому краю */
         }
 
         /* Варианты ответов */
         .options-grid {
             display: grid;
             gap: 12px;
+            grid-template-columns: 1fr;
+            align-items: flex-start; /* Изменено на flex-start для выравнивания по левому краю */
         }
 
         .option-item {
@@ -110,7 +124,6 @@
             margin-right: 12px;
             transform: scale(1.2);
         }
-
         /* Поле для ввода */
         .input-field {
             width: 96%;
@@ -120,28 +133,28 @@
             background: var(--card-bg);
             color: var(--text-light);
         }
-
+    
         /* Контейнер для изображения */
         .image-container {
             margin-top: 20px;
             text-align: center;
         }
-
+    
         .image-container img {
             max-width: 100%;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-
+    
         /* Навигация */
         .navigation-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-top: 30px;
-            gap: 20px; 
+            gap: 10px; /* Уменьшено расстояние между кнопками */
         }
-
+    
         .nav-button {
             background: var(--accent-color);
             color: white;
@@ -150,20 +163,22 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
+            font-weight: bold;
         }
-
+    
         .nav-button:hover {
             background: #4a5b78;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
         }
-
+    
         .question-list {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
             margin: 20px 0;
+            justify-content: center;
         }
-
+    
         .question-link {
             padding: 8px 12px;
             border-radius: 6px;
@@ -171,16 +186,16 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-
+    
         .question-link.current {
             background: var(--primary-color);
             color: black;
         }
-
+    
         .question-link.answered {
-            background:hsl(205, 51%, 83%);
-            
+            background: hsl(205, 51%, 83%);
         }
+    
         /* Контейнер для изображения - исправленная версия */
         .image-container {
             display: flex;
@@ -190,7 +205,7 @@
             width: 100%;
             overflow: hidden; /* На случай, если изображение будет больше контейнера */
         }
-
+    
         .image-container img {
             max-width: 100%;
             max-height: 400px;
@@ -202,7 +217,8 @@
             display: block; /* Важно для корректного центрирования */
             margin: 0 auto; /* Дополнительное центрирование */
         }
-        .results-container {
+    
+        .results-container, .attempts-container {
             text-align: center;
             padding: 40px;
             max-width: 600px;
@@ -210,32 +226,32 @@
             background: var(--card-bg);
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            
+    
             /* Новые свойства для вертикального центрирования */
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            
+    
             /* Дополнительно для лучшего отображения */
             width: 90%; /* Чтобы не прилипал к краям на мобильных */
             max-height: 90vh; /* Максимальная высота */
             overflow-y: auto; /* Прокрутка если контент не помещается */
         }
-        
-        .results-title {
+    
+        .results-title, .attempts-title {
             color: var(--primary-color);
             font-size: 1.8em;
             margin-bottom: 20px;
         }
-        
+    
         .results-text {
             font-size: 1.2em;
             margin-bottom: 30px;
             line-height: 1.6;
         }
-
-        .home-button {
+    
+        .home-button,  .start-test-btn{
             padding: 5px 15px;
             border: none;
             border-radius: 10px;
@@ -249,83 +265,115 @@
             height: 30px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
-        .home-button:hover {
+    
+        .home-button:hover, .start-test-btn:hover {
             background-color: #4a5b78;
             color: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-
-        .home-button:active {
+    
+        .home-button:active, .start-test-btn:active {
             transform: scale(0.96) translateY(1px);
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             transition: none;
         }
-        
-        /* .home-button {
+    
+        /* .attempts-container {
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        } */
+    
+        /* .attempts-title {
+            color: var(--primary-color);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        } */
+    
+        .attempt-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #2a3b56;
+            border-radius: 8px;
+        }
+    
+        /* .start-test-btn {
             background: var(--primary-color);
-            color: white;
+            color: black;
             border: none;
-            padding: 0px 30px;
+            padding: 12px 30px;
             border-radius: 8px;
             font-size: 1.1em;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 20px;
+            font-weight: bold;
         }
-        
-        .home-button:hover {
+    
+        .start-test-btn:hover {
             background: hsl(205, 51%, 83%);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }    */
-
+        } */
+    
         /* Адаптивность */
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
             }
-
+    
             .question-text {
                 font-size: 1em;
             }
-
+    
             .nav-button {
                 padding: 10px 20px;
             }
+    
             .image-container img {
                 max-height: 250px;
             }
         }
+    
         @media (max-width: 425px) {
             .container {
-                padding: 15px;
+                padding: 5px;
                 width: 75%
             }
-            .option-item{
+    
+            .option-item {
                 padding: 5px;
             }
-            .option-input{
+    
+            .option-input {
                 transform: scale(0.7);
             }
+    
             .question-container {
-                width: 100%
+                width: 80%
             }
-
+    
             .question-text {
                 font-size: 1em;
             }
-
+    
             .nav-button {
-                padding: 0px 20px;
+                padding: 10px 20px;
+                font-size: 12x;
             }
+    
             .input-field {
                 padding: 4px;
             }
         }
-    </style>
+    </style>       
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="mainTestContainer" style="display: none;">
         <header class="test-header">
             <h1>{{ test_name }}</h1>
         </header>
@@ -364,28 +412,97 @@
             <button class="nav-button" id="nextQuestion">Далее</button>
         </div>
     </div>
+    <div class="container" id="attemptsContainer">
+        <div class="attempts-container">
+            <h2 class="attempts-title">Информация о тесте</h2>
+            <div id="attemptsList">
+                <!-- Сюда будут загружены предыдущие попытки -->
+            </div>
+            <button class="start-test-btn" id="startTestBtn">Начать тест</button>
+        </div>
+    </div>
 </body>
 <script>
     // Вопросы передаются через шаблон в виде JSON-строки
     const initialQuestions = JSON.parse('{{ questions | safe }}');
+    const test_name = "{{ test_name }}";
 
     let currentQuestion = 0;
     let answers = {}; // Объект для хранения ответов пользователя
     let questions = initialQuestions;
+    let testAttempts = [];
 
-    function initTest() {
-        // Проверяем, есть ли вопросы
+// Загружаем предыдущие попытки
+    // Загружаем предыдущие попытки
+    async function loadAttempts() {
+        try {
+            const response = await fetch(`/get-attempts/${test_name}`);
+            const data = await response.json();
+
+            if (data.success) {
+                testAttempts = data.attempts;
+                renderAttempts();
+            } else {
+                console.error('Ошибка загрузки попыток:', data.error);
+                document.getElementById('attemptsList').innerHTML = '<p>Ошибка загрузки информации о попытках</p>';
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            document.getElementById('attemptsList').innerHTML = '<p>Ошибка загрузки информации о попытках</p>';
+        }
+    }
+
+
+    // Отображаем информацию о предыдущих попытках
+    function renderAttempts() {
+        const attemptsList = document.getElementById('attemptsList');
+
+        if (!testAttempts || testAttempts.length === 0) {
+            attemptsList.innerHTML = '<p>Вы еще не проходили этот тест</p>';
+            return;
+        }
+
+        let html = '<h3>Ваши предыдущие попытки:</h3>';
+
+        testAttempts.forEach(attempt => {
+            const date = new Date(attempt.attempt_data);
+            const formattedDate = date.toLocaleString('ru-RU');
+
+            html += `
+                <div class="attempt-item">
+                    <p><strong>Дата прохождения:</strong> ${formattedDate}</p>
+                    <p><strong>Итоговая оценка:</strong> ${attempt.mark}</p>
+                </div>
+            `;
+        });
+
+        attemptsList.innerHTML = html;
+    }
+
+    // Начинаем тест
+    function startTest() {
+        document.getElementById('attemptsContainer').style.display = 'none';
+        document.getElementById('mainTestContainer').style.display = 'block';
+
+        // Инициализация теста
         if (!questions || questions.length === 0) {
             showEmptyTestMessage();
-            return; // Прерываем дальнейшее выполнение
+            return;
         }
-        
+
         renderQuestionNavigation();
         showQuestion(currentQuestion);
         updateProgress();
         setupEventListeners();
     }
 
+    // Загружаем попытки при загрузке страницы
+    document.addEventListener('DOMContentLoaded', () => {
+        loadAttempts();
+
+        // Обработчик кнопки "Начать тест"
+        document.getElementById('startTestBtn').addEventListener('click', startTest);
+    });
     function showQuestion(index) {
     const question = questions[index];
     
@@ -524,13 +641,14 @@
     }
 
     function updateProgress() {
-        const answered = Object.keys(answers).filter(key => 
+        const answered = Object.keys(answers).filter(key =>
             answers[key] !== undefined && answers[key] !== ''
         ).length;
-        
+
         const progress = (answered / questions.length) * 100;
         document.getElementById('progress').style.width = `${progress}%`;
     }
+
     function showResults(correctAnswers, totalQuestions, mark) {
         // Очищаем контейнер страницы
         document.querySelector('.container').innerHTML = `
@@ -634,7 +752,6 @@
     }
 
 
-    // Инициализация теста
-    initTest();
+    
 </script>
 </html>

@@ -362,10 +362,14 @@ def view_test(test_name):
         # Сериализация данных в JSON
         questions_json = json.dumps(questions)
 
-        return render_template('viewTest.html', test_id=test_id, test_name=test_name, questions=questions_json)
+        return render_template('viewTest.html',
+                             test_id=test_id,
+                             test_name=test_name,
+                             questions=questions_json)
     except Exception as e:
         app.logger.error(f"Error: {str(e)}")
         return render_template('error.html', message="Ошибка при загрузке теста"), 500
+
 
 
 @app.route('/save_attempt', methods=['POST'])
@@ -374,22 +378,42 @@ def save_attempt():
         return jsonify({'success': False, 'message': 'Необходима авторизация'})
 
     data = request.get_json()
-    
+
     try:
         cur = conn.cursor()
+
+        # Проверяем, существует ли уже запись для данного пользователя и теста
         cur.execute("""
-            INSERT INTO attempts (user_id, test_id, mark, attempt_data)
-            VALUES (%s, %s, %s, NOW())
-            RETURNING attempt_id
-        """, (session['user_id'], data['test_id'], data['mark']))
-        
+            SELECT attempt_id
+            FROM attempts
+            WHERE user_id = %s AND test_id = %s
+        """, (session['user_id'], data['test_id']))
+
+        attempt = cur.fetchone()
+
+        if attempt:
+            # Если запись существует, обновляем её
+            cur.execute("""
+                UPDATE attempts
+                SET mark = %s, attempt_data = NOW()
+                WHERE attempt_id = %s
+                RETURNING attempt_id
+            """, (data['mark'], attempt[0]))
+        else:
+            # Если записи нет, создаем новую
+            cur.execute("""
+                INSERT INTO attempts (user_id, test_id, mark, attempt_data)
+                VALUES (%s, %s, %s, NOW())
+                RETURNING attempt_id
+            """, (session['user_id'], data['test_id'], data['mark']))
+
         attempt_id = cur.fetchone()[0]
-        
         conn.commit()
         return jsonify({'success': True, 'attempt_id': attempt_id})
     except Exception as e:
         conn.rollback()
         return jsonify({'success': False, 'message': str(e)})
+
     
 @app.route('/get-directions', methods=['GET'])
 @login_required
@@ -532,6 +556,41 @@ def get_all_file_names():
     except Exception as e:
         app.logger.error(f"Error getting all file names: {str(e)}")
         return jsonify({"success": False, "error": "Ошибка при получении имен файлов"}), 500
+    
+@app.route('/get-attempts/<string:test_name>', methods=['GET'])
+@login_required
+def get_attempts(test_name):
+    try:
+        cur = conn.cursor()
+
+        # Сначала получаем test_id по test_name
+        cur.execute("SELECT test_id FROM test_options WHERE test_name = %s", (test_name,))
+        test = cur.fetchone()
+
+        if not test:
+            return jsonify({'success': False, 'error': 'Тест не найден'}), 404
+
+        test_id = test[0]
+
+        # Затем получаем попытки по test_id
+        cur.execute("""
+            SELECT mark, attempt_data
+            FROM attempts
+            WHERE user_id = %s AND test_id = %s
+            ORDER BY attempt_data DESC
+        """, (session['user_id'], test_id))
+
+        attempts = []
+        for row in cur.fetchall():
+            attempts.append({
+                'mark': row[0],
+                'attempt_data': row[1].strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'success': True, 'attempts': attempts})
+    except Exception as e:
+        app.logger.error(f"Error getting attempts: {str(e)}")
+        return jsonify({'success': False, 'error': 'Ошибка при получении попыток'}), 500
     
 @app.route('/get-files-by-theme', methods=['GET'])
 @login_required
