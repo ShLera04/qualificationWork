@@ -733,16 +733,17 @@ document.getElementById('themeDropdown').addEventListener('change', function() {
 document.getElementById('generatePDFButton').addEventListener('click', function() {
     const themeDropdown = document.getElementById('themeDropdown');
     const testDropdown = document.getElementById('testDropdown');
-    
+
     const themeName = themeDropdown.value; // Получаем значение выбранной опции
     const testName = testDropdown.value;   // Получаем значение выбранной опции
 
-    if (!themeName || !testName) {
-        alert('Пожалуйста, выберите тему и тест');
+    if (!themeName || themeName === "Выберите тему" || !testName || testName === "Выберите тест") {
+        showFlashMessage('Не выбрана тема или тест', 'error', '#displayResultsTable');
     } else {
         window.location.href = `/generate-test-results-pdf?theme_name=${encodeURIComponent(themeName)}&test_name=${encodeURIComponent(testName)}`;
     }
 });
+
 
 // Загружаем темы при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {

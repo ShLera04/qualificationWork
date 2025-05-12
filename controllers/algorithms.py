@@ -11,22 +11,25 @@ def is_saddle_point(matrix, row, col):
         return False
     return True
 
-def find_saddle_points_for_both(matrix_a, matrix_b):
-    def find_saddle_points(matrix):
-        saddle_points = []
-        if not matrix:
-            return saddle_points
-        row_min = [min(row) for row in matrix]
-        col_max = [max(col) for col in zip(*matrix)]
-        for i in range(len(matrix)):
-            for j in range(len(matrix[i])):
-                if matrix[i][j] == row_min[i] and matrix[i][j] == col_max[j]:
-                    saddle_points.append((i, j))
+def find_saddle_points(matrix, output_type='tuple'):
+    """Универсальная функция с выбором формата вывода"""
+    saddle_points = []
+    if not matrix:
         return saddle_points
-
+    
+    row_min = [min(row) for row in matrix]
+    col_max = [max(col) for col in zip(*matrix)]
+    
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if matrix[i][j] == row_min[i] and matrix[i][j] == col_max[j]:
+                saddle_points.append((i, j) if output_type == 'tuple' else [i, j])
+    
+    return saddle_points
+def find_saddle_points_for_both(matrix_a, matrix_b):
     return {
-        "matrix_a": find_saddle_points(matrix_a),
-        "matrix_b": find_saddle_points(matrix_b)
+        "matrix_a": find_saddle_points(matrix_a, 'tuple'),
+        "matrix_b": find_saddle_points(matrix_b, 'tuple')
     }
 
 def is_pareto_optimal(matrix_a, matrix_b):
@@ -86,16 +89,7 @@ def generate_matrix_with_saddle_points(rows, cols, saddle_points_count, max_atte
         attempts += 1
         matrix = np.random.randint(0, 100, size=(rows, cols)).tolist()
 
-        def find_saddle_points(matrix):
-            saddle_points = []
-            for i in range(len(matrix)):
-                for j in range(len(matrix[0])):
-                    if (matrix[i][j] == min(matrix[i]) and
-                        matrix[i][j] == max([row[j] for row in matrix])):
-                        saddle_points.append([i, j])
-            return saddle_points
-
-        current_saddle_points = find_saddle_points(matrix)
+        current_saddle_points = find_saddle_points(matrix, 'list')
         while len(current_saddle_points) < saddle_points_count:
             i, j = np.random.randint(0, rows), np.random.randint(0, cols)
             matrix[i] = [max(x, matrix[i][j]) for x in matrix[i]]

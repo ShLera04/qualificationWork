@@ -780,6 +780,7 @@ def create_question():
 def generate_test_results_pdf():
     theme_name = request.args.get('theme_name')
     test_name = request.args.get('test_name')
+    
 
     try:
         pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
@@ -822,7 +823,7 @@ def generate_test_results_pdf():
         styles['Normal'].fontName = 'Arial'
 
         title1 = Paragraph(f"Результаты теста: {test_name}",  styles['Title'] )
-        title2 = Paragraph(f"Тема: {theme_name})", styles['Title'])
+        title2 = Paragraph(f"Тема: {theme_name}", styles['Title'])
 
         elements.append(title1)
         elements.append(title2)
