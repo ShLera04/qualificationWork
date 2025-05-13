@@ -82,7 +82,7 @@ function handleFileClick(event, fileName) {
 }
 function handleFileOpen(fileName) {
     const url = `/download-file-by-name/${encodeURIComponent(fileName)}`;
-    
+    console.log('Opening URL:', url);
     if (!fileName.toLowerCase().endsWith('.pdf')) {
         forceDownload(url, fileName);
     } else {
@@ -94,6 +94,7 @@ function handleFileOpen(fileName) {
 }
 
 function forceDownload(url, fileName) {
+    console.log('Forcing download for URL:', url);
     const link = document.createElement('a');
     link.href = url;
     link.download = fileName;

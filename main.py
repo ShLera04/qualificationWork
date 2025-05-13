@@ -32,6 +32,9 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from transliterate import translit
+from urllib.parse import quote
+
 logging.basicConfig(filename="main.log",
                     level=logging.INFO,
                     format="%(asctime)s %(levelname)s %(message)s",
@@ -540,20 +543,22 @@ def download_file_by_name(file_name):
             mime_type = 'application/octet-stream'
 
         disposition = 'inline' if file_name.lower().endswith('.pdf') else 'attachment'
-        
+
+        # Кодирование имени файла
+        encoded_file_name = quote(file_name)
+
         response = make_response(send_file(
             file_stream,
             as_attachment=(disposition == 'attachment'),
-            download_name=file_name,
+            download_name=encoded_file_name,
             mimetype=mime_type
         ))
-        
-        response.headers['Content-Disposition'] = f'{disposition}; filename="{file_name}"'
+
+        response.headers['Content-Disposition'] = f'{disposition}; filename="{encoded_file_name}"'
         return response
 
     except Exception as e:
         app.logger.error(f"Error downloading file by name: {str(e)}")
-        return jsonify({"success": False, "error": "Ошибка при скачивании файла"}), 500
     
 
 @app.route('/get-all-file-names', methods=['GET'])
