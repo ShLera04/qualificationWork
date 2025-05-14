@@ -958,10 +958,11 @@ button:active {
         font-size: 14px;
     }
     .menu-item {
-        font-size: 14px;
+        font-size: 1rem;
+        padding: 0.5rem;
     }
     .menu-header .username {
-        font-size: 16px;
+        font-size: 1.6rem;
     }
     .InputContainer {
         margin-left:55%;
@@ -1042,6 +1043,13 @@ button:active {
         padding: 3px 3px;
         font-size: 8px;
         height: 25px;
+    }
+    .menu-item {
+        font-size: 1rem;
+        padding: 0.5rem;
+    }
+    .menu-header .username {
+        font-size: 1.6rem;
     }
 }
 @media (max-width: 426px) {
@@ -1148,10 +1156,14 @@ button:active {
         font-size: 10px;
     }
     .menu-item {
-        font-size: 14px;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+    .menu-header {
+        margin-bottom: 0.5rem;
     }
     .menu-header .username {
-        font-size: 16px;
+        font-size: 1rem;
     }
     .InputContainer {
         margin-left:8%;
@@ -1185,10 +1197,25 @@ button:active {
         font-size: 6px;
         height: 20px;
     }
+    .close-btn {
+        font-size: 1.8rem;
+    }
 } 
 @media (min-width: 1026px) and (max-width: 1440px) {
     .burger-menu {
         display: flex;
+    }
+    .header-line img {
+        height: 5vh;
+        width: auto;
+        margin-right: 0;
+    }
+    .burger-line {
+        width: 1.5rem;
+        height: 0.2rem;
+        background-color: white;
+        margin: 0.25rem 0;
+        transition: 0.4s;
     }
     .modal-content{
         width: 500px;
@@ -1315,10 +1342,11 @@ button:active {
         font-size: 16px;
     }
     .menu-item {
-        font-size: 18px;
+        font-size: 1rem;
+        padding: 0.5rem;
     }
     .menu-header .username {
-        font-size: 20px;
+        font-size: 1.6rem;
     }
     .InputContainer {
         margin-left:46%;
@@ -1356,12 +1384,16 @@ button:active {
         display: flex;
     }
     .header-line img {
-        height: 70px;
-        margin-left: 10%;
+        height: 5vh;
+        width: auto;
+        margin-right: 0;
     }
     .burger-line {
-        width: 35px;
-        height: 5px;
+        width: 1.5rem;
+        height: 0.2rem;
+        background-color: white;
+        margin: 0.25rem 0;
+        transition: 0.4s;
     }
     .header-down {
         text-align: center;
@@ -1472,10 +1504,11 @@ button:active {
         font-size: 20px;
     }
     .menu-item {
-        font-size: 22px;
+        font-size: 1rem;
+        padding: 0.5rem;
     }
     .menu-header .username {
-        font-size: 26px;
+        font-size: 1.6rem;
     }
     input[type="checkbox" i]{
         width: 20px;
