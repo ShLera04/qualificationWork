@@ -128,7 +128,6 @@ def register():
             except Exception as e:
                 conn.rollback()
                 flash(f'Ошибка при регистрации', 'error')
-                # Используем current_app вместо app
                 current_app.logger.error(f"Registration error: {str(e)}")
                 
     except Exception as e:
@@ -165,9 +164,9 @@ def entrance_page():
                 session['logged_in'] = True
                 
                 if user[2]:
-                    return redirect(url_for('mainLecturer_page'))
+                    return redirect(url_for('routes.mainLecturer_page'))
                 else:
-                    return redirect(url_for('mainStudent_page'))
+                    return redirect(url_for('routes.mainStudent_page'))
             else:
                 flash('Неверный логин или пароль', 'error')
                 return render_template('entrance.html', login=login)

@@ -1588,7 +1588,7 @@ button {
     background-color: hsl(205, 51%, 93%);
     color: black;
     cursor: pointer;
-    transition: all 0.2s ease; /* Плавные изменения для hover */
+    transition: all 0.2s ease;
     font-family: Roboto, Verdana, Tahoma, sans-serif;
     font-weight: bolder;
     font-size: 14px;

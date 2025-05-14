@@ -12,7 +12,6 @@ def is_saddle_point(matrix, row, col):
     return True
 
 def find_saddle_points(matrix, output_type='tuple'):
-    """Универсальная функция с выбором формата вывода"""
     saddle_points = []
     if not matrix:
         return saddle_points
@@ -26,11 +25,11 @@ def find_saddle_points(matrix, output_type='tuple'):
                 saddle_points.append((i, j) if output_type == 'tuple' else [i, j])
     
     return saddle_points
+
 def find_saddle_points_for_both(matrix_a, matrix_b):
     return {
         "matrix_a": find_saddle_points(matrix_a, 'tuple'),
-        "matrix_b": find_saddle_points(matrix_b, 'tuple')
-    }
+        "matrix_b": find_saddle_points(matrix_b, 'tuple')}
 
 def is_pareto_optimal(matrix_a, matrix_b):
     pareto_optimal_points = []
@@ -125,20 +124,14 @@ def generate_saddle_matrix():
         k = int(data['k'])
         
         if k > rows * cols:
-            return jsonify({
-                "error": f"Количество седловых точек не может превышать {rows * cols}"
-            }), 400
+            return jsonify({"error": f"Количество седловых точек не может превышать {rows * cols}"}), 400
         
         result = generate_matrix_with_saddle_points(rows, cols, k)
         return jsonify(result)
     except ValueError as ve:
-        return jsonify({
-            "error": str(ve)
-        }), 500
+        return jsonify({"error": str(ve)}), 500
     except Exception as e:
-        return jsonify({
-            "error": str(e)
-        }), 500
+        return jsonify({"error": str(e)}), 500
     
 @algo_bp.route('/calculate_mixed_matrix', methods=['POST'])
 @login_required

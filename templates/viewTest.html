@@ -4,373 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ test_name }} - Тестирование</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/page.css') }}"> -->
-    <style>
-        :root {
-            --primary-color: hsl(205, 51%, 83%);
-            --background-dark: #041027;
-            --card-bg: #1f2a44;
-            --text-light: #ffffff;
-            --accent-color: #3a4a6a;
-        }
-    
-        /* Общие стили */
-        body {
-            background: var(--background-dark);
-            color: var(--text-light);
-            font-family: 'Roboto', sans-serif;
-        }
-    
-        #mainTestContainer {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            align-items: center;
-            gap: 20px;
-        }
-    
-        /* Шапка теста */
-        .test-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-    
-        /* Прогресс-бар */
-        .progress-container {
-            margin-bottom: 20px;
-            margin: 0 auto; 
-            width: 100%;
-            max-width: 300px;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .progress-bar {
-            height: 12px;
-            max-width: 100%;
-            background: var(--accent-color);
-            border-radius: 6px;
-            overflow: hidden;
-            position: relative;
-            display: flex;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary-color);
-            width: 0;
-            transition: width 0.3s ease;
-        }
-
-    
-        /* Контейнер вопроса */
-        .question-container {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 25px;
-            margin: 0 auto; 
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            width: 50%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .question-header {
-            margin-bottom: 20px;
-            text-align: left !important; /* Изменено на left для выравнивания по левому краю */
-        }
-
-        .question-number {
-            color: var(--primary-color);
-            font-size: 1.1em;
-            font-weight: 600;
-        }
-
-        .question-text {
-            font-size: 1.2em;
-            line-height: 1.4;
-            margin: 15px 0;
-            text-align: left; /* Изменено на left для выравнивания по левому краю */
-        }
-
-        /* Варианты ответов */
-        .options-grid {
-            display: grid;
-            gap: 12px;
-            grid-template-columns: 1fr;
-            align-items: flex-start; /* Изменено на flex-start для выравнивания по левому краю */
-        }
-
-        .option-item {
-            background: #2a3b56;
-            border-radius: 8px;
-            padding: 15px;
-            transition: all 0.2s ease;
-        }
-
-        .option-item:hover {
-            background: #324462;
-            transform: translateY(-2px);
-        }
-
-        .option-label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .option-input {
-            margin-right: 12px;
-            transform: scale(1.2);
-        }
-        /* Поле для ввода */
-        .input-field {
-            width: 96%;
-            padding: 8px;
-            border: 1px solid var(--accent-color);
-            border-radius: 8px;
-            background: var(--card-bg);
-            color: var(--text-light);
-        }
-    
-        /* Контейнер для изображения */
-        .image-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-    
-        .image-container img {
-            max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-    
-        /* Навигация */
-        .navigation-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 30px;
-            gap: 10px; /* Уменьшено расстояние между кнопками */
-        }
-    
-        .nav-button {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: bold;
-        }
-    
-        .nav-button:hover {
-            background: #4a5b78;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-        }
-    
-        .question-list {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 20px 0;
-            justify-content: center;
-        }
-    
-        .question-link {
-            padding: 8px 12px;
-            border-radius: 6px;
-            background: var(--accent-color);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-    
-        .question-link.current {
-            background: var(--primary-color);
-            color: black;
-        }
-    
-        .question-link.answered {
-            background: hsl(205, 51%, 83%);
-        }
-    
-        /* Контейнер для изображения - исправленная версия */
-        .image-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
-            width: 100%;
-            overflow: hidden; /* На случай, если изображение будет больше контейнера */
-        }
-    
-        .image-container img {
-            max-width: 100%;
-            max-height: 400px;
-            height: auto;
-            width: auto;
-            object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            display: block; /* Важно для корректного центрирования */
-            margin: 0 auto; /* Дополнительное центрирование */
-        }
-    
-        .results-container, .attempts-container {
-            text-align: center;
-            padding: 40px;
-            max-width: 600px;
-            margin: auto; /* Изменено с margin: 0 auto */
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    
-            /* Новые свойства для вертикального центрирования */
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-    
-            /* Дополнительно для лучшего отображения */
-            width: 90%; /* Чтобы не прилипал к краям на мобильных */
-            max-height: 90vh; /* Максимальная высота */
-            overflow-y: auto; /* Прокрутка если контент не помещается */
-        }
-    
-        .results-title, .attempts-title {
-            color: var(--primary-color);
-            font-size: 1.8em;
-            margin-bottom: 20px;
-        }
-    
-        .results-text {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-    
-        .home-button,  .start-test-btn{
-            padding: 5px 15px;
-            border: none;
-            border-radius: 10px;
-            background-color: hsl(205, 51%, 93%);
-            color: black;
-            cursor: pointer;
-            transition: all 0.2s ease; /* Плавные изменения для hover */
-            font-family: Roboto, Verdana, Tahoma, sans-serif;
-            font-weight: bolder;
-            font-size: 12px;
-            height: 30px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-    
-        .home-button:hover, .start-test-btn:hover {
-            background-color: #4a5b78;
-            color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-    
-        .home-button:active, .start-test-btn:active {
-            transform: scale(0.96) translateY(1px);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            transition: none;
-        }
-    
-        /* .attempts-container {
-            text-align: center;
-            padding: 40px;
-            max-width: 600px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        } */
-    
-        /* .attempts-title {
-            color: var(--primary-color);
-            font-size: 1.8em;
-            margin-bottom: 20px;
-        } */
-    
-        .attempt-item {
-            margin-bottom: 15px;
-            padding: 15px;
-            background: #2a3b56;
-            border-radius: 8px;
-        }
-    
-        /* .start-test-btn {
-            background: var(--primary-color);
-            color: black;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-    
-        .start-test-btn:hover {
-            background: hsl(205, 51%, 83%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        } */
-    
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-    
-            .question-text {
-                font-size: 1em;
-            }
-    
-            .nav-button {
-                padding: 10px 20px;
-            }
-    
-            .image-container img {
-                max-height: 250px;
-            }
-        }
-    
-        @media (max-width: 425px) {
-            .container {
-                padding: 5px;
-                width: 75%
-            }
-    
-            .option-item {
-                padding: 5px;
-            }
-    
-            .option-input {
-                transform: scale(0.7);
-            }
-    
-            .question-container {
-                width: 80%
-            }
-    
-            .question-text {
-                font-size: 1em;
-            }
-    
-            .nav-button {
-                padding: 10px 20px;
-                font-size: 12x;
-            }
-    
-            .input-field {
-                padding: 4px;
-            }
-        }
-    </style>       
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/viewTest.css') }}">     
 </head>
 <body>
     <div class="container" id="mainTestContainer" style="display: none;">
@@ -378,34 +12,28 @@
             <h1>{{ test_name }}</h1>
         </header>
 
-        <!-- Прогресс-бар -->
         <div class="progress-container">
             <div class="progress-bar">
                 <div class="progress-fill" id="progress"></div>
             </div>
         </div>
 
-        <!-- Список вопросов -->
         <div class="question-list" id="questionNav"></div>
 
-        <!-- Контейнер вопроса -->
         <div class="question-container">
             <div class="question-header">
                 <div class="question-number" id="questionNumber"></div>
                 <div class="question-text" id="questionText"></div>
             </div>
 
-            <!-- Изображение вопроса -->
             <div class="image-container" id="imageContainer" style="display: none;">
                 <img id="questionImage" class="question-image" alt="Иллюстрация вопроса">
             </div>
 
-            <!-- Варианты ответов или поле для ввода -->
             <div class="options-grid" id="optionsContainer"></div>
             <input type="text" id="inputField" class="input-field" style="display: none;">
         </div>
 
-        <!-- Навигация -->
         <div class="navigation-container">
             <button class="nav-button" id="prevQuestion">Назад</button>
             <button class="nav-button" id="submitTest">Завершить тест</button>
@@ -415,25 +43,20 @@
     <div class="container" id="attemptsContainer">
         <div class="attempts-container">
             <h2 class="attempts-title">Информация о тесте</h2>
-            <div id="attemptsList">
-                <!-- Сюда будут загружены предыдущие попытки -->
-            </div>
+            <div id="attemptsList"></div>
             <button class="start-test-btn" id="startTestBtn">Начать тест</button>
         </div>
     </div>
 </body>
-<script>
-    // Вопросы передаются через шаблон в виде JSON-строки
+ <script>
     const initialQuestions = JSON.parse('{{ questions | safe }}');
     const test_name = "{{ test_name }}";
 
     let currentQuestion = 0;
-    let answers = {}; // Объект для хранения ответов пользователя
+    let answers = {}; 
     let questions = initialQuestions;
     let testAttempts = [];
 
-// Загружаем предыдущие попытки
-    // Загружаем предыдущие попытки
     async function loadAttempts() {
         try {
             const response = await fetch(`/get-attempts/${test_name}`);
@@ -453,7 +76,6 @@
     }
 
 
-    // Отображаем информацию о предыдущих попытках
     function renderAttempts() {
         const attemptsList = document.getElementById('attemptsList');
 
@@ -479,12 +101,10 @@
         attemptsList.innerHTML = html;
     }
 
-    // Начинаем тест
     function startTest() {
         document.getElementById('attemptsContainer').style.display = 'none';
         document.getElementById('mainTestContainer').style.display = 'block';
 
-        // Инициализация теста
         if (!questions || questions.length === 0) {
             showEmptyTestMessage();
             return;
@@ -496,21 +116,17 @@
         setupEventListeners();
     }
 
-    // Загружаем попытки при загрузке страницы
     document.addEventListener('DOMContentLoaded', () => {
         loadAttempts();
 
-        // Обработчик кнопки "Начать тест"
         document.getElementById('startTestBtn').addEventListener('click', startTest);
     });
     function showQuestion(index) {
     const question = questions[index];
-    
-    // Обновление содержимого
+
     document.getElementById('questionNumber').textContent = `Вопрос ${index + 1}`;
     document.getElementById('questionText').textContent = question.question_text;
 
-    // Изображение вопроса
     const imageContainer = document.getElementById('imageContainer');
     const imgElement = document.getElementById('questionImage');
 
@@ -521,7 +137,6 @@
         imageContainer.style.display = 'none';
     }
 
-    // Варианты ответов или поле для ввода
     const optionsContainer = document.getElementById('optionsContainer');
     const inputField = document.getElementById('inputField');
     optionsContainer.innerHTML = '';
@@ -535,13 +150,12 @@
             const optionElement = document.createElement('div');
             optionElement.className = 'option-item';
             
-            // Исправлено сравнение - приводим оба значения к строке
             const isChecked = String(answers[index]) === String(option.answer_id);
             
             optionElement.innerHTML = `
                 <label class="option-label">
                     <input type="radio" name="answer" class="option-input"
-                           value="${option.answer_id}" ${isChecked ? 'checked' : ''}>
+                            value="${option.answer_id}" ${isChecked ? 'checked' : ''}>
                     ${option.answer_text}
                 </label>
             `;
@@ -549,17 +163,15 @@
         });
     }
 
-    // Обновление навигации
     document.querySelectorAll('.question-link').forEach(link => {
         link.classList.remove('current');
     });
     document.querySelectorAll('.question-link')[index].classList.add('current');
-}
+    }
 
     function setupEventListeners() {
-        // Обработчики для кнопок навигации
         document.getElementById('prevQuestion').addEventListener('click', () => {
-            saveCurrentAnswer(); // Сохраняем текущий ответ
+            saveCurrentAnswer(); 
             if (currentQuestion > 0) {
                 currentQuestion--;
                 showQuestion(currentQuestion);
@@ -567,14 +179,13 @@
         });
 
         document.getElementById('nextQuestion').addEventListener('click', () => {
-            saveCurrentAnswer(); // Сохраняем текущий ответ
+            saveCurrentAnswer();
             if (currentQuestion < questions.length - 1) {
                 currentQuestion++;
                 showQuestion(currentQuestion);
             }
         });
 
-        // Обработчик изменений в вариантах ответов
         document.getElementById('optionsContainer').addEventListener('change', (e) => {
             if (e.target.name === 'answer') {
                 answers[currentQuestion] = e.target.value;
@@ -583,14 +194,12 @@
             }
         });
 
-        // Обработчик ввода текста
         document.getElementById('inputField').addEventListener('input', (e) => {
             answers[currentQuestion] = e.target.value;
             updateProgress();
             renderQuestionNavigation();
         });
 
-        // Обработчик завершения теста
         document.getElementById('submitTest').addEventListener('click', submitTest);
     }
 
@@ -604,7 +213,6 @@
                 answers[currentQuestion] = inputValue;
                 hasAnswer = true;
             } else {
-                // Удаляем запись о ответе, если поле пустое
                 delete answers[currentQuestion];
             }
         } else if (question.question_type === 'с единственным выбором ответа') {
@@ -617,7 +225,6 @@
             }
         }
         
-        // Обновляем прогресс только если ответ действительно был дан
         if (hasAnswer) {
             updateProgress();
             renderQuestionNavigation();
@@ -650,7 +257,6 @@
     }
 
     function showResults(correctAnswers, totalQuestions, mark) {
-        // Очищаем контейнер страницы
         document.querySelector('.container').innerHTML = `
             <div class="results-container">
                 <h2 class="results-title">Тест завершен!</h2>
@@ -662,9 +268,8 @@
             </div>
         `;
         
-        // Добавляем обработчик для кнопки
         document.getElementById('goHome').addEventListener('click', () => {
-            window.location.href = '/mainStudent'; // Или другой URL вашей главной страницы
+            window.location.href = '/mainStudent'; 
         });
     }
 
@@ -722,7 +327,6 @@
             const result = await response.json();
             
             if (result.success) {
-                // Вместо alert показываем красивый экран результатов
                 showResults(correctAnswers, questions.length, mark);
             } else {
                 showResults(correctAnswers, questions.length, mark);
@@ -750,8 +354,5 @@
             window.location.href = '/mainStudent';
         });
     }
-
-
-    
-</script>
+ </script>
 </html>
