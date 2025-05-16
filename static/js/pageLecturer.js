@@ -204,6 +204,12 @@ function loadTests() {
             testLink.href = `/view-test/${test.test_id}`;
             testLink.textContent = test.test_name;
             testLink.className = "test-link";
+
+            testLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                openTest(test.test_name);
+            });
+
             
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Удалить";
@@ -273,3 +279,7 @@ menuItems.forEach(item => {
         menuOverlay.classList.remove('active');
     });
 });
+
+function openTest(testName) {
+    window.location.href = `/view-test/${testName}`;
+}

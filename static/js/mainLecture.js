@@ -488,3 +488,109 @@ document.getElementById('generateMixedMatrix').addEventListener('click', functio
         showFlashMessage(error.message, 'error', '#mixedSaddleGenerator .second_container');
     });
 });
+
+// Генерация матрицы для антагонистической игры
+document.getElementById('generateAntagonisticMatrix').addEventListener('click', function() {
+    const rows = parseInt(document.getElementById('antagonisticRows').value);
+    const cols = parseInt(document.getElementById('antagonisticCols').value);
+    const matrixContainer = document.getElementById('antagonisticMatrixContainer');
+    matrixContainer.innerHTML = '';
+
+    function generateMatrix(container, rows, cols) {
+        const table = document.createElement('table');
+        table.className = 'matrix';
+        for (let i = 0; i < rows; i++) {
+            const row = document.createElement('tr');
+            for (let j = 0; j < cols; j++) {
+                const cell = document.createElement('td');
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.style.width = '100%';
+                input.style.height = '100%';
+                input.style.border = '1px solid #ccc';
+                input.style.borderRadius = '4px';
+                input.style.fontFamily = 'Roboto, sans-serif';
+                input.style.textAlign = 'center';
+                input.style.backgroundColor = 'white';
+                cell.appendChild(input);
+                row.appendChild(cell);
+            }
+            table.appendChild(row);
+        }
+        container.appendChild(table);
+    }
+
+    generateMatrix(matrixContainer, rows, cols);
+});
+
+// Решение антагонистической игры
+document.getElementById('solveAntagonisticGame').addEventListener('click', function() {
+    const rows = parseInt(document.getElementById('antagonisticRows').value);
+    const cols = parseInt(document.getElementById('antagonisticCols').value);
+    const matrixContainer = document.getElementById('antagonisticMatrixContainer');
+    const matrix = [];
+
+    // Собираем матрицу из введенных значений
+    for (let i = 0; i < rows; i++) {
+        const row = [];
+        for (let j = 0; j < cols; j++) {
+            const input = matrixContainer.querySelectorAll('input')[i * cols + j];
+            row.push(parseFloat(input.value));
+        }
+        matrix.push(row);
+    }
+
+    // Отправляем запрос на сервер
+    fetch('/solve_antagonistic_game', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ matrix: matrix })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.error); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            showFlashMessage(data.error, 'error', '#antagonisticGame .second_container');
+            return;
+        }
+
+        // Отображаем результаты
+        const resultsContainer = document.getElementById('antagonisticResults');
+        resultsContainer.innerHTML = '<h3>Решение антагонистической игры</h3>';
+
+        if (data.solution.saddle_point) {
+            resultsContainer.innerHTML += `
+                <p>Найдено решение в чистых стратегиях (седловая точка)</p>
+                <p>Седловая точка: (${data.solution.saddle_point[0]}, ${data.solution.saddle_point[1]})</p>
+                <p>Цена игры: ${data.solution.v.toFixed(4)}</p>
+            `;
+        } else {
+            resultsContainer.innerHTML += `
+                <p>Решение в смешанных стратегиях</p>
+                <p>Цена игры: ${data.solution.v.toFixed(4)}</p>
+            `;
+        }
+        resultsContainer.innerHTML += '<h4>Оптимальная стратегия 1-го игрока (p*):</h4>';
+        data.solution.p_star.forEach((prob, index) => {
+            resultsContainer.innerHTML += `
+                <p>Стратегия ${index + 1}: ${prob.toFixed(4)}</p>
+            `;
+        });
+
+        resultsContainer.innerHTML += '<h4>Оптимальная стратегия 2-го игрока (q*):</h4>';
+        data.solution.q_star.forEach((prob, index) => {
+            resultsContainer.innerHTML += `
+                <p>Стратегия ${index + 1}: ${prob.toFixed(4)}</p>
+            `;
+        });
+    })
+    .catch(error => {
+        showFlashMessage(error.message, 'error', '#antagonisticGame .second_container');
+    });
+});

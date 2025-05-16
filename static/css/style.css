@@ -526,7 +526,7 @@ button:active {
 .calculate {
     margin-top: 20px;
 }
-#results {
+#results, #antagonisticGame .results {
     margin-top: 15px;
     border-radius: 12px;
     margin-top: 20px;
@@ -861,6 +861,10 @@ button:active {
         background-color: #007bff;
         color: white;
     }
+    #antagonisticResults p {
+        color: white;
+    }
+
 @media (max-width: 1025px) {
     .burger-menu {
         display: flex;
@@ -919,7 +923,7 @@ button:active {
         height: auto;
         margin-top: 20px;
     }
-    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix{
+    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix, #solveAntagonisticGame, #generateAntagonisticMatrix{
         font-size: 14px;
     }
     .header-down b {
@@ -952,7 +956,7 @@ button:active {
         height: 35px;
         font-size: 12px;
     }
-    #results {
+    #results, #antagonisticGame .results {
         max-width: 1050px;
         text-align: center;
         font-size: 14px;
@@ -1113,7 +1117,7 @@ button:active {
     .group input:placeholder-shown + label {
         font-size: 12px;
     }
-    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix{
+    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix, #solveAntagonisticGame, #generateAntagonisticMatrix{
         font-size: 10px;
         padding: 0px 10px;
         height: 25px;
@@ -1149,7 +1153,7 @@ button:active {
         padding: 5px !important;
         aspect-ratio: 1/1 !important;
     }
-    #results {
+    #results, #antagonisticGame .results  {
         max-width: 1050px;
         background-color: transparent;
         text-align: center;
@@ -1290,7 +1294,7 @@ button:active {
     .button {
         font-size: 16px;
     }
-    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix{
+    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix, #solveAntagonisticGame, #generateAntagonisticMatrix {
         font-size: 16px;
         padding: 0px 15px;
         left: 50%;
@@ -1324,7 +1328,7 @@ button:active {
         height: 35px;
         font-size: 12px;
     }
-    #results {
+    #results, #antagonisticGame .results  {
         margin-top: 15px;
         border-radius: 12px;
         margin-top: 20px;
@@ -1461,7 +1465,7 @@ button:active {
     .button {
         font-size: 16px;
     }
-    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix{
+    #generateMatrix, #generateSaddleMatrix, #generateMixedMatrix, #solveAntagonisticGame, #generateAntagonisticMatrix {
         font-size: 20px;
         padding: 0px 15px;
         left: 50%;
@@ -1486,7 +1490,7 @@ button:active {
     .question-block select option{
         font-size: 18px !important;
     }
-    #results {
+    #results, #antagonisticGame .results  {
         margin-top: 15px;
         border-radius: 12px;
         margin-top: 20px;
